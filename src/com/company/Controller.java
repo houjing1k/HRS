@@ -42,7 +42,8 @@ public class Controller {
 			ois.close();
 			return arrayList;
 		} catch(Exception ex) {
-			ex.printStackTrace();
+			//commented to prevent exception from printing
+			//ex.printStackTrace();
 			return new ArrayList<>();
 		}
 	}

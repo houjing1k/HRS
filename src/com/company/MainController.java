@@ -26,7 +26,7 @@ public class MainController extends Controller
 					break;
 
 				case 2: //2 - Add/Manage Reservations
-					//new ReservationController().processMain();
+					new ReservationController();
 					break;
 
 				case 3: //3 - Room Services
