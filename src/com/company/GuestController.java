@@ -25,7 +25,7 @@ public class GuestController extends Controller
 			case 1:
 				//add new Guest
 				addGuest();
-				return;
+				break;
 			case 2:
 				//Update Guest details
 				updateGuest();
@@ -46,7 +46,15 @@ public class GuestController extends Controller
 
 	public int addGuest()
 	{
-		int currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
+		int currID;
+		if (guestList.size() != 0)
+		{
+			currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
+		}
+		else
+		{
+			currID = 0;
+		}
 		guestList.add(gb.addGuest(currID));
 		saveGuestsToFile();
 		return currID;
