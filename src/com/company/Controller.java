@@ -42,7 +42,7 @@ public class Controller {
 			ois.close();
 			return arrayList;
 		} catch(Exception ex) {
-			//ex.printStackTrace();
+			ex.printStackTrace();
 			return new ArrayList<>();
 		}
 	}
