@@ -4,47 +4,42 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Controller {
-	Scanner scan = new Scanner(System.in);
-	public int handleMenu(String []menu)
-	{
-		int choice;
-		for(int i = 0 ; i < menu.length ; i ++)
-		{
-			System.out.println(menu[i]);
-		}
-		choice = scan.nextInt();
-		return choice;
-	}
 
-	public void toFile(ArrayList<?> arrayList, String fileName)
+	public <T> void toFile(T object, String fileDir)
 	{
 		try {
-			FileOutputStream fos = new FileOutputStream(fileName);
+			FileOutputStream fos = new FileOutputStream(fileDir);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(arrayList); // write MenuArray to ObjectOutputStream
+
+			oos.writeObject(object); // write object to ObjectOutputStream
+
 			oos.close();
+			fos.close();
+
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-
-	public ArrayList<?> fromFile(String fileName)
+	
+	@SuppressWarnings("unchecked")
+	public <T> T fromFile(String fileDir)
 	{
+		T object = null;
 		try {
-			FileInputStream fis = new FileInputStream(fileName);
+			FileInputStream fis = new FileInputStream(fileDir);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			ArrayList <?> arrayList;
-			arrayList = (ArrayList <?>)ois.readObject();
+
+			object = (T) ois.readObject();
+			
 			ois.close();
-			return arrayList;
+			fis.close();
+
 		} catch(Exception ex) {
 			//commented to prevent exception from printing
 			//ex.printStackTrace();
-			return new ArrayList<>();
 		}
+		return object;
 	}
 }
