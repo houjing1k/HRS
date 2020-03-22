@@ -3,6 +3,7 @@ package com.company;
 import sun.applet.Main;
 
 import java.util.Scanner;
+import com.company.roomservice.RoomServiceController;
 
 public class MainController extends Controller
 {
@@ -30,7 +31,7 @@ public class MainController extends Controller
 					break;
 
 				case 3: //3 - Room Services
-					//new RoomServiceController().processMain();
+					new RoomServiceController().processMain();
 					break;
 
 				case 4: //4 - Room Check-in / Check-out
