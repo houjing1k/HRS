@@ -37,18 +37,24 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		this.order_date_time = order_date_time;
 		this.room_number = room_number;
 		this.status = OrderStatus.UNCONFIRMED;
+		this.remarks = "";
+		this.bill = 0;
 	}
 	
-	void addItem(RoomServiceItem item, int quantity) {
+	boolean addItem(RoomServiceItem item, int quantity) {
 		
 		// need add error checking for positive quantity?
 		for (int i=0; i < quantity; i++) {
+			if (item.getStatus() == StockStatus.OUT_OF_STOCK) return false;
 			order_items.add(item);
+			bill += item.getPrice();
 		}
 		order_items.sort(null);
+		return true;
 	}
 	
 	RoomServiceItem removeItem(int index) {
+		bill -= order_items.get(index).getPrice();
 		return order_items.remove(index);
 	}
 	

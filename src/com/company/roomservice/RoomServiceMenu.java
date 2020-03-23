@@ -20,6 +20,7 @@ class RoomServiceMenu implements Serializable, Iterable<RoomServiceItem>{
 	}
 	
 	boolean addItem(String name, String description, double price) {
+		if (price < 0) return false;
 		RoomServiceItem item = new RoomServiceItem(name, description, price);
 		boolean flag = menu_items.add(item);
 		menu_items.sort(null);
@@ -30,20 +31,25 @@ class RoomServiceMenu implements Serializable, Iterable<RoomServiceItem>{
 		return menu_items.remove(index);
 	}
 	
-	void updateItemName(int index, String new_name) {
-		menu_items.get(index-1).setName(new_name);
+	boolean updateItemName(int index, String new_name) {
+		menu_items.get(index).setName(new_name);
+		return true;
 	}
 	
-	void updateItemDescription(int index, String new_description) {
-		menu_items.get(index-1).setDescription(new_description);
+	boolean updateItemDescription(int index, String new_description) {
+		menu_items.get(index).setDescription(new_description);
+		return true;
 	}
 	
-	void updateItemPrice(int index, double new_price) {
-		menu_items.get(index-1).setPrice(new_price);
+	boolean updateItemPrice(int index, double new_price) {
+		if (new_price < 0) return false;
+		menu_items.get(index).setPrice(new_price);
+		return true;
 	}
 	
-	void updateItemStatus(int index, StockStatus new_stock_status) {
-		menu_items.get(index-1).setStatus(new_stock_status);
+	boolean updateItemStatus(int index, StockStatus new_stock_status) {
+		menu_items.get(index).setStatus(new_stock_status);
+		return true;
 	}
 	
 	RoomServiceItem getItem(int index) {

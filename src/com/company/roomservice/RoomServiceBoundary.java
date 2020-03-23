@@ -6,9 +6,11 @@ import java.util.Scanner;
 class RoomServiceBoundary implements IBoundary {
 
 	private Scanner sc;
+	private String currency;
 	
 	public RoomServiceBoundary() {
 		sc = new Scanner(System.in);
+		currency = "$";
 	}
 	
 	Object[] userInputForAddItem() {
@@ -30,51 +32,76 @@ class RoomServiceBoundary implements IBoundary {
 		return inputs;
 	}
 	
-	Object[] userInputForRemoveItem(int menuSize) {
+	Object[] userInputForRemoveItem(int size) {
 		
 		Object[] inputs = new Object[1];
 		
 		System.out.println("Enter index of item to remove: ");
-		inputs[0] = getIntFromUser(1, menuSize);
+		inputs[0] = getIntFromUser(1, size);
 		System.out.println();
 		
 		return inputs;
 	}
 	
-	Object[] userInputForUpdateName(int menuSize) {
+	Object[] userInputForUpdateItem(int menuSize, int attribute) {
 		
 		Object[] inputs = new Object[2];
 		
 		System.out.println("Enter the index of item to update: ");
 		inputs[0] = getIntFromUser(1, menuSize);
 		System.out.println();
+		switch (attribute) {
+		case 0:
+			System.out.println("Enter the new name: ");
+			inputs[1] = getStringFromUser();
+			break;
+		case 1:
+			System.out.println("Enter the new description: ");
+			inputs[1] = getStringFromUser();
+			break;
+		case 2:
+			System.out.println("Enter the new price: ");
+			inputs[1] = getDoubleFromUser();
+			break;
+		case 3:
+			System.out.println("Select the new status: ");
+			System.out.println("1. In Stock");
+			System.out.println("2. Out Of Stock");
+			inputs[1] = (getIntFromUser(1,2)==1) ? StockStatus.IN_STOCK : StockStatus.OUT_OF_STOCK;
+			break;
+		default:
+			// invalid option for attribute
+		}
 		
-		System.out.println("Enter the new name: ");
-		inputs[1] = getStringFromUser();
 		System.out.println();
-		
 		return inputs;
 	}
 	
-	void printSuccess(int choice) {
+	void printSuccess(boolean flag, int choice) {
 		switch (choice) {
 		case 1:
-			System.out.println("Item successfully added.");
+			if (flag == true) System.out.println("Item successfully added.");
+			else System.out.println("Item was not added.");
 			break;
 		case 2:
-			System.out.println("Item successfully removed.");
+			if (flag == true) System.out.println("Item successfully removed.");
+			else System.out.println("Item was not removed.");
 			break;
 		case 3:
-			System.out.println("Item name successfully updated.");
+			if (flag == true) System.out.println("Item name successfully updated.");
+			else System.out.println("Item name was not updated.");
 			break;
 		case 4:
-			System.out.println("Item description successfully updated.");
+			if (flag == true) System.out.println("Item description successfully updated.");
+			else System.out.println("Item description was not updated.");
 			break;
 		case 5:
-			System.out.println("Item price successfully updated.");
+			if (flag == true) System.out.println("Item price successfully updated.");
+			else System.out.println("Item price was not updated.");
 			break;
 		case 6:
-			System.out.println("Item price successfully updated.");
+			if (flag == true) System.out.println("Item status successfully updated.");
+			else System.out.println("Item status was not updated.");
 			break;
 			
 		}
@@ -88,13 +115,32 @@ class RoomServiceBoundary implements IBoundary {
 			int i=1;
 			System.out.println("Today's menu:");
 			for (RoomServiceItem item : menu) {
-				System.out.printf("%d: \t%s \n\t$%.2f \t\t%s\n", i, item.getName(), item.getPrice(), item.getStatus());
+				System.out.printf("%d: \t%s \n\t%s%.2f \t\t%s\n", i, item.getName(), currency, item.getPrice(), item.getStatus());
 				System.out.printf("\t%s\n",item.getDescription());
 				i++;
 			}
 		}
 		System.out.println();
 	}
+	
+	void printOrder(RoomServiceOrder order) {
+		if (order == null ||order.size() == 0) System.out.println("No items in order.");
+		else {
+			int i=1;
+			System.out.println("Current order:");
+			for (RoomServiceItem item : order) {
+				System.out.printf("%d: \t%s \n\t%s%.2f\n", i, item.getName(), currency, item.getPrice());
+				i++;
+			}
+			System.out.print("Remarks: ");
+			System.out.println(order.getRemarks());
+			System.out.print("Total: " + currency);
+			System.out.println(order.getBill());
+		}
+		System.out.println();
+	}
+	
+
 	
 	public int userInputFromMenu(String[] menu) {
 		
@@ -149,6 +195,7 @@ class RoomServiceBoundary implements IBoundary {
 		
 		return num;
 	}
+	
 	public void printMenu(String[] menu) {
 		
 		int index = 0;
@@ -166,12 +213,10 @@ class RoomServiceBoundary implements IBoundary {
 			index++;
 		}
 	}
-	
 
 	@Override
 	public int process() {
 		// TODO Auto-generated method stub
-		
 		return 0;
 	}
 }
