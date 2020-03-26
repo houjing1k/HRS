@@ -311,19 +311,4 @@ public class GuestBoundary implements IBoundary
 		return check;
 	}
 
-	private boolean inputCreditCardNo(String str)
-	{
-		sc = new Scanner(System.in);
-
-		boolean check = ((!str.equals(""))
-				&& (str != null)
-				&& (str.matches("\\d{4}-?\\d{4}-?\\d{4}-?\\d{4}")));
-		if (!check)
-		{
-			System.out.println("Invalid Credit Card Number.");
-		}
-		return check;
-	}
-
-
 }
