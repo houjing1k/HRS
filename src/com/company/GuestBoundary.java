@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class GuestBoundary implements IBoundary
 {
 	private Scanner sc;
+	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.", "Credit Card No."};
 
 	public GuestBoundary()
 	{
@@ -32,45 +33,36 @@ public class GuestBoundary implements IBoundary
 		System.out.println();
 	}
 
-	public GuestEntity addGuest(int ID)
+	public void addGuestMenu()
 	{
-		GuestEntity newGuest = new GuestEntity();
-		newGuest.setGuestID(ID);
-		sc.nextLine();
-		System.out.println("~~~~~~~~~~~~~~~~~~~ Add Guest ~~~~~~~~~~~~~~~~~~");
-		System.out.println("Full Name: ");
-		newGuest.setName(sc.nextLine());
-		System.out.println("Address: ");
-		newGuest.setAddress(sc.nextLine());
-		System.out.println("Country: ");
-		newGuest.setCountry(sc.nextLine());
-		System.out.println("Gender (M/F) : ");
-		newGuest.setGender(sc.next().charAt(0));
-		sc.nextLine();
-		System.out.println("Identity Number: ");
-		newGuest.setIdentityNo(sc.nextLine());
-		System.out.println("Nationality: ");
-		newGuest.setNationality(sc.nextLine());
-		System.out.println("Credit Card Number: ");
-		newGuest.setCreditCardNum(sc.nextLine());
-		System.out.println("Contact Number: ");
-		newGuest.setContactNo(sc.nextLine());
-
-		printGuest(newGuest);
-
-		return newGuest;
+		System.out.println("---Add New Guest--- ");
 	}
 
 	public void printGuestList(ArrayList<GuestEntity> list)
 	{
-		for (GuestEntity e : list)
+		if ((list == null) || (list.size() == 0))
+		{
+			System.out.println("No records found.");
+		}
+		else
+		{
+			for (GuestEntity e : list)
+			{
+				System.out.println(e);
+			}
+		}
+	}
+
+	public void printGuest(GuestEntity e)
+	{
+		if (e == null)
+		{
+			System.out.println("No records found.");
+		}
+		else
 		{
 			System.out.println(e);
 		}
-	}
-	public void printGuest(GuestEntity e)
-	{
-			System.out.println(e);
 	}
 
 	public String searchGuest()
@@ -94,72 +86,244 @@ public class GuestBoundary implements IBoundary
 	public void waitInput()
 	{
 		sc = new Scanner(System.in);
-		System.out.println("\nPress Enter to return.");
+		System.out.println("\nPress \"Enter\" to return.");
 		sc.nextLine();
 	}
 
 	public int updateGuest()
 	{
 		sc = new Scanner(System.in);
-
-		System.out.println("Enter Field to Update: ");
-		System.out.println("1 - Name");
-		System.out.println("2 - Address");
-		System.out.println("3 - Country");
-		System.out.println("4 - Gender");
-		System.out.println("5 - Identity No.");
-		System.out.println("6 - Nationality");
-		System.out.println("7 - Contact No.");
-		System.out.println("8 - Credit Card");
-
-		return sc.nextInt();
-	}
-	public String updateGuestSub(int sel)
-	{
-		sc = new Scanner(System.in);
-		switch (sel)
+		int sel;
+		while (true)
 		{
-			case 1:
-				System.out.println("New Name: ");
-				return sc.nextLine();
-			case 2:
-				System.out.println("New Address: ");
-				return sc.nextLine();
-			case 3:
-				System.out.println("New Country: ");
-				return sc.nextLine();
-			case 4:
-				System.out.println("New Gender: ");
-				return sc.nextLine();
-			case 5:
-				System.out.println("New Identity No.: ");
-				return sc.nextLine();
-			case 6:
-				System.out.println("New Nationality: ");
-				return sc.nextLine();
-			case 7:
-				System.out.println("New Contact No.: ");
-				return sc.nextLine();
-			case 8:
-				System.out.println("New Credit Card No.: ");
-				return sc.nextLine();
-			default:
-				System.out.println("Invalid Input");
-				return null;
+			try
+			{
+				System.out.println("Enter Field to Update: ");
+				System.out.println("1 - Name");
+				System.out.println("2 - Address");
+				System.out.println("3 - Country");
+				System.out.println("4 - Gender");
+				System.out.println("5 - Identity No.");
+				System.out.println("6 - Nationality");
+				System.out.println("7 - Contact No.");
+				System.out.println("8 - Credit Card");
+				System.out.println("0 - Exit");
+				sel = sc.nextInt();
+				if (sel < 0 || sel > 8)
+				{
+					throw new Exception();
+				}
+				else
+				{
+					return sel;
+				}
+			} catch (Exception e)
+			{
+				System.out.println("Invalid choice.");
+			}
+
 		}
 	}
-	public Character updateGuest(int sel)
+
+	public String addUpdateGuestSub(int sel, boolean update)
 	{
 		sc = new Scanner(System.in);
-		switch (sel)
+		String input = null;
+		boolean check = true;
+		while (check)
 		{
-			case 4:
-				System.out.println("New Gender: ");
-				return sc.nextLine().charAt(0);
-			default:
-				System.out.println("Invalid Input");
-				return null;
+			try
+			{
+				if (update)
+				{
+					System.out.println("New " + list[sel - 1] + ":");
+				}
+				else
+				{
+					System.out.println(list[sel - 1] + ":");
+				}
+				input = sc.nextLine();
+				check = false;
+				switch (sel)
+				{
+					case 1:
+						if (!checkName(input)) throw new Exception();
+						break;
+					case 2:
+						if (!checkAddress(input)) throw new Exception();
+						break;
+					case 3:
+						if (!checkCountry(input)) throw new Exception();
+						break;
+					case 4:
+						if (!checkGender(input)) throw new Exception();
+						break;
+					case 5:
+						if (!checkIdentityNo(input)) throw new Exception();
+						break;
+					case 6:
+						if (!checkNationality(input)) throw new Exception();
+						break;
+					case 7:
+						if (!checkContactNo(input)) throw new Exception();
+						break;
+					case 8:
+						if (!checkCreditCardNo(input)) throw new Exception();
+						break;
+				}
+
+			} catch (Exception e)
+			{
+				check = true;
+			}
+		}
+		return input;
+	}
+
+	public boolean confirmation(GuestEntity guest)
+	{
+		sc = new Scanner(System.in);
+		char choice;
+		while (true)
+		{
+			try
+			{
+				System.out.println("Please confirm the following");
+				System.out.println("(Y - Accept, N - Decline):");
+				System.out.println();
+				printGuest(guest);
+				choice = sc.next().charAt(0);
+
+				if (choice == 'Y')
+				{
+					System.out.println("Changes accepted.");
+					return true;
+				}
+				else if (choice == 'N')
+				{
+					System.out.println("No changes made.");
+					return false;
+				}
+				else
+				{
+					throw new Exception();
+				}
+			} catch (Exception e)
+			{
+				System.out.println("Invalid Input.");
+			}
 		}
 	}
+
+	private boolean checkName(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("^[ A-Za-z]+$")));
+		if (!check)
+		{
+			System.out.println("Invalid input. Only alphabetical accepted");
+		}
+		return check;
+	}
+
+	private boolean checkAddress(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null));
+		if (!check)
+		{
+			System.out.println("Invalid input.");
+		}
+		return check;
+	}
+
+	private boolean checkCountry(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("^[A-Za-z]+$")));
+		if (!check)
+		{
+			System.out.println("Invalid input. Only alphabetical single-word accepted");
+		}
+		return check;
+	}
+
+	private boolean checkGender(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.equals("M") || str.equals("F")));
+		if (!check)
+		{
+			System.out.println("Invalid input. Only input (M / F).");
+		}
+		return check;
+	}
+
+	private boolean checkIdentityNo(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("^[a-zA-Z0-9]+$")));
+		if (!check)
+		{
+			System.out.println("Invalid input. Only alphanumeric accepted");
+		}
+		return check;
+	}
+
+	private boolean checkNationality(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("^[A-Za-z]+$")));
+		if (!check)
+		{
+			System.out.println("Invalid input. Only alphabetical single-word accepted");
+		}
+		return check;
+	}
+
+	private boolean checkContactNo(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("^[0-9]+$")));
+		if (!check)
+		{
+			System.out.println("Invalid input. Only alphanumeric accepted");
+		}
+		return check;
+	}
+
+	private boolean checkCreditCardNo(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("\\d{4}-\\d{4}-\\d{4}-\\d{4}")));
+		if (!check)
+		{
+			System.out.println("Invalid Credit Card Number.");
+			System.out.println("Format: xxxx-xxxx-xxxx-xxxx");
+		}
+		return check;
+	}
+
+	private boolean inputCreditCardNo(String str)
+	{
+		sc = new Scanner(System.in);
+
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("\\d{4}-?\\d{4}-?\\d{4}-?\\d{4}")));
+		if (!check)
+		{
+			System.out.println("Invalid Credit Card Number.");
+		}
+		return check;
+	}
+
 
 }

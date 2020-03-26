@@ -1,8 +1,5 @@
 package com.company;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GuestController extends Controller
@@ -17,6 +14,7 @@ public class GuestController extends Controller
 		guestList = (ArrayList<GuestEntity>) fromFile(guestFileName);
 	}
 
+	//Main Processs
 	public void processMain()
 	{
 		int sel = gb.process();
@@ -39,14 +37,17 @@ public class GuestController extends Controller
 				printAllGuest();
 				break;
 			case 0:
-				break;
+				return;
+
 		}
 		gb.waitInput();
 	}
 
+	//Add new Guest
 	public int addGuest()
 	{
 		int currID;
+		GuestEntity newGuest = new GuestEntity();
 		if (guestList.size() != 0)
 		{
 			currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
@@ -55,18 +56,36 @@ public class GuestController extends Controller
 		{
 			currID = 0;
 		}
-		guestList.add(gb.addGuest(currID));
-		saveGuestsToFile();
-		return currID;
+		newGuest.setGuestID(currID + 1);
+
+		gb.addGuestMenu();
+
+		String[] guestDetails = new String[8];
+		for (int i = 0; i < 8; i++)
+		{
+			setGuestDetails(i + 1, newGuest, gb.addUpdateGuestSub(i + 1, false));
+		}
+
+		if (gb.confirmation(newGuest))
+		{
+			guestList.add(newGuest);
+			saveGuestsToFile();
+			return currID;
+		}
+		else
+		{
+			return -1;
+		}
+
 	}
 
+	// Search Guest by Name
 	public ArrayList<GuestEntity> searchGuest(String name)
 	{
 		ArrayList<GuestEntity> results = new ArrayList<>();
 		for (GuestEntity e : guestList)
 		{
-			//System.out.println(e.getName());
-			if (e.getName().contains(name))
+			if (containsIgnoreCase(e.getName(), name))
 			{
 				results.add(e);
 			}
@@ -74,6 +93,7 @@ public class GuestController extends Controller
 		return results;
 	}
 
+	//Search Guest by ID
 	public GuestEntity searchGuest(int guestID)
 	{
 		GuestEntity result = null;
@@ -87,6 +107,7 @@ public class GuestController extends Controller
 		return result;
 	}
 
+	//Update Guest Details
 	public void updateGuest()
 	{
 		GuestEntity guest = null;
@@ -94,7 +115,7 @@ public class GuestController extends Controller
 		printGuestList(temp);
 		if (temp.size() == 0)
 		{
-			System.out.println("Not Found");
+			return;
 		}
 		else if (temp.size() == 1)
 		{
@@ -106,37 +127,57 @@ public class GuestController extends Controller
 			printGuest(guest);
 		}
 
-		int sel = gb.updateGuest();
-		String newVal = gb.updateGuestSub(sel);
-
-		switch (sel)
+		if (guest != null)
 		{
-			case 1:
-				guest.setName(newVal);
-				break;
-			case 2:
-				guest.setAddress(newVal);
-				break;
-			case 3:
-				guest.setCountry(newVal);
-				break;
-			case 4:
-				guest.setGender(newVal.charAt(0));
-				break;
-			case 5:
-				guest.setIdentityNo(newVal);
-				break;
-			case 6:
-				guest.setNationality(newVal);
-				break;
-			case 7:
-				guest.setContactNo(newVal);
-				break;
-			case 8:
-				guest.setCreditCardNum(newVal);
-				break;
+
+			int sel = gb.updateGuest();
+			String newVal = gb.addUpdateGuestSub(sel, true);
+
+			if (setGuestDetails(sel, guest, newVal))
+			{
+				printGuest(guest);
+				saveGuestsToFile();
+			}
 		}
-		printGuest(guest);
+	}
+
+	private boolean setGuestDetails(int index, GuestEntity guest, String val)
+	{
+		if (val != null)
+		{
+			switch (index)
+			{
+				case 1:
+					guest.setName(val);
+					break;
+				case 2:
+					guest.setAddress(val);
+					break;
+				case 3:
+					guest.setCountry(val);
+					break;
+				case 4:
+					guest.setGender(val.charAt(0));
+					break;
+				case 5:
+					guest.setIdentityNo(val);
+					break;
+				case 6:
+					guest.setNationality(val);
+					break;
+				case 7:
+					guest.setContactNo(val);
+					break;
+				case 8:
+					guest.setCreditCardNum(val);
+					break;
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	private void saveGuestsToFile()
@@ -157,5 +198,10 @@ public class GuestController extends Controller
 	private void printGuest(GuestEntity e)
 	{
 		gb.printGuest(e);
+	}
+
+	private boolean containsIgnoreCase(String str, String subString)
+	{
+		return str.toLowerCase().contains(subString.toLowerCase());
 	}
 }
