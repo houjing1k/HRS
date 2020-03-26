@@ -22,11 +22,11 @@ public class MainController extends Controller
 					break;
 
 				case 2: //2 - Add/Manage Reservations
-					//new ReservationController().processMain();
+					new ReservationController().processMain();
 					break;
 
 				case 3: //3 - Room Services
-					//new RoomServiceController().processMain();
+					new RoomServiceController().processMain();
 					break;
 
 				case 4: //4 - Room Check-in / Check-out
