@@ -1,24 +1,19 @@
 package com.company;
 
-import sun.applet.Main;
-
-import java.util.Scanner;
-import com.company.roomservice.RoomServiceController;
-
 public class MainController extends Controller
 {
-	Scanner sc = new Scanner(System.in);
-	int sel = 1;
+	private MainBoundary mb;
 
 	public MainController()
 	{
+		mb = new MainBoundary();
 	}
 
-	public void start()
+	public void processMain()
 	{
 		while(true)
 		{
-			sel = new MainBoundary().process();
+			int sel = mb.process();
 
 			switch (sel)
 			{
@@ -27,28 +22,27 @@ public class MainController extends Controller
 					break;
 
 				case 2: //2 - Add/Manage Reservations
-					new ReservationController();
+					//new ReservationController().processMain();
 					break;
 
 				case 3: //3 - Room Services
-					new RoomServiceController().processMain();
+					//new RoomServiceController().processMain();
 					break;
 
 				case 4: //4 - Room Check-in / Check-out
 					//new RoomController().processMain();
 					break;
 
-				case 5: //5 - Manage Hotel Rooms
-					//new RoomController().processManage();
-					break;
-
-				case 6: //6 - Other Admin
+				case 5: //6 - Admin Options
 					// new AdminController().processMain();
 					break;
 
 				case 0:
 					System.exit(0);
 					break;
+
+				default:
+					mb.invalidInputWarning();
 			}
 		}
 	}
