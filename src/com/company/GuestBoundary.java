@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GuestBoundary implements IBoundary
+public class GuestBoundary extends Boundary
 {
 	private Scanner sc;
 	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.", "Credit Card No."};
@@ -13,29 +13,24 @@ public class GuestBoundary implements IBoundary
 		sc = new Scanner(System.in);
 	}
 
-	@Override
-	public int process()
+	protected void printMenu()
 	{
-		printMenu();
-		int sel = sc.nextInt();
-		return sel;
-	}
-
-	private void printMenu()
-	{
-		System.out.println("~~~~~~~~~~~~~~~~~ Manage Guests ~~~~~~~~~~~~~~~~");
-		System.out.println("1 - Add new Guest");
-		System.out.println("2 - Update Guest Details");
-		System.out.println("3 - Search Guests by Name");
-		System.out.println("4 - Print all Guests");
-		System.out.println("0 - Back to Main Menu");
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		printMainTitle("Manage Guests");
+		String[] menuList =
+				{
+						"Add new Guest",
+						"Update Guest Details",
+						"Search Guests by Name",
+						"Search Guests by Guest ID",
+						"Print all Guests"
+				};
+		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
 	}
 
 	public void addGuestMenu()
 	{
-		System.out.println("---Add New Guest--- ");
+		printSubTitle("Add New Guest");
 	}
 
 	public void printGuestList(ArrayList<GuestEntity> list)
@@ -83,40 +78,22 @@ public class GuestBoundary implements IBoundary
 		return id;
 	}
 
-	public void waitInput()
-	{
-		sc = new Scanner(System.in);
-		System.out.println("\nPress \"Enter\" to return.");
-		sc.nextLine();
-	}
-
 	public int updateGuest()
 	{
 		sc = new Scanner(System.in);
-		int sel;
+		String input = null;
 		while (true)
 		{
 			try
 			{
-				System.out.println("Enter Field to Update: ");
-				System.out.println("1 - Name");
-				System.out.println("2 - Address");
-				System.out.println("3 - Country");
-				System.out.println("4 - Gender");
-				System.out.println("5 - Identity No.");
-				System.out.println("6 - Nationality");
-				System.out.println("7 - Contact No.");
-				System.out.println("8 - Credit Card");
-				System.out.println("0 - Exit");
-				sel = sc.nextInt();
-				if (sel < 0 || sel > 8)
-				{
+				printSubTitle("Enter Field to Update");
+				printMenuList(list, "Back to menu");
+
+				input = sc.next();
+				if (!input.matches("^[0-8]+$"))
 					throw new Exception();
-				}
 				else
-				{
-					return sel;
-				}
+					return Integer.parseInt(input);
 			} catch (Exception e)
 			{
 				System.out.println("Invalid choice.");
@@ -125,7 +102,7 @@ public class GuestBoundary implements IBoundary
 		}
 	}
 
-	public String addUpdateGuestSub(int sel, boolean update)
+	public String addUpdateGuestSub(int sel, String prefix)
 	{
 		sc = new Scanner(System.in);
 		String input = null;
@@ -134,9 +111,9 @@ public class GuestBoundary implements IBoundary
 		{
 			try
 			{
-				if (update)
+				if (prefix != null)
 				{
-					System.out.println("New " + list[sel - 1] + ":");
+					System.out.println(prefix + " " + list[sel - 1] + ":");
 				}
 				else
 				{
@@ -183,23 +160,26 @@ public class GuestBoundary implements IBoundary
 	public boolean confirmation(GuestEntity guest)
 	{
 		sc = new Scanner(System.in);
-		char choice;
+		String choice;
 		while (true)
 		{
 			try
 			{
-				System.out.println("Please confirm the following");
-				System.out.println("(Y - Accept, N - Decline):");
 				System.out.println();
-				printGuest(guest);
-				choice = sc.next().charAt(0);
 
-				if (choice == 'Y')
+				printGuest(guest);
+
+				System.out.println("Please confirm the above:");
+				System.out.println("(Y - Accept, N - Decline):");
+
+				choice = sc.next();
+
+				if (choice.equals("Y") || choice.equals("y"))
 				{
 					System.out.println("Changes accepted.");
 					return true;
 				}
-				else if (choice == 'N')
+				else if (choice.equals("N") || choice.equals("n"))
 				{
 					System.out.println("No changes made.");
 					return false;
@@ -293,7 +273,7 @@ public class GuestBoundary implements IBoundary
 				&& (str.matches("^[0-9]+$")));
 		if (!check)
 		{
-			System.out.println("Invalid input. Only alphanumeric accepted");
+			System.out.println("Invalid input. Only numeric accepted");
 		}
 		return check;
 	}
@@ -310,5 +290,4 @@ public class GuestBoundary implements IBoundary
 		}
 		return check;
 	}
-
 }

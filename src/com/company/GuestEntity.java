@@ -18,7 +18,7 @@ public class GuestEntity implements Serializable
 	{
 	}
 
-	public GuestEntity(Integer guestID, String name, String creditCardNum, String address, String country, Character gender, String identityNo, String nationality, String contactNo)
+	public GuestEntity(Integer guestID, String name, String address, String country, Character gender, String identityNo, String nationality, String contactNo, String creditCardNum)
 	{
 		this.guestID = guestID;
 		this.name = name;
@@ -44,6 +44,20 @@ public class GuestEntity implements Serializable
 				"\nContact No.  : " + contactNo +
 				"\nCredit Card  : " + creditCardNum +
 				"\n";
+	}
+
+	public static GuestEntity copyGuest(GuestEntity guest)
+	{
+		return new GuestEntity(
+				guest.getGuestID(),
+				guest.getName(),
+				guest.getAddress(),
+				guest.getCountry(),
+				guest.getGender(),
+				guest.getIdentityNo(),
+				guest.getNationality(),
+				guest.getContactNo(),
+				guest.getCreditCardNum());
 	}
 
 

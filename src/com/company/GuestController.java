@@ -14,31 +14,42 @@ public class GuestController extends Controller
 		guestList = (ArrayList<GuestEntity>) fromFile(guestFileName);
 	}
 
-	//Main Processs
+	//Main Process
 	public void processMain()
 	{
-		int sel = gb.process();
-		switch (sel)
+		boolean loop = true;
+		while (loop)
 		{
-			case 1:
-				//add new Guest
-				addGuest();
-				break;
-			case 2:
-				//Update Guest details
-				updateGuest();
-				break;
-			case 3:
-				//Search Guest by name
-				printGuestList(searchGuest(gb.searchGuest()));
-				break;
-			case 4:
-				//Print All Guests
-				printAllGuest();
-				break;
-			case 0:
-				return;
-
+			int sel = gb.process();
+			loop = false;
+			switch (sel)
+			{
+				case 1:
+					//add new Guest
+					addGuest();
+					break;
+				case 2:
+					//Update Guest details
+					updateGuest();
+					break;
+				case 3:
+					//Search Guest by name
+					printGuestList(searchGuest(gb.searchGuest()));
+					break;
+				case 4:
+					//Search Guest by ID
+					printGuest(searchGuest(gb.searchGuestID()));
+					break;
+				case 5:
+					//Print All Guests
+					printAllGuest();
+					break;
+				case 0:
+					return;
+				default:
+					loop = true;
+					gb.invalidInputWarning();
+			}
 		}
 		gb.waitInput();
 	}
@@ -56,14 +67,14 @@ public class GuestController extends Controller
 		{
 			currID = 0;
 		}
-		newGuest.setGuestID(currID + 1);
+		newGuest.setGuestID(currID);
 
 		gb.addGuestMenu();
 
 		String[] guestDetails = new String[8];
 		for (int i = 0; i < 8; i++)
 		{
-			setGuestDetails(i + 1, newGuest, gb.addUpdateGuestSub(i + 1, false));
+			setGuestDetails(i + 1, newGuest, gb.addUpdateGuestSub(i + 1, "Enter"));
 		}
 
 		if (gb.confirmation(newGuest))
@@ -111,6 +122,7 @@ public class GuestController extends Controller
 	public void updateGuest()
 	{
 		GuestEntity guest = null;
+		GuestEntity updGuest = null;
 		ArrayList<GuestEntity> temp = searchGuest(gb.searchGuest());
 		printGuestList(temp);
 		if (temp.size() == 0)
@@ -129,13 +141,14 @@ public class GuestController extends Controller
 
 		if (guest != null)
 		{
-
+			updGuest = GuestEntity.copyGuest(guest);
 			int sel = gb.updateGuest();
-			String newVal = gb.addUpdateGuestSub(sel, true);
+			String newVal = gb.addUpdateGuestSub(sel, "New");
+			setGuestDetails(sel, updGuest, newVal);
 
-			if (setGuestDetails(sel, guest, newVal))
+			if (gb.confirmation(updGuest))
 			{
-				printGuest(guest);
+				setGuestDetails(sel, guest, newVal);
 				saveGuestsToFile();
 			}
 		}
