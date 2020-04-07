@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+
+import java.util.ArrayLisl;
 
 public class PaymentBill {
 	private int roomID;
@@ -52,6 +53,7 @@ public class PaymentBill {
 	public int getroomID() {
 		return this.roomID;
 	}
+	
 	public int getReservationID() {
 		return this.reservationID;
 	}
@@ -68,8 +70,8 @@ public class PaymentBill {
 	}
 	
 	// return the discount
-	public String getStatus() {
-		return discount;
+	public double getDiscount() {
+		return this.discount;
 	}
 
 
