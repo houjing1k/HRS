@@ -2,60 +2,60 @@
 
 import java.util.ArrayList;
 
-public class PaymentController {
-	private ArrayList<Bill> billList;
+public class PaymentController extends Controller{
+	private ArrayList<PaymentBill> PaymentBillList;
 	private double service_charge=10.0;
 	private double GST =7.0;
-	private double discount=0;
+   	PaymentBoundary paymentboundary= new PaymentBoundary();
+	
 
 	public PaymentController() {
-		billList = new ArrayList<Bill>();
+		PaymentBillList = new ArrayList<PaymentBill>();
 	}
 	
 	//Create payment account when guest and reservation is made.
 	public void createPaymentAccount(Reservation reservation, Guest guest) {
-		Bill bill =new Bill( reservation.getRoomID, reservation.getReservationID, guest.getPaymentDetail);
-		billList.add(bill);
+		PaymentBill bill =new PaymentBill( reservation.getRoomID, reservation.getReservationID, guest.getPaymentDetail());
+		PaymentBillList.add(bill);
 	}
 	
-
-	//add the room to bill.
-    public void addRoomToBill(Reservation reservation) {
+	//add the room to PaymentBill.
+    public void addRoomToPaymentBill(Reservation reservation) {
        /*
         1.get the start and end date,roomID from reservation list
         2. getRoomDetails(roomID); do you have smtg like this that return room based on id?
-        3. iterate through the date and add to bill based on diff rate(weekend)  
+        3. iterate through the date and add to PaymentBill based on diff rate(weekend)  
         */
     	Transaction newtrans = new Transaction(item.name, item.description, item.price,quantity, item.date);
-    	Bill bill= getBill(reservationID);
+    	PaymentBill bill= getPaymentBill(reservationID);
     	bill.AddTransaction(item);
     }
     
-    //add room service to bill.
-    public void addRoomServiceToBill() {
+    //add room service to PaymentBill.
+    public void addRoomServiceToPaymentBill(Reservation reservation) {
 
     	//insert code
     }
     
-    // Find the bill based on reservationID
-    public Bill getBill(int reservationID) {
-    	for(Bill bill : billList) {
+    // Find the PaymentBill based on reservationID
+    public PaymentBill getPaymentBill(int reservationID) {
+    	for(PaymentBill bill : PaymentBillList) {
     		if(bill.getReservationID()==reservationID) {
     			return bill;
     		}
     	}
 		return null;
     }
+
     //print the invoice
     public void printInvoice(int reservationID) {
-    	Bill bill=getBill(reservationID);
-    	bill.printBill();
-    	
-    	// print bla bla bla
-    	bill.getTotalBill()
-    	double totalBill= bill.getTotalBill();
-    	
-    	//insert totalBill formula  gst, promotion ,service charge
+    	PaymentBill bill=getPaymentBill(reservationID);
+    	bill.printPaymentBill();
+    	double totalPaymentBill= calculatePaymentBill(PaymentBill);
+	
+    	System.out.println("The total price :" +totalPaymentBill +" ( Include GST :"+ GST*100+"% ,Service Charge:
+		+service charge*100+" %, Discount: "+bill.getDiscount()*100+"% )")
+
     }
     
     //make payment
@@ -64,32 +64,53 @@ public class PaymentController {
     	printInvoice(reservationID);
     	
     	//get the payment method
-    	Bill bill=getBill(reservationID);
-    	PaymentDetail payment =bill.getPaymentDetail();
-    	double totalBill= bill.getTotalBill();
-
-    	
+    	PaymentBill bill=getPaymentBill(reservationID);
+    	PaymentDetail payment =PaymentBill.getPaymentDetail();
+	
     	if(payment.getPaymentMethod()=="CASH") {
     		
     		System.out.println("PAY BY CASH:");
-    		System.out.println("you paid "+ totalBill);
+    		System.out.println("you paid "+ calculatePaymentBill());
     	}
     	else {
-			System.out.println(payment.toString());
-
-    		
+			System.out.println(payment.toString());	
     	}
 		System.out.println("Thank you");
     	bill.setStatus("PAID");
     }
     
+    	
+	//calculate the total of PaymentBill
+	public double calculatePaymentBill(PaymentBill paymentbill) {
+		double sum=0;
+		for(Transaction trans : paymentbill.getTransactions()) {
+			sum+=trans.getPrice();
+		}
+		// GST , Discount , service charge	
+		sum =sum* (1+ this.GST +  paymentbill.getDiscount() + this.service_charge);
+
+		return sum;	
+	}    	
     
-    
+	public void setServiceCharge(double charge) {
+		this.service_charge= charge;	
+	} 
+
+
+	public void setDiscount(int reservationID,double discount){
+	PaymentBill bill =getPaymentBill(reservationID);
+	bill.setDiscount(discount);
+	}
+
+	public void setGST(double gst) {
+		this.GST= gst;	
+	} 
+
     /*
      TO-DO
      
      
-     generatePaymentReport? which will include only reserveid , status, totalBill;
+     generatePaymentReport? which will include only reserveid , status, totalPaymentBill;
      */
     
     
