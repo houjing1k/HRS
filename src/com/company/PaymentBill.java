@@ -1,5 +1,5 @@
 
-import java.util.ArrayLisl;
+import java.util.ArrayList;
 
 public class PaymentBill {
 	private int roomID;
