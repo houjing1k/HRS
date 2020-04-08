@@ -20,6 +20,10 @@ public class ReservationController extends Controller {
     ReservationController()
     {
         reservations = (ArrayList<ReservationEntity>) fromFile("reservationData");
+        if(reservations == null)
+        {
+            reservations = new ArrayList<>();
+        }
         do {
             choice = reservationBoundary.handleMenu(menu);
             switch (choice)
@@ -84,5 +88,8 @@ public class ReservationController extends Controller {
     }
 
 
+    @Override
+    public void processMain() {
 
+    }
 }
