@@ -160,6 +160,8 @@ public class PaymentController extends Controller{
     public void addRoomToPaymentBill(int reservationID) {
     	//get the bill
     	PaymentBill bill= getPaymentBill(reservationID);
+    	if(bill==null) return;
+
     	Transaction newtrans = new Transaction();
     	newtrans.setQuantity(1);
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -208,6 +210,7 @@ public class PaymentController extends Controller{
     			return bill;
     		}
     	}
+		System.out.println("PaymentAccount not exist!");
 		return null;
     }
 
@@ -215,6 +218,7 @@ public class PaymentController extends Controller{
     public void printInvoice(int reservationID) {
 
     	PaymentBill bill=getPaymentBill(reservationID);
+    	if(bill==null) return;
     	bill.printPaymentBill();
     	double totalPaymentBill=0;
     	totalPaymentBill=calculatePaymentBill(bill);
@@ -228,6 +232,8 @@ public class PaymentController extends Controller{
     	//print the invoice
     	//get the payment method
     	PaymentBill bill=getPaymentBill(reservationID);
+    	if(bill==null) return;
+
     	while (true)
 		{
         	paymentboundary.makePaymentMenu();	
@@ -312,6 +318,7 @@ public class PaymentController extends Controller{
 	public void setDiscount(){
 		int id=paymentboundary.requestReservationID();
 		PaymentBill bill =getPaymentBill(id);
+    	if(bill==null) return;
 		System.out.println("Discount :");
 		double discount = scan.nextDouble();
 		bill.setDiscount(discount);
