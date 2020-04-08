@@ -3,38 +3,32 @@ package com.company;
 import java.util.ArrayList;
 
 public class PaymentBill {
+	/**
+	 * 
+	 */
 	private int roomID;
 	private int reservationID;
 	private double discount=0;
 	private Status status=Status.PENDING;
 	private ArrayList<Transaction> transactionList;
-	private PaymentDetail payment_detail= new PaymentDetail("CASH"); //default by cash
-
+	private PaymentDetail payment_detail;
 	
 	public enum Status{
 		PENDING,PAID,CANCELLED;	
 	}
 	public PaymentBill() {
 		transactionList = new ArrayList<Transaction>();
+	    payment_detail= new PaymentDetail("CASH"); //default by cash
 	}
-/*	
-	//Create a PaymentBill for a customer
-	public PaymentBill(int roomID, int reservationID,PaymentDetail payment_detail) {
-		this.roomID=roomID;
-		this.reservationID=reservationID;
-		this.payment_detail= payment_detail;
-		transactionList = new ArrayList<Transaction>();
-	}
-*/
-	//Add transaction to the PaymentBill. As of now, we only have room and roomservice
+
+	//Add transaction to the PaymentBill. 
 	public void AddTransaction(Transaction item) {
-		//Transaction newtrans = new Transaction(item.name, item.description, item.price,quantity, item.date);
 		transactionList.add(item);
 	}
 		
 	//print the PaymentBill
 	public void printPaymentBill() {
-		System.out.println("[Transaction]");
+		System.out.println(String.format("%s %15s %10s %10s %10s", "Name", "Description", "Quantity" ,"Price","Date"));
 		for(Transaction trans : transactionList) {
 			System.out.println(trans.toString());
 
@@ -79,7 +73,7 @@ public class PaymentBill {
 	//return the paymentdetail
 	public PaymentDetail getPaymentDetail() {
 		
-		return payment_detail;
+		return this.payment_detail;
 	}
 
 	//set discount

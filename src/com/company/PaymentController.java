@@ -3,347 +3,391 @@ package com.company;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.time.LocalDate;
-import java.time.DayOfWeek;
-import java.time.format.DateTimeFormatter;
+import java.time.Period;
 
-
+/**
+ * @author Kenny Voo
+ *
+ */
 
 public class PaymentController extends Controller{
 	private ArrayList<PaymentBill> PaymentBillList;
 	private double service_charge=0.1;
 	private double GST =0.07;
-	PaymentBoundary paymentboundary= new PaymentBoundary();
+	PaymentBoundary pb= new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
-	
+	//String report= fromFile( "PaymentReport.txt");
 	public PaymentController() {
 		PaymentBillList = new ArrayList<PaymentBill>();
-		
 	}
 	
 	@Override
 	public void processMain() {
 		int id;
-		boolean loop = true;
-		while (loop)
-		{
-		int sel = paymentboundary.process();
-			//loop = false;
+		while (true)
+		{   int sel = pb.process();
 			switch (sel)
 			{
 				case 1:
-					//Add/Edit Payment Account
-					modifyPaymentAccount();
+					modifyPaymentAccount();  	//Add/Edit Payment Account
 					break;
 				case 2:
-					//Add to bill
-					addToBill();
+					addToBill();  				//Add to bill
 					break;
 				case 3:
-					//Print Invoice
-					id=paymentboundary.requestReservationID();
-					printInvoice(id);
+					id=pb.requestRoomID();
+					printInvoice(id);			//Print Invoice
+					pb.waitInput();
 					break;
 				case 4:
-					//Make Payment
-					id=paymentboundary.requestReservationID();
-					makePayment(id);
+					id=pb.requestRoomID();
+					makePayment(id);    		//Make Payment
 					break;
 				case 5:
 					modifyCharges();
-					//printAllGuest();
 					break;
 				case 6:
-					//Generate Financial report
-					//printAllGuest();
+					generatePaymentReport();   //Generate Financial report
+					pb.waitInput();
+
 					break;
 				case 0:
 					return;
 				default:
-					loop = true;
-					paymentboundary.invalidInputWarning();
+					pb.invalidInputWarning();
 			}
 		}
-		paymentboundary.waitInput();
-		
 	} 
 	
 	public void modifyPaymentAccount() {
-		boolean loop = true;
-		while (loop)
+		int roomID;
+		while (true)
 		{
-		paymentboundary.modifyAccountMenu();
+		pb.modifyAccountMenu();
 		int sel = sc.nextInt();
 			switch (sel)
 			{
 				case 1:
-					//Add Payment Account
-					createPaymentAccount();
+					pb.CreatePaymentAccount();
+					roomID=pb.requestRoomID();
+					createPaymentAccount(roomID);   	//Add Payment Account
+					pb.waitInput();
 					break;
 				case 2:
-					//modify Payment Account
-					updatePaymentAccount();
+					updatePaymentAccount(); 		//modify Payment Account
+					break;
+				case 3:
+					viewAllPaymentAccount();		//View all Payment Account
+					pb.waitInput();
+
+					break;
+				case 4:
+					roomID=pb.requestRoomID();
+					removePaymentAccount(roomID);		// remove payment account
+				case 0:
+					return;
+				default:
+					pb.invalidInputWarning();
+			}
+		}
+	}
+	
+	//Modify Rate of diff Charges
+	public void modifyCharges() {
+		while (true)
+		{
+		pb.modifyChargesMenu();
+		int sel = sc.nextInt();
+			switch (sel)
+			{
+				case 1:
+					setGST(); 				//Modify GST
+					break;
+				case 2:
+					setServiceCharge();		//modify Service charge
+					break;
+				case 3:
+					setDiscount(); 			//modify discount
+					break;
+				case 0:
+					return;
+				default:
+					pb.invalidInputWarning();
+			}
+		}
+	}
+	
+	//Adding Item to bill
+	public void addToBill() {
+		while (true)
+		{
+			pb.addItemMenu();
+			int sel = sc.nextInt();
+			switch (sel)
+			{
+				case 1:							//Add room to bill
+					System.out.println("Dummy Room Created for testing");
+					addRoomToPaymentBill(pb.requestRoomID(),"Deluxe",100.0); 
+					pb.waitInput();
+					break;
+				case 2:							//Add roomService
+					addRoomServiceToPaymentBill(pb.requestRoomID());
+					break;
+				case 0:
+					return;
+				default:
+					pb.invalidInputWarning();
+			}
+		}
+
+	}
+	
+    //make payment
+    public void makePayment(int roomID) {
+    	PaymentBill bill=getPaymentBill(roomID);
+    	//return if bill does not exist or 0 transaction;
+    	if(bill==null) {
+    		pb.invalidPaymentAccount();
+    		return; 	
+    	}
+    	else if(bill.getTransactions().size()==0) {
+    		System.out.println("No transactions yet!");
+    		return;
+    	}
+		boolean loop = true;	
+    	while (loop)
+		{
+			loop = false;
+        	pb.makePaymentMenu();	
+			int sel = sc.nextInt();
+			switch (sel)
+			{
+				case 1:					
+			    	printInvoice(roomID);					//Pay by CASH
+			    	pb.paymentProcess("CASH",calculatePaymentBill(bill));
+					bill.setStatus("PAID");
+					break;
+				case 2:	
+					
+					printInvoice(roomID);					//Pay by Card
+					System.out.println(bill.getPaymentDetail().toString());
+					System.out.println();
+					pb.paymentProcess("CARD",calculatePaymentBill(bill));
+					bill.setStatus("PAID");
+					
 					break;
 				case 0:
 					return;
 				default:
 					loop = true;
-					paymentboundary.invalidInputWarning();
+					pb.invalidInputWarning();
 			}
+			
 		}
-	}
-
+		pb.waitInput();
+    }
+    
+    
 	//Create payment account when guest and reservation is made.
-	public void createPaymentAccount() {
-		paymentboundary.CreatePaymentAccount();
+	public void createPaymentAccount(int roomID) {
+		//Check if this payment account exist
+		if(getPaymentBill(roomID)!= null) {
+			System.out.println("PaymentAccount already exist!");
+			return;
+		}
 		PaymentBill bill =new PaymentBill();
-		System.out.println("Room ID :");
-		bill.setRoomID(sc.nextInt());
-		System.out.println("Reservation ID :");
-		bill.setReservationID(sc.nextInt());
+		bill.setRoomID(roomID);
 		bill.setPaymentDetail(createPaymentDetail());
 		PaymentBillList.add(bill);
 	}
 	
 	// Enter Card Detail
 	public PaymentDetail createPaymentDetail() {
-		paymentboundary.CreatePaymentDetail();
+		pb.CreatePaymentDetail();
 		PaymentDetail card = new PaymentDetail("CARD");
-		System.out.println("Card Name :");
-		card.setCardName(sc.next());
-		System.out.println("Card No :");
-		card.setCardNo(sc.next());	
-		System.out.println("Billing Address:");
-		card.setBillingAddress(sc.next());
-		System.out.println("Card Expiry Date :");
-		card.setExpiryDate(sc.next());
+		card.setCardName(pb.readStrictlyString(sc, "Credit Card Name : "));
+		card.setCardNo(pb.readCreditCardNo(sc,"Credit Card No : "));	
+		card.setBillingAddress(pb.readString(sc, "Billing Address : "));
+		card.setExpiryDate(pb.readDate(sc, "Expiry Date (dd/MM/yyyy ) :").toString());
 		return card;
 	}
 	
 	// Update Card Detail
 	public void updatePaymentAccount() {
-		
+
 	}
 	
-	public void addToBill() {
-		boolean loop = true;
-		int id;
-		while (loop)
-		{
-			paymentboundary.addItemMenu();
-			int sel = sc.nextInt();
-			//loop = false;
-			switch (sel)
-			{
-				case 1:
-					//Add room
-					id=paymentboundary.requestReservationID();
-					addRoomToPaymentBill(id);
-					break;
-				case 2:
-					//Add roomService
-					id=paymentboundary.requestReservationID();
-					addRoomServiceToPaymentBill(id);
-					break;
-				case 0:
-					return;
-				default:
-					loop = true;
-					paymentboundary.invalidInputWarning();
-			}
+	//Print out all the payment account
+	public void viewAllPaymentAccount() {
+		if(PaymentBillList.size()==0) {
+			System.out.println("No Payment Account Exist");
+			return;
 		}
-		//paymentboundary.waitInput();
+		pb.printSubTitle("Payment Account");
+		for(PaymentBill bill : PaymentBillList) {
+			System.out.println("RoomID "+bill.getRoomID());
+    	}
 		
 	}
-	
+	// Remove Payment Account
+	public void removePaymentAccount(int roomID) {
+		PaymentBill bill =getPaymentBill(roomID);
+    	if(bill==null) {
+    		pb.invalidPaymentAccount();
+    		return;
+    	}
+		PaymentBillList.remove(bill);
+		//System.out.println("Payment Account Succesfully Remove\n");	
+
+	}
 	
 	//add the room to PaymentBill.
-    public void addRoomToPaymentBill(int reservationID) {
-    	//get the bill
-    	PaymentBill bill= getPaymentBill(reservationID);
+    public void addRoomToPaymentBill(int roomID, String roomType, Double roomCost ) {
+    	//Search the bill
+    	PaymentBill bill= getPaymentBill(roomID);
     	if(bill==null) return;
 
     	Transaction newtrans = new Transaction();
     	newtrans.setQuantity(1);
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+		//Fetch the room id,room type and price of the room. 
+		newtrans.setName("Room ID "+roomID);
+    	newtrans.setDescription(roomType);
+    	double price =roomCost;
+    	
     	//get the start date and end date
-		System.out.println("Start Date (dd/MM/yyyy ):");
-		String getdate = sc.next();
-		LocalDate startDate = LocalDate.parse(getdate,formatter);
-		System.out.println("End Date (dd/MM/yyyy ):");
-		getdate = sc.next();
-		LocalDate endDate = LocalDate.parse(getdate,formatter);
+    	LocalDate startDate;
+    	LocalDate endDate;
+    	while(true) {
+		startDate = pb.readDate(sc, "Start Date (dd/MM/yyyy ):");
+		endDate = pb.readDate(sc, "End Date (dd/MM/yyyy ):");
+		if (Period.between(startDate, endDate).getDays()<1) 
+			System.out.println("Enter Valid Period of Day!");	
+		else break;
+    	}
 		
-		//Fetch the room and price of the room. I assume it's 100 first
-		System.out.println("Room ID :");
-		newtrans.setName("Room ID "+sc.next());
-		//fetch room type
-    	newtrans.setDescription("Deluxe");
-		double price =100;
-		
+		//iterate through date.
 		for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
 		{    	
 			Transaction tempTrans = new Transaction(newtrans);
 			double temp_price=price;
+			//If weekdays then the price will drop by 10%
 		    if(date.getDayOfWeek().name()=="SATURDAY"|| date.getDayOfWeek().name()=="SUNDAY") {
-		    	tempTrans.setPrice(temp_price*0.9);
-		    }
-		    else {
 		    	tempTrans.setPrice(temp_price);
 		    }
+		    else tempTrans.setPrice(temp_price*0.9);
 		    tempTrans.setTime(date.atTime(12, 00));
 		    bill.AddTransaction(tempTrans);
 		}
-
     }
     
     //add room service to PaymentBill.
-    public void addRoomServiceToPaymentBill(int reservationID) {
+    public void addRoomServiceToPaymentBill(int roomID) {
+		PaymentBill bill =getPaymentBill(roomID);
+    	if(bill==null) {
+    		pb.invalidPaymentAccount();
+    		return;
+    	} 	
+        Transaction transaction = null;
 
-    	//insert code
+        ArrayList<RoomServiceOrder> list = new RoomServiceController().getCurrentOrdersOfRoom(roomID);
+        for (RoomServiceOrder order : list) {
+            for (RoomServiceItem item: order) {
+                if (item.getName().equals(transaction.getName()))
+                    transaction.setQuantity(  transaction.getQuantity()+1 );
+                else {
+                    if (transaction != null) getPaymentBill(roomID).AddTransaction(transaction); 
+                    transaction = new Transaction(
+                            item.getName(), item.getDescription(),
+                            item.getPrice(), 1, order.getOrder_date_time());
+                }
+            }
+        }
+
     }
-    
-    // Find the PaymentBill based on reservationID
-    public PaymentBill getPaymentBill(int reservationID) {
+
+    // Find the PaymentBill based on roomID
+    public PaymentBill getPaymentBill(int roomID) {
     	for(PaymentBill bill : PaymentBillList) {
-    		if(bill.getReservationID()==reservationID) {
+    		if(bill.getRoomID()==roomID) {
     			return bill;
     		}
     	}
-		System.out.println("PaymentAccount not exist!");
 		return null;
     }
 
     //print the invoice
-    public void printInvoice(int reservationID) {
-
-    	PaymentBill bill=getPaymentBill(reservationID);
-    	if(bill==null) return;
+    public void printInvoice(int roomID) {
+    	PaymentBill bill=getPaymentBill(roomID);
+    	if(bill==null) {
+    		pb.invalidPaymentAccount();
+    		return;
+    		}
     	bill.printPaymentBill();
     	double totalPaymentBill=0;
     	totalPaymentBill=calculatePaymentBill(bill);
-    	System.out.println("The total price :" +String.format("%.2f", totalPaymentBill) +" ( Include GST :"+ GST*100+"% ,Service Charge:"
+    	System.out.println("\nThe total price :" + totalPaymentBill +" ( Include GST :"+  String.format("%.2f",GST*100)+"% , Service Charge:"
 		+service_charge*100+" %, Discount: "+bill.getDiscount()*100+"% )");
 
     }
     
-    //make payment
-    public void makePayment(int reservationID) {
-    	//print the invoice
-    	//get the payment method
-    	PaymentBill bill=getPaymentBill(reservationID);
-    	if(bill==null) return;
 
-    	while (true)
-		{
-        	paymentboundary.makePaymentMenu();	
-			int sel = sc.nextInt();
-			//loop = false;
-			switch (sel)
-			{
-				case 1:
-						//CASH
-			    	printInvoice(reservationID);
-			    	paymentboundary.paymentProcess("CASH",calculatePaymentBill(bill));
-					bill.setStatus("PAID");
-					break;
-				case 2:
-					//Card
-					printInvoice(reservationID);
-					bill.getPaymentDetail().toString();
-					paymentboundary.paymentProcess("CARD",calculatePaymentBill(bill));
-					bill.setStatus("PAID");
-					break;
-				case 0:
-					return;
-				default:
-					paymentboundary.invalidInputWarning();
-			}
-			
-		}
-    	
-    }
-
-    	
 	//calculate the total of PaymentBill
 	public double calculatePaymentBill(PaymentBill paymentbill) {
-		double sum=0;
+		double sum=0.00;
 		for(Transaction trans : paymentbill.getTransactions()) {
 			sum+=trans.getPrice();
 		}
 		// GST , Discount , service charge	
-		sum =sum* (1+ this.GST +  paymentbill.getDiscount() + this.service_charge);
-
-		return sum;	
+		sum =sum* (1+ this.GST -  paymentbill.getDiscount() + this.service_charge);
+		return Double.valueOf(String.format("%.2f",sum));	
 	}    	
 	
 	
-	public void modifyCharges() {
-		boolean loop = true;
-		while (loop)
-		{
-		paymentboundary.modifyChargesMenu();
-		int sel = sc.nextInt();
-			switch (sel)
-			{
-				case 1:
-					//Modify GST
-					setGST();
-					break;
-				case 2:
-					//modify Service charge
-					setServiceCharge();
-					break;
-				case 3:
-					//Apply discount
-					updatePaymentAccount();
-					break;
-				case 0:
-					return;
-				default:
-					loop = true;
-					paymentboundary.invalidInputWarning();
-			}
-		}
-	}
-	
 	public void setServiceCharge() {
 		System.out.println("Current Service Charge : "+ service_charge);
-		System.out.println("New Service Charge : ");
-		double charge = scan.nextDouble();
+		double charge = pb.readDouble(sc, "New Service Charge : ");
 		this.service_charge= charge;	
 	} 
 
-
 	public void setDiscount(){
-		int id=paymentboundary.requestReservationID();
+		int id=pb.requestRoomID();
 		PaymentBill bill =getPaymentBill(id);
-    	if(bill==null) return;
-		System.out.println("Discount :");
-		double discount = scan.nextDouble();
+    	if(bill==null) {
+    		pb.invalidPaymentAccount();
+    		return;
+    	}
+		System.out.println("Current Discount Rate : "+ bill.getDiscount());
+		double discount = pb.readDouble(sc, "New Discount Rate:");
 		bill.setDiscount(discount);
 	}
 
 	public void setGST() {
 		System.out.println("Current GST : "+ this.GST);
 		System.out.println("New GST : ");
-		double gst = scan.nextDouble();
-		this.GST= gst;	
+		double gst = pb.readDouble(sc, "New GST : ");
+		this.GST= Double.valueOf(String.format("%.2f",gst));	
 	}
 
 
+	public void generatePaymentReport() {
+		pb.printSubTitle("Financial Report");
+		String str=null;
+		str=(String.format("%s %10s %10s", "RoomID", "Status" ,"Price")+"\n");
 
+		double sum=0;
+		for(PaymentBill bill : PaymentBillList) {
+			if(bill.getStatus()=="PAID")
+				sum+=calculatePaymentBill(bill);
+			str+=(String.format("%s %14s %14s",bill.getRoomID(),bill.getStatus(),calculatePaymentBill(bill))+"\n");
+		}
+
+		System.out.println(str);
+		System.out.println("\nTotal Payment : "+sum);
+		toFile(str, "PaymentReport.txt");
+		
+	}
 	
-	
-    /*
-     TO-DO
-     
-     
-     generatePaymentReport? which will include only reserveid , status, totalPaymentBill;
-     */
-    
-    
-    
+
     
 
 

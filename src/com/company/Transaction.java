@@ -32,7 +32,7 @@ public class Transaction implements Serializable{
 		this.price=trans.getPrice();
 		this.quantity=trans.getQuantity();
 		this.time =trans.getTime();
-				;
+				
 	}
 	
 	public Transaction() {
@@ -42,12 +42,7 @@ public class Transaction implements Serializable{
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String formatDateTime = time.format(formatter);
-
-        return  "name :" + name + 
-        		"\t description :" + description + 
-        		"\t price : $" + price +
-        		"\t quantity :"+quantity+ 
-        		"\t Date :" + formatDateTime ;
+        return   String.format("%s %10s %8s %10s %25s", name, description, quantity ,price,formatDateTime);
 	}
 	
 	
