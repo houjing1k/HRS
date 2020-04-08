@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ReservationBoundary {
+public class ReservationBoundary extends Boundary {
     Scanner scan = new Scanner(System.in);
     public int handleMenu(String []menu)
     {
@@ -16,6 +16,18 @@ public class ReservationBoundary {
         }
         choice = scan.nextInt();
         return choice;
+    }
+
+    protected void printMenu()
+    {
+        printMainTitle("Manage Reservations");
+        String [] menuList = {
+                "1. Reserve A Room",
+                "2. Print All Reservations",
+                "3. Get reservation"
+        };
+        printMenuList(menuList, "Go back to Main Menu");
+        System.out.println();
     }
 
     public void printReservations(ArrayList arrayList)
