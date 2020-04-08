@@ -1,6 +1,5 @@
 package com.company;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.company.RoomEntity.RoomType;
@@ -11,6 +10,7 @@ public class CheckInController extends Controller {
 	private CheckInBoundary checkInBoundary;
 	private GuestController guestController;
 	private RoomController roomController;
+	private MainController mainController;
 	
 	private String[] menuMain = {
             "1. Walk In Check In",
@@ -37,11 +37,15 @@ public class CheckInController extends Controller {
 			"Enter Room Id:"
 	};
 	
+	String [] menuReserveId = {
+			"Enter Reservation Id:"
+	};
 	
 	private CheckInController() {
 		checkInBoundary = new CheckInBoundary();
 		guestController = new GuestController();
 		roomController = RoomController.getInstance();
+		mainController = new MainController();
 	}
 	
 	public static CheckInController getInstance() {
@@ -51,7 +55,7 @@ public class CheckInController extends Controller {
 		return instance;
 	}
 	
-	public void start() {
+	public void processMain() {
 		switch (checkInBoundary.printMenu(menuMain))
 		{
 			case 1:
@@ -60,6 +64,7 @@ public class CheckInController extends Controller {
 				break;
 			case 2:
 				//go to reserve check in
+				reserveCheckIn();
 				break;
 			case 3:
 				//check out
@@ -72,11 +77,25 @@ public class CheckInController extends Controller {
 		}
 	}
 	
+	private void reserveCheckIn() {
+		// TODO Auto-generated method stub
+		int reserveId =checkInBoundary.printMenu(menuReserveId);
+		RoomEntity room = roomController.listRerservation(reserveId);
+		if(room!=null) {
+			checkIn(room.getGuestId(),room.getReserveId());
+		}
+		else {
+			System.out.print("Reservation not found");
+			this.processMain();
+		}
+	}
+
 	private void checkOut() {
 		// TODO Auto-generated method stub
 		int roomId =checkInBoundary.printMenu(menuRoomId);
 		roomController.checkOut(roomId);
-		
+		System.out.println("Check out successful");
+		mainController.processMain();
 	}
 
 	private void walkInCheckIn() {
@@ -92,18 +111,27 @@ public class CheckInController extends Controller {
 				GuestEntity guestObj = guestController.searchGuest(guestId);
 				if(guestObj==null) {
 					System.out.println("Invalid Input");
+					this.processMain();
 					return;
 				}
 				break;
 			default:
 				System.out.println("Invalid Input");
+				this.processMain();
 				return;
 		}
 		int roomId = selectRoom();
+		checkIn(guestId,roomId);
+	}
+	
+	private void checkIn(int guestId,int roomId) {
 		try {
 			roomController.checkIn(guestId, roomId);
+			System.out.println("Check in successful");
+			mainController.processMain();
 		}catch(Exception e) {
-			System.out.print("Invalid input");
+			System.out.println("Invalid inputs");
+			this.processMain();
 		}
 	}
 	
