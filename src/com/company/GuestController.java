@@ -12,6 +12,10 @@ public class GuestController extends Controller
 	{
 		gb = new GuestBoundary();
 		guestList = (ArrayList<GuestEntity>) fromFile(guestFileName);
+		if (guestList == null)
+		{
+			guestList = new ArrayList<GuestEntity>();
+		}
 	}
 
 	//Main Process
