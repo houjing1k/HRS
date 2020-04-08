@@ -251,7 +251,7 @@ public class PaymentController extends Controller{
 					//Card
 					printInvoice(reservationID);
 					bill.getPaymentDetail().toString();
-					paymentboundary.paymentProcess("Card",calculatePaymentBill(bill));
+					paymentboundary.paymentProcess("CARD",calculatePaymentBill(bill));
 					bill.setStatus("PAID");
 					break;
 				case 0:
