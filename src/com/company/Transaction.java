@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class Transaction implements Serializable{
 	/**
-	 *  
+	 * 
 	 */
 	
 	private static final long serialVersionUID = 1L;
@@ -23,6 +23,9 @@ public class Transaction implements Serializable{
 		this.quantity=quantity;
 		this.time =time;
 	}
+	public Transaction() {
+		
+	}
 
 	public String toString() {
         return "Transaction [name=" + name + ", description=" + description + ", price=" + price +", quantity="+quantity+ ", Date=" + time +"]";
@@ -34,9 +37,17 @@ public class Transaction implements Serializable{
 		return name;
 	}
 	
+	public void setName(String name) {
+		this.name=name;
+	}
+	
 	//return description of the transaction
 	public String getDescription() {
 		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description=description;
 	}
 	
 	//return price of the transaction
@@ -44,14 +55,24 @@ public class Transaction implements Serializable{
 		return price;
 	}
 	
+	public void setPrice(double price) {
+		this.price=price;
+	}
+	
 	//return quantity of the transaction
 	public int getQuantity() {
 		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		this.quantity=quantity;
 	}
 	
 	//return date of the transaction
 	public LocalDateTime getTime() {
 		return time;
 	}
-	
+	public void setTime(LocalDateTime time) {
+		this.time=time;
+	}
 }
