@@ -49,6 +49,10 @@ public class PaymentController extends Controller{
 					makePayment(id);
 					break;
 				case 5:
+					modifyCharges();
+					//printAllGuest();
+					break;
+				case 6:
 					//Generate Financial report
 					//printAllGuest();
 					break;
@@ -86,7 +90,6 @@ public class PaymentController extends Controller{
 					paymentboundary.invalidInputWarning();
 			}
 		}
-		//paymentboundary.waitInput();
 	}
 
 	//Create payment account when guest and reservation is made.
@@ -267,18 +270,57 @@ public class PaymentController extends Controller{
 
 		return sum;	
 	}    	
-    
-	public void setServiceCharge(double charge) {
+	
+	
+	public void modifyCharges() {
+		boolean loop = true;
+		while (loop)
+		{
+		paymentboundary.modifyChargesMenu();
+		int sel = sc.nextInt();
+			switch (sel)
+			{
+				case 1:
+					//Modify GST
+					setGST();
+					break;
+				case 2:
+					//modify Service charge
+					setServiceCharge();
+					break;
+				case 3:
+					//Apply discount
+					updatePaymentAccount();
+					break;
+				case 0:
+					return;
+				default:
+					loop = true;
+					paymentboundary.invalidInputWarning();
+			}
+		}
+	}
+	
+	public void setServiceCharge() {
+		System.out.println("Current Service Charge : "+ service_charge);
+		System.out.println("New Service Charge : ");
+		double charge = scan.nextDouble();
 		this.service_charge= charge;	
 	} 
 
 
-	public void setDiscount(int reservationID,double discount){
-	PaymentBill bill =getPaymentBill(reservationID);
-	bill.setDiscount(discount);
+	public void setDiscount(){
+		int id=paymentboundary.requestReservationID();
+		PaymentBill bill =getPaymentBill(id);
+		System.out.println("Discount :");
+		double discount = scan.nextDouble();
+		bill.setDiscount(discount);
 	}
 
-	public void setGST(double gst) {
+	public void setGST() {
+		System.out.println("Current GST : "+ this.GST);
+		System.out.println("New GST : ");
+		double gst = scan.nextDouble();
 		this.GST= gst;	
 	}
 

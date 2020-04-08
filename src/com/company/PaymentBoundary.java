@@ -15,6 +15,7 @@ public class PaymentBoundary extends Boundary{
 						"Add items to Bill",
 						"Print Invoice",
 						"Make Payment",
+						"Modify charges",
 						"Generate Financial report"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
@@ -68,6 +69,20 @@ public class PaymentBoundary extends Boundary{
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
 	}
+    
+    protected void modifyChargesMenu()
+	{
+		printMainTitle("Modify charges");
+		String[] menuList =
+				{
+						"Modify GST",
+						"Modify Service Charge",
+						"Apply/modify Discount",
+				};
+		printMenuList(menuList, "Go back to Main Menu");
+		System.out.println();
+	}
+    
     protected void makePaymentMenu()
 	{
 		printMainTitle("Payment");
