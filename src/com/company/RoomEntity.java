@@ -13,7 +13,7 @@ public class RoomEntity implements Serializable{
 	private final BedType bedType;
 	private boolean smoking;
 	private int guestId;
-	private String reserveId;
+	private int reserveId;
 	
 	public RoomEntity(int roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking) {
 		this.roomId = roomId;
@@ -43,7 +43,7 @@ public class RoomEntity implements Serializable{
 	public int getCost() {return roomType.cost;}
 	
 	//Method to get reservation id
-	public String getReserveId() {return reserveId;}
+	public int getReserveId() {return reserveId;}
 	
 	//Method to get guest id
 	public int getGuestId() {return guestId;}
@@ -63,12 +63,12 @@ public class RoomEntity implements Serializable{
 	//Method to check in
 	public void checkIn(int guest) {
 		this.guestId = guest;
-		this.reserveId = null;
 		this.status = RoomStatus.OCCUPIED;
 	}
 	
 	//Method to reserve 
-	public void reserve(String reserveId) {
+	public void reserve(int guestId,int reserveId) {
+		this.guestId = guestId;
 		this.status = RoomStatus.RESERVED;
 		this.reserveId = reserveId;
 	}
@@ -80,7 +80,6 @@ public class RoomEntity implements Serializable{
 	
 	//Method to check out
 	public void checkOut() {
-		//this.guestId = null;
 		this.status = RoomStatus.VACANT;
 	}
 	
