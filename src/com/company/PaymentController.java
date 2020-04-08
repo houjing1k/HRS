@@ -222,7 +222,7 @@ public class PaymentController extends Controller{
     	bill.printPaymentBill();
     	double totalPaymentBill=0;
     	totalPaymentBill=calculatePaymentBill(bill);
-    	System.out.println("The total price :" +totalPaymentBill +" ( Include GST :"+ GST*100+"% ,Service Charge:"
+    	System.out.println("The total price :" +String.format("%.2f", totalPaymentBill) +" ( Include GST :"+ GST*100+"% ,Service Charge:"
 		+service_charge*100+" %, Discount: "+bill.getDiscount()*100+"% )");
 
     }
@@ -251,7 +251,7 @@ public class PaymentController extends Controller{
 					//Card
 					printInvoice(reservationID);
 					bill.getPaymentDetail().toString();
-					paymentboundary.paymentProcess("Card",calculatePaymentBill(bill));
+					paymentboundary.paymentProcess("CARD",calculatePaymentBill(bill));
 					bill.setStatus("PAID");
 					break;
 				case 0:

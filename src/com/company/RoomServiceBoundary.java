@@ -113,21 +113,21 @@ class RoomServiceBoundary extends Boundary {
 		if (menu.size() == 0) System.out.println("No items in menu.");
 		else {
 			int i=1;
-			System.out.println("Today's menu:");
+			printMainTitle("Today's Menu");
 			for (RoomServiceItem item : menu) {
 				System.out.printf("%d: \t%s \n\t%s%.2f \t\t%s\n", i, item.getName(), currency, item.getPrice(), item.getStatus());
 				System.out.printf("\t%s\n",item.getDescription());
 				i++;
 			}
 		}
-		System.out.println();
+		printDivider();
 	}
 	
 	void printOrder(RoomServiceOrder order) {
 		if (order == null ||order.size() == 0) System.out.println("No items in order.");
 		else {
 			int i=1;
-			System.out.println("Current order:");
+			printMainTitle("Current Order");
 			for (RoomServiceItem item : order) {
 				System.out.printf("%d: \t%s \n\t%s%.2f\n", i, item.getName(), currency, item.getPrice());
 				i++;
@@ -137,7 +137,7 @@ class RoomServiceBoundary extends Boundary {
 			System.out.print("Total: " + currency);
 			System.out.println(order.getBill());
 		}
-		System.out.println();
+		printDivider();
 	}
 	
 
@@ -198,20 +198,10 @@ class RoomServiceBoundary extends Boundary {
 	
 	public void printMenu(String[] menu) {
 		
-		int index = 0;
-		for (String item : menu) {
-			if (index==0) {
-				System.out.println(item);
-			}
-			else if (index == menu.length-1) {
-				System.out.println("0. \t" + item);
-				System.out.println();
-			}
-			else {
-				System.out.println(index + ". \t" + item);
-			}
-			index++;
-		}
+		printMainTitle(menu[0]);
+		String[] temp = new String[menu.length-2];
+		System.arraycopy(menu, 1, temp, 0, menu.length-2 );
+		printMenuList(temp, menu[menu.length-1]);
 	}
 
 	@Override
