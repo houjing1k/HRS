@@ -1,4 +1,4 @@
-package com.company;
+package oodp;
 
 import java.io.Serializable;
 

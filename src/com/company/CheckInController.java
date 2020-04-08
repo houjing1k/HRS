@@ -3,7 +3,7 @@ package com.company;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import com.company.RoomEntity.RoomType;
+import oodp.RoomEntity.RoomType;
 
 public class CheckInController extends Controller {
 	private static CheckInController instance = null;
