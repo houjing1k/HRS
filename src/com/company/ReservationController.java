@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -86,7 +87,25 @@ public class ReservationController extends Controller {
             switch (choice)
             {
                 case 1:
-                    int guestId = new GuestController().addGuest();
+                    System.out.println("Has guest registered before?(Y/N");
+                    String decision;
+                    do {
+                        decision = scan.next();
+                        decision = decision.toUpperCase();
+                    }while (!decision.equals("Y") && !decision.equals("N"));
+                    int guestId;
+                    if(decision.equals("Y"))
+                    {
+                        System.out.println("Key in the name of the guest");
+                        ArrayList<GuestEntity> test = new GuestController().searchGuest(scan.next());
+                        new GuestController().printGuestList(test);
+                        System.out.println("Key in the ID of the guest");
+                        guestId = scan.nextInt();
+                    }
+                    else
+                    {
+                        guestId = new GuestController().addGuest();
+                    }
                     System.out.println("Please type the start date(mm/dd/yy):");
                     String startDate = scan.next();
                     System.out.println("Please type the end date(mm/dd/yy):");
