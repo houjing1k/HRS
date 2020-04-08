@@ -48,6 +48,10 @@ public class PaymentDetail {
 	}
 	
 	public String toString() {
-        return "Card Details \nCard Name: " + card_name + "\nCard No: " + this.card_no + "\nBilling Address: " + this.billing_address + "\nExpiry Date: " + this.expiry_date;
+        return "[Card Details] " +
+        		"\nCard Name: " + card_name + 
+        		"\nCard No: " + this.card_no + 
+        		"\nBilling Address: " + this.billing_address + 
+        		"\nExpiry Date: " + this.expiry_date;
 	}
 }

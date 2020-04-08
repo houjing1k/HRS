@@ -28,7 +28,12 @@ public class Transaction implements Serializable{
 	}
 
 	public String toString() {
-        return "Transaction [name=" + name + ", description=" + description + ", price=" + price +", quantity="+quantity+ ", Date=" + time +"]";
+        return "[Transaction]"+
+        		"\n name :" + name + 
+        		"\n description :" + description + 
+        		"\n  price :" + price +
+        		"\n quantity :"+quantity+ 
+        		"\n Date :" + time +"]";
 	}
 	
 	
