@@ -2,16 +2,22 @@ package com.company;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.time.format.DateTimeFormatter;
+
+
 
 public class PaymentController extends Controller{
 	private ArrayList<PaymentBill> PaymentBillList;
-	private double service_charge=10.0;
-	private double GST =7.0;
+	private double service_charge=0.1;
+	private double GST =0.07;
 	PaymentBoundary paymentboundary= new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
 	
 	public PaymentController() {
 		PaymentBillList = new ArrayList<PaymentBill>();
+		
 	}
 	
 	@Override
@@ -21,7 +27,7 @@ public class PaymentController extends Controller{
 		while (loop)
 		{
 		int sel = paymentboundary.process();
-			loop = false;
+			//loop = false;
 			switch (sel)
 			{
 				case 1:
@@ -58,12 +64,11 @@ public class PaymentController extends Controller{
 	} 
 	
 	public void modifyPaymentAccount() {
-		paymentboundary.modifyAccountMenu();
 		boolean loop = true;
 		while (loop)
 		{
+		paymentboundary.modifyAccountMenu();
 		int sel = sc.nextInt();
-			loop = false;
 			switch (sel)
 			{
 				case 1:
@@ -81,7 +86,7 @@ public class PaymentController extends Controller{
 					paymentboundary.invalidInputWarning();
 			}
 		}
-		paymentboundary.waitInput();
+		//paymentboundary.waitInput();
 	}
 
 	//Create payment account when guest and reservation is made.
@@ -117,21 +122,23 @@ public class PaymentController extends Controller{
 	}
 	
 	public void addToBill() {
-		int id=paymentboundary.requestReservationID();
-		paymentboundary.addItemMenu();
 		boolean loop = true;
+		int id;
 		while (loop)
 		{
+			paymentboundary.addItemMenu();
 			int sel = sc.nextInt();
-			loop = false;
+			//loop = false;
 			switch (sel)
 			{
 				case 1:
 					//Add room
+					id=paymentboundary.requestReservationID();
 					addRoomToPaymentBill(id);
 					break;
 				case 2:
 					//Add roomService
+					id=paymentboundary.requestReservationID();
 					addRoomServiceToPaymentBill(id);
 					break;
 				case 0:
@@ -141,21 +148,53 @@ public class PaymentController extends Controller{
 					paymentboundary.invalidInputWarning();
 			}
 		}
-		paymentboundary.waitInput();
+		//paymentboundary.waitInput();
 		
 	}
 	
 	
 	//add the room to PaymentBill.
     public void addRoomToPaymentBill(int reservationID) {
+    	//get the bill
+    	PaymentBill bill= getPaymentBill(reservationID);
+    	Transaction newtrans = new Transaction();
+    	newtrans.setQuantity(1);
        /*
         1.get the start and end date,roomID from reservation list
         2. getRoomDetails(roomID); do you have smtg like this that return room based on id?
         3. iterate through the date and add to PaymentBill based on diff rate(weekend)  
         */
-    	Transaction newtrans = new Transaction();
-    	PaymentBill bill= getPaymentBill(reservationID);
-    	//bill.AddTransaction();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    	//get the start date and end date
+		System.out.println("Start Date (dd/MM/yyyy ):");
+		String getdate = sc.next();
+		LocalDate startDate = LocalDate.parse(getdate,formatter);
+		System.out.println("End Date (dd/MM/yyyy ):");
+		getdate = sc.next();
+		LocalDate endDate = LocalDate.parse(getdate,formatter);
+		
+		//Fetch the room and price of the room. I assume it's 100 first
+		System.out.println("Room ID :");
+		newtrans.setName("Room ID "+sc.next());
+		//fetch room type
+    	newtrans.setDescription("Deluxe");
+		double price =100;
+		
+		for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
+		{    	
+			Transaction tempTrans = new Transaction(newtrans);
+			double temp_price=price;
+		    if(date.getDayOfWeek().name()=="SATURDAY"|| date.getDayOfWeek().name()=="SUNDAY") {
+		    	tempTrans.setPrice(temp_price*0.9);
+		    }
+		    else {
+		    	tempTrans.setPrice(temp_price);
+		    }
+		    tempTrans.setTime(date.atTime(12, 00));
+		    bill.AddTransaction(tempTrans);
+		}
+
     }
     
     //add room service to PaymentBill.
@@ -179,7 +218,8 @@ public class PaymentController extends Controller{
 
     	PaymentBill bill=getPaymentBill(reservationID);
     	bill.printPaymentBill();
-    	double totalPaymentBill= calculatePaymentBill(bill);
+    	double totalPaymentBill=0;
+    	totalPaymentBill=calculatePaymentBill(bill);
     	System.out.println("The total price :" +totalPaymentBill +" ( Include GST :"+ GST*100+"% ,Service Charge:"
 		+service_charge*100+" %, Discount: "+bill.getDiscount()*100+"% )");
 
