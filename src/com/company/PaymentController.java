@@ -159,11 +159,6 @@ public class PaymentController extends Controller{
     	PaymentBill bill= getPaymentBill(reservationID);
     	Transaction newtrans = new Transaction();
     	newtrans.setQuantity(1);
-       /*
-        1.get the start and end date,roomID from reservation list
-        2. getRoomDetails(roomID); do you have smtg like this that return room based on id?
-        3. iterate through the date and add to PaymentBill based on diff rate(weekend)  
-        */
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     	//get the start date and end date
@@ -228,21 +223,38 @@ public class PaymentController extends Controller{
     //make payment
     public void makePayment(int reservationID) {
     	//print the invoice
-    	printInvoice(reservationID);
     	//get the payment method
     	PaymentBill bill=getPaymentBill(reservationID);
-    	if(bill.getPaymentDetail().getPaymentMethod()=="CASH") {
-    		
-    		System.out.println("Pay By Cash:");
-    		System.out.println("Total Amount: "+ calculatePaymentBill(bill));
-    	}
-    	else {
-			System.out.println(bill.getPaymentDetail().toString());	
-    	}
-		System.out.println("Thank you");
-    	bill.setStatus("PAID");
+    	while (true)
+		{
+        	paymentboundary.makePaymentMenu();	
+			int sel = sc.nextInt();
+			//loop = false;
+			switch (sel)
+			{
+				case 1:
+						//CASH
+			    	printInvoice(reservationID);
+			    	paymentboundary.paymentProcess("CASH",calculatePaymentBill(bill));
+					bill.setStatus("PAID");
+					break;
+				case 2:
+					//Card
+					printInvoice(reservationID);
+					bill.getPaymentDetail().toString();
+					paymentboundary.paymentProcess("Card",calculatePaymentBill(bill));
+					bill.setStatus("PAID");
+					break;
+				case 0:
+					return;
+				default:
+					paymentboundary.invalidInputWarning();
+			}
+			
+		}
+    	
     }
-    
+
     	
 	//calculate the total of PaymentBill
 	public double calculatePaymentBill(PaymentBill paymentbill) {

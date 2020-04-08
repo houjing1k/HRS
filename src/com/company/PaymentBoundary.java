@@ -49,6 +49,7 @@ public class PaymentBoundary extends Boundary{
 				{
 						"Add Payment Account",
 						"Edit Payment Account",
+						"Delete Payment Account"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
@@ -59,8 +60,10 @@ public class PaymentBoundary extends Boundary{
 		printMainTitle("add Items to Bill");
 		String[] menuList =
 				{
-						"add Room",
-						"add Room service",
+						"Add Room",
+						"Add Room Service",
+						"Remove Room",
+						"Remove Room service"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
@@ -82,4 +85,36 @@ public class PaymentBoundary extends Boundary{
 		return scan.nextInt();
 	}
 
+    protected int requestTransactionDetail()
+	{
+		System.out.println("Reservation ID :");
+		return scan.nextInt();
+	}
+    public void paymentProcess(String method,double money) {
+		if(method=="CASH") {
+			System.out.println("Pay By Cash:");
+			boolean paying=true;
+			while(paying) {
+				System.out.println("Cash Amount :");
+				double receive = scan.nextDouble();
+				if(receive>=money) {
+					System.out.println("Paid Amount: $"+ receive);
+					System.out.println("Return Amount: $"+ (receive-money));
+					paying =false;
+				}
+				else {
+					System.out.println("Insufficient Amount!");
+				}
+			}
+		}
+		else {
+			System.out.println("Pay By Card:");
+			System.out.println("Paid Amount:: $"+ money);
+		}
+		System.out.println("Thank you");
+    	
+ 
+    }
+    
+    
 }
