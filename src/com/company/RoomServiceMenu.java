@@ -1,4 +1,4 @@
-package com.company.roomservice;
+package com.company;
 import java.io.Serializable;
 import java.util.*;
 

@@ -1,9 +1,9 @@
-package com.company.roomservice;
+package com.company;
 
-import com.company.IBoundary;
+import com.company.Boundary;
 import java.util.Scanner;
 
-class RoomServiceBoundary implements IBoundary {
+class RoomServiceBoundary extends Boundary {
 
 	private Scanner sc;
 	private String currency;
@@ -218,5 +218,11 @@ class RoomServiceBoundary implements IBoundary {
 	public int process() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	protected void printMenu() {
+		// TODO Auto-generated method stub
+		
 	}
 }
