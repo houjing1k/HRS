@@ -35,6 +35,7 @@ public class MainController extends Controller
 
 				case 5: //6 - Admin Options
 					// new AdminController().processMain();
+					new PaymentController().processMain();
 					break;
 
 				case 0:
