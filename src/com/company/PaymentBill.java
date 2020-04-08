@@ -34,8 +34,10 @@ public class PaymentBill {
 		
 	//print the PaymentBill
 	public void printPaymentBill() {
+		System.out.println("[Transaction]");
 		for(Transaction trans : transactionList) {
 			System.out.println(trans.toString());
+
 		}
 	}
 
