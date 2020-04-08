@@ -2,6 +2,8 @@ package com.company;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Transaction implements Serializable{
 	/**
@@ -23,17 +25,29 @@ public class Transaction implements Serializable{
 		this.quantity=quantity;
 		this.time =time;
 	}
+	
+	public Transaction(Transaction trans){
+		this.name=trans.getName();
+		this.description=trans.getDescription();
+		this.price=trans.getPrice();
+		this.quantity=trans.getQuantity();
+		this.time =trans.getTime();
+				;
+	}
+	
 	public Transaction() {
 		
 	}
 
 	public String toString() {
-        return "[Transaction]"+
-        		"\n name :" + name + 
-        		"\n description :" + description + 
-        		"\n  price :" + price +
-        		"\n quantity :"+quantity+ 
-        		"\n Date :" + time +"]";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String formatDateTime = time.format(formatter);
+
+        return  "name :" + name + 
+        		"\t description :" + description + 
+        		"\t price : $" + price +
+        		"\t quantity :"+quantity+ 
+        		"\t Date :" + formatDateTime ;
 	}
 	
 	
