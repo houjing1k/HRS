@@ -2,9 +2,9 @@ package com.company;
 
 import java.util.ArrayList;
 
-import oodp.RoomEntity.BedType;
-import oodp.RoomEntity.RoomStatus;
-import oodp.RoomEntity.RoomType;
+import com.company.RoomEntity.BedType;
+import com.company.RoomEntity.RoomStatus;
+import com.company.RoomEntity.RoomType;
 
 public class RoomController extends Controller {
 
