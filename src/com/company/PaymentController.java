@@ -292,15 +292,16 @@ public class PaymentController extends Controller{
         ArrayList<RoomServiceOrder> list = new RoomServiceController().getCurrentOrdersOfRoom(roomID);
         for (RoomServiceOrder order : list) {
             for (RoomServiceItem item: order) {
-                if (item.getName().equals(transaction.getName()))
-                    transaction.setQuantity(  transaction.getQuantity()+1 );
-                else {
-                    if (transaction != null) getPaymentBill(roomID).AddTransaction(transaction); 
-                    transaction = new Transaction(
-                            item.getName(), item.getDescription(),
+            	if (transaction == null)
+            		transaction = new Transaction(
+                            new StringBuilder(item.getName()).substring(0,10), new StringBuilder(item.getDescription()).substring(0,15),
                             item.getPrice(), 1, order.getOrder_date_time());
-                }
+            	else if (item.getName().equals(transaction.getName())) 
+            		transaction.setQuantity( transaction.getQuantity()+1 );
+            	else
+            		bill.AddTransaction(transaction);
             }
+            bill.AddTransaction(transaction);
         }
 
     }
