@@ -1,6 +1,9 @@
 package com.company;
 
 import com.company.Boundary;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 class RoomServiceBoundary extends Boundary {
@@ -19,10 +22,20 @@ class RoomServiceBoundary extends Boundary {
 		
 		System.out.println("Enter item name: ");
 		inputs[0] = getStringFromUser();
+		while ( ((String) inputs[0]).length() >= 20 ) {
+			System.out.println("Name must be less than 20 characters.");
+			System.out.println("Enter item name: ");
+			inputs[0] = getStringFromUser();
+		}
 		System.out.println();
 		
 		System.out.println("Enter item description: ");
 		inputs[1] = getStringFromUser();
+		while ( ((String) inputs[1]).length() >= 80 ) {
+			System.out.println("Description must be less than 80 characters.");
+			System.out.println("Enter item description: ");
+			inputs[1] = getStringFromUser();
+		}
 		System.out.println();
 		
 		System.out.println("Enter item price: ");
@@ -54,10 +67,20 @@ class RoomServiceBoundary extends Boundary {
 		case 0:
 			System.out.println("Enter the new name: ");
 			inputs[1] = getStringFromUser();
+			while ( ((String) inputs[1]).length() >= 20 ) {
+				System.out.println("Name must be less than 20 characters.");
+				System.out.println("Enter item name: ");
+				inputs[1] = getStringFromUser();
+			}
 			break;
 		case 1:
 			System.out.println("Enter the new description: ");
 			inputs[1] = getStringFromUser();
+			while ( ((String) inputs[1]).length() >= 80 ) {
+				System.out.println("Description must be less than 80 characters.");
+				System.out.println("Enter item description: ");
+				inputs[1] = getStringFromUser();
+			}
 			break;
 		case 2:
 			System.out.println("Enter the new price: ");
@@ -75,7 +98,7 @@ class RoomServiceBoundary extends Boundary {
 		
 		System.out.println();
 		return inputs;
-	}
+	}	
 	
 	void printSuccess(boolean flag, int choice) {
 		switch (choice) {
@@ -100,13 +123,14 @@ class RoomServiceBoundary extends Boundary {
 			else System.out.println("Item price was not updated.");
 			break;
 		case 6:
-			if (flag == true) System.out.println("Item status successfully updated.");
-			else System.out.println("Item status was not updated.");
+			if (flag == true) System.out.println("Status successfully updated.");
+			else System.out.println("Status was not updated.");
 			break;
 			
 		}
 		System.out.println();
 	}
+	
 	
 	void printFoodMenu(RoomServiceMenu menu) {
 		
@@ -115,19 +139,31 @@ class RoomServiceBoundary extends Boundary {
 			int i=1;
 			printMainTitle("Today's Menu");
 			for (RoomServiceItem item : menu) {
-				System.out.printf("%d: \t%s \n\t%s%.2f \t\t%s\n", i, item.getName(), currency, item.getPrice(), item.getStatus());
-				System.out.printf("\t%s\n",item.getDescription());
+				System.out.printf("%d: \t%s \n\t%s%-15.2f %s\n", i, item.getName(), currency, item.getPrice(), item.getStatus());
+				
+				String[] wordlist = item.getDescription().split(" ");
+				StringBuilder builder = new StringBuilder();
+				
+				for (String word : wordlist)
+				{
+					builder.append(word + " ");
+					if (builder.length() >  36 ) // arbitrary value of 36
+					{
+						System.out.printf("\t" + builder.toString() + "\n");
+						builder = new StringBuilder();
+					}
+				}
+				System.out.printf("\t" + builder.toString() + "\n");
 				i++;
 			}
 		}
 		printDivider();
-	}
-	
+	}	
+
 	void printOrder(RoomServiceOrder order) {
-		if (order == null ||order.size() == 0) System.out.println("No items in order.");
+		if (order == null || order.size() == 0) System.out.println("No items in order.");
 		else {
 			int i=1;
-			printMainTitle("Current Order");
 			for (RoomServiceItem item : order) {
 				System.out.printf("%d: \t%s \n\t%s%.2f\n", i, item.getName(), currency, item.getPrice());
 				i++;
@@ -135,12 +171,27 @@ class RoomServiceBoundary extends Boundary {
 			System.out.print("Remarks: ");
 			System.out.println(order.getRemarks());
 			System.out.print("Total: " + currency);
-			System.out.println(order.getBill());
+			System.out.printf("%.2f\n",order.getBill());
 		}
-		printDivider();
 	}
 	
 
+	void printListOfOrders(ArrayList<RoomServiceOrder> list) {
+		if (list == null || list.size() == 0) System.out.println("No orders found.");
+		else {
+			System.out.printf("%-9s %-13s %-9s %s\n",
+					"OrderId", "Room Number", "Amount","Time of order");
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+			for (RoomServiceOrder order : list) {
+				
+				String formatedDateTime = order.getOrder_date_time().format(formatter);
+				System.out.printf("%-9d %-13d %s%-8.2f %s\n", 
+						order.getOrder_id(), order.getRoom_number(), currency, order.getBill(), formatedDateTime);
+			}
+		}
+		System.out.println();
+	}
 	
 	public int userInputFromMenu(String[] menu) {
 		
@@ -153,11 +204,11 @@ class RoomServiceBoundary extends Boundary {
 	
 	public String getStringFromUser() {
 		
-		String str;
-		str = sc.next();
-		str += sc.nextLine();
+		StringBuilder builder = new StringBuilder();;
+		builder.append(sc.next());
+		builder.append(sc.nextLine());
 		
-		return str;
+		return builder.toString();
 	}
 	
 	public double getDoubleFromUser() {

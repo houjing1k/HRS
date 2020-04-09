@@ -10,6 +10,8 @@ package com.company;
  */
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 import com.company.Controller;
 
 public class RoomServiceController extends Controller {
@@ -19,7 +21,8 @@ public class RoomServiceController extends Controller {
 			"View Menu",
 			"Edit Menu",
 			"Create New Order",
-			"View/Search Order History",
+			"View/Edit Orders",
+			"Search For Order",
 			"Back to Main Menu"
 		};
 
@@ -44,9 +47,16 @@ public class RoomServiceController extends Controller {
 			"Back to Room Service Menu"
 	};
 	
-	private final String[] order_history_menu = {
-			"View/Search Order History",
-			"View all orders",
+	private final String[] view_edit_orders_menu = {
+			"View/Edit Orders",
+			"View all preparing orders",
+			"View all confirmed orders",
+			"Change order status",
+			"Back to Room Service Menu"
+	};
+	
+	private final String[] search_order_menu = {
+			"Search For Order",
 			"Search order by ID",
 			"Search order by Room Number",
 			"Back to Room Service Menu"
@@ -94,13 +104,16 @@ public class RoomServiceController extends Controller {
 				createOrderMenu();
 				break;
 			case 4:
-				orderHistoryMenu();
+				viewEditOrdersMenu();
+				break;
+			case 5:
+				searchOrderMenu();
 				break;
 			case 0:
 				break;
 			}
 		} while (choice != 0);
-		 
+		close();
 	}
 	
 	public void editMenu() {
@@ -126,6 +139,7 @@ public class RoomServiceController extends Controller {
 			
 			case 2: // remove item
 			{
+				boundary.printFoodMenu(menu);
 				Object[] inputs = boundary.userInputForRemoveItem(menu.size());
 				int index_to_remove = ((int) inputs[0]) - 1;
 				
@@ -138,6 +152,7 @@ public class RoomServiceController extends Controller {
 			
 			case 3: // update name
 			{
+				boundary.printFoodMenu(menu);
 				Object[] inputs = boundary.userInputForUpdateItem(menu.size(), 0);
 				int index_to_update = ((int) inputs[0]) - 1;
 				String new_name = (String) inputs[1];
@@ -150,6 +165,7 @@ public class RoomServiceController extends Controller {
 			
 			case 4: // update description
 			{
+				boundary.printFoodMenu(menu);
 				Object[] inputs = boundary.userInputForUpdateItem(menu.size(), 1);
 				int index_to_update = ((int) inputs[0]) - 1;
 				String new_description = (String) inputs[1];
@@ -162,6 +178,7 @@ public class RoomServiceController extends Controller {
 				
 			case 5: // update price
 			{
+				boundary.printFoodMenu(menu);
 				Object[] inputs = boundary.userInputForUpdateItem(menu.size(), 2);
 				int index_to_update = ((int) inputs[0]) - 1;
 				double new_price = (double) inputs[1];
@@ -174,6 +191,7 @@ public class RoomServiceController extends Controller {
 			
 			case 6: // update status
 			{
+				boundary.printFoodMenu(menu);
 				Object[] inputs = boundary.userInputForUpdateItem(menu.size(), 3);
 				int index_to_update = ((int) inputs[0]) - 1;
 				StockStatus new_stock_status = (StockStatus) inputs[1];
@@ -209,7 +227,7 @@ public class RoomServiceController extends Controller {
 			choice = boundary.userInputFromMenu(create_order_menu);
 			
 			switch (choice) {
-			case 1:
+			case 1:  // add item to order
 				// needs improvement!! 
 			{
 				boundary.printFoodMenu(menu);
@@ -262,9 +280,11 @@ public class RoomServiceController extends Controller {
 				
 				break;
 			}
-			case 4: // view list of current orders
+			case 4: // view list of current order
 			{
+				boundary.printMainTitle("Current Order");
 				boundary.printOrder(temp_order);
+				System.out.println();
 				break;
 			}
 			case 5:
@@ -273,8 +293,10 @@ public class RoomServiceController extends Controller {
 				order_history.addOrder(temp_order);
 				
 				temp_order = null;
+				next_order_id += 1;
 				System.out.println("Order has been confirmed.");
 				System.out.println();
+				choice=0;
 				break;
 			}
 			case 0:
@@ -288,19 +310,163 @@ public class RoomServiceController extends Controller {
 		} while (choice != 0);
 	}
 	
-	public void orderHistoryMenu() {
+	public void viewEditOrdersMenu() {
+		
+		int choice;
+		
+		do  {
+			choice = boundary.userInputFromMenu(view_edit_orders_menu);
+			
+			switch (choice) {
+			case 1: // view all preparing orders
+			{
+				if (next_order_id == 1) {
+					System.out.println("There are no orders.");
+					break;
+				}
+				ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+				for (RoomServiceOrder order : order_history) {
+					if (order.getStatus() == OrderStatus.PREPARING)
+						list.add(order);
+				}
+				boundary.printMainTitle("Preparing Orders Found");
+				boundary.printListOfOrders(list);
+				break;
+			}
+			case 2: // view all confirmed orders
+			{
+				if (next_order_id == 1) {
+					System.out.println("There are no orders.");
+					break;
+				}
+				ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+				for (RoomServiceOrder order : order_history) {
+					if (order.getStatus() == OrderStatus.CONFIRMED)
+						list.add(order);
+				}
+				boundary.printMainTitle("Completed Orders Found");
+				boundary.printListOfOrders(list);
+				break;
+			}
+			case 3: // change order status
+			{
+				int order_id;
+				OrderStatus status;
+				
+				if (next_order_id == 1) {
+					System.out.println("There are no orders.");
+					break;
+				}
+				System.out.println("Enter order id of status to be changed: ");
+				order_id = boundary.getIntFromUser(1, next_order_id-1);
+				
+				ArrayList<RoomServiceOrder> list = searchForOrderWithID(order_id);
+				
+				boundary.printListOfOrders(list);
+				
+				if (list.size()==0)
+					break;
+				
+				System.out.printf("Curent status is %s\n", list.get(0).getStatus());
+				System.out.println("Select the new status: ");
+				System.out.println("1. Preparing");
+				System.out.println("2. Delivered");
+				System.out.println("0. Do not change status and go back.");
+				int tempChoice = boundary.getIntFromUser(0,2);
+				if (tempChoice == 0) break;
+				
+				status = (tempChoice==1) ? OrderStatus.PREPARING : OrderStatus.DELIVERED;
+				
+				list.get(0).setStatus(status);
+				boundary.printSuccess(true, 6);
+				
+				break;
+			}
+			case 0:
+				break;
+			} 
+		} while (choice!=0);
+	}
+	
+	public void searchOrderMenu() {
 		
 		int choice;
 		
 		do {
-			choice = boundary.userInputFromMenu(order_history_menu);
+			choice = boundary.userInputFromMenu(search_order_menu);
 			
 			switch (choice) {
-			case 1:
-			
+			case 1: // search order by id
+			{
+				if (next_order_id == 1) {
+					System.out.println("There are no orders.");
+					break;
+				}
+				
+				System.out.println("Enter order id to be searched: ");
+				int order_id = boundary.getIntFromUser(1, next_order_id-1);
+				
+				ArrayList<RoomServiceOrder> list = searchForOrderWithID(order_id);
+				
+				boundary.printMainTitle("Order of id " + order_id);
+				boundary.printListOfOrders(list);
+				break;
+			}
+			case 2: // search order by room number
+			{
+				if (next_order_id == 1) {
+					System.out.println("There are no orders.");
+					break;
+				}
+				
+				System.out.println("Enter room number to be searched: ");
+				int room_number = boundary.getIntFromUser(); // need to check if number is valid
+				
+				ArrayList<RoomServiceOrder> list = searchForOrderWithRoomNum(room_number);
+				
+				boundary.printMainTitle("Orders for Room " + room_number);
+				boundary.printListOfOrders(list);
+				break;
+			}
 			case 0:
 				break;
 			}
 		} while (choice != 0);
+	}
+
+	// search for order with id
+	public ArrayList<RoomServiceOrder> searchForOrderWithID(int order_id){
+		
+		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+		for (RoomServiceOrder order : order_history) {
+			if (order.getOrder_id() == order_id)
+				list.add(order);
+		}
+		
+		return list;
+	}
+	
+	// search for order with room number
+		public ArrayList<RoomServiceOrder> searchForOrderWithRoomNum(int room_num){
+			
+			ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+			for (RoomServiceOrder order : order_history) {
+				if (order.getRoom_number() == room_num)
+					list.add(order);
+			}
+			
+			return list;
+		}
+	
+	public ArrayList<RoomServiceOrder> getCurrentOrdersOfRoom(int room_number){
+		
+		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+		
+		for (RoomServiceOrder order : order_history) {
+			if (order.getRoom_number()==room_number && !order.isPaid() ) {
+				list.add(order);
+			}
+		}
+		return list;
 	}
 }
