@@ -66,14 +66,13 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	 */
 	void setDescription(String description) {
 		// remove excess whitespace
-		String temp = "";
+		StringBuilder temp = new StringBuilder();
 		description.trim();
-		for (String str : description.split(" ")) {
-			if (str.length()==1 || str.length()==0) continue;
-			temp += str.concat(" ");
+		for (String word : description.split(" ")) {
+			if (word.equals(" ")) continue;
+			temp.append(word + " ");
 		}
-		temp.trim();
-		this.description = temp;
+		this.description = temp.toString().trim();
 	}
 	
 	/**

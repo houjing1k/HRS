@@ -30,6 +30,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	
 	private int room_number;
 	private OrderStatus status;
+	private boolean paid;
 	
 	// Constructor
 	RoomServiceOrder(int order_id, LocalDateTime order_date_time, int room_number) {
@@ -39,6 +40,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		this.status = OrderStatus.UNCONFIRMED;
 		this.remarks = "";
 		this.bill = 0;
+		this.paid = false;
 	}
 	
 	boolean addItem(RoomServiceItem item, int quantity) {
@@ -153,7 +155,20 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	void setStatus(OrderStatus s) {
 		this.status = s;
 	}
-	
+
+	/**
+	 * @return the paid
+	 */
+	boolean isPaid() {
+		return paid;
+	}
+
+	/**
+	 * @param paid the paid to set
+	 */
+	void setPaid(boolean paid) {
+		this.paid = paid;
+	}
 
 	@Override
 	public int compareTo(RoomServiceOrder o) {

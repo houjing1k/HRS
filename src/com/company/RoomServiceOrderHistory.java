@@ -19,18 +19,11 @@ public class RoomServiceOrderHistory implements Serializable, Iterable<RoomServi
 	
 	
 	boolean addOrder(RoomServiceOrder order) {
-		return order_history.add(order);
-	}
-	
-	
-	RoomServiceOrder getLatestOrderOfRoom(int room_number) {
-		RoomServiceOrder temp = null;
-		
-		for (RoomServiceOrder order : order_history) {
-			if (order.getRoom_number() == room_number) temp = order;
+		boolean flag = order_history.add(order);
+		if (flag) {
+			latest_order_id += 1;
 		}
-		
-		return temp;
+		return flag;
 	}
 	
 	int getNoOfOrders() {

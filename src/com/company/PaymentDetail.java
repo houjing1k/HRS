@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.PaymentDetail.PaymentType;
 
 public class PaymentDetail {
 	private PaymentType payment_method;
