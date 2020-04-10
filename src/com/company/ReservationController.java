@@ -9,11 +9,6 @@ import java.util.*;
 
 
 public class ReservationController extends Controller {
-    String [] menu = {
-            "1. Reserve A Room",
-            "2. Print All Reservations",
-            "3. Get reservation"
-    };
     Scanner scan = new Scanner(System.in);
     int choice;
     ArrayList<ReservationEntity> reservations = new ArrayList<>();
@@ -64,9 +59,20 @@ public class ReservationController extends Controller {
         }
     }
 
-    public void cancelReservation(int reservationId)
+    public boolean cancelReservation(int reservationId)
     {
-
+        boolean cancelled = false;
+        for(int i = 0 ; i < reservations.size() ; i ++)
+        {
+            //to check if the reservation has any clashes
+            if(reservations.get(i).getReservationId() == reservationId && reservations.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED)
+            {
+                reservations.get(i).cancelReservation();
+                saveReservationsTofIle();
+                cancelled = true;
+            }
+        }
+        return cancelled;
     }
 
     private void saveReservationsTofIle()
@@ -82,6 +88,8 @@ public class ReservationController extends Controller {
 
     @Override
     public void processMain() {
+        int guestId;
+        int reservationId;
         do {
             choice = reservationBoundary.process();
             switch (choice)
@@ -93,12 +101,10 @@ public class ReservationController extends Controller {
                         decision = scan.next();
                         decision = decision.toUpperCase();
                     }while (!decision.equals("Y") && !decision.equals("N"));
-                    int guestId;
                     if(decision.equals("Y"))
                     {
-                        System.out.println("Key in the name of the guest");
-                        ArrayList<GuestEntity> test = new GuestController().searchGuest(scan.next());
-                        new GuestController().printGuestList(test);
+                        ArrayList<GuestEntity> guestEntityArrayList = reservationBoundary.requestGuestName();
+                        reservationBoundary.listGuests(guestEntityArrayList);
                         System.out.println("Key in the ID of the guest");
                         guestId = scan.nextInt();
                     }
@@ -117,6 +123,24 @@ public class ReservationController extends Controller {
                     break;
                 case 3:
                     reservationBoundary.getReservation(reservations,scan.nextInt());
+                    break;
+                case 4:
+                    ArrayList<GuestEntity> guestEntityArrayList = reservationBoundary.requestGuestName();
+                    reservationBoundary.listGuests(guestEntityArrayList);
+                    System.out.println("Key in the ID of the guest");
+                    guestId = scan.nextInt();
+                    reservationBoundary.getReservation(reservations,guestId);
+                    System.out.println("Key in the ID of the reservation");
+                    reservationId = scan.nextInt();
+                    if(cancelReservation(reservationId))
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+
                     break;
             }
         }while (choice > 0);

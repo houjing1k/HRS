@@ -32,6 +32,12 @@ public class ReservationEntity implements Serializable {
                 "]";
     }
 
+    public void cancelReservation()
+    {
+        reservationState = ReservationState.CANCELLED;
+
+    }
+
     public Date getEndDate() {
         return endDate;
     }
@@ -51,5 +57,10 @@ public class ReservationEntity implements Serializable {
     public int getRoomId() {
         return roomId;
     }
+
+    public ReservationState getReservationState() {
+        return reservationState;
+    }
+
 
 }
