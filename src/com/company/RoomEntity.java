@@ -7,7 +7,7 @@ public class RoomEntity implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final int roomId;
+	private final String roomId;
 	private final RoomType roomType;
 	private  RoomStatus status;
 	private final BedType bedType;
@@ -15,16 +15,19 @@ public class RoomEntity implements Serializable{
 	private int guestId;
 	private int reserveId;
 	
-	public RoomEntity(int roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking) {
+
+	
+	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking) {
 		this.roomId = roomId;
 		this.roomType = roomType; 
 		this.status = status;
 		this.bedType = bedType;
 		this.smoking = smoking;
-		
+
 	}
+	
 	//Method to get room id
-	public int getRoomId() {return roomId;}
+	public String getRoomId() {return roomId;}
 	
 	//Method to get room type
 	public RoomType getRoomType() {return roomType;}
@@ -86,7 +89,12 @@ public class RoomEntity implements Serializable{
 	//method to print string 
 	@Override
 	public String toString() {
-		return("Room ID: "+this.getRoomId()+", Room Status: "+this.getRoomStatus());
+		return("\nRoom ID: "+this.getRoomId()+
+				"\nGuest Id: "+this.getGuestId()+
+				"\nRoom Status: "+this.getRoomStatus()+
+				"\nRoom Type: "+this.getRoomType()+
+				"\nBed Type: "+this.getBedType()+
+				"\nSmoking: "+this.isSmoking());
 	}
 	
 	public enum RoomType{

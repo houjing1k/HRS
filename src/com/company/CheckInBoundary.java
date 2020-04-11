@@ -36,25 +36,25 @@ public class CheckInBoundary extends Boundary {
     };
 	
 
-	public int getId(boolean b) {
+	public String getRoomId() {
 		// TODO Auto-generated method stub
-		if(b)
-			System.out.println("Enter Room ID: ");
-		else
-			System.out.println("Enter Reservation ID: ");
-		int id = sc.nextInt();
+		String id = "";
+		do {
+			System.out.println("\nEnter Room ID: ");
+			id = sc.nextLine();
+		}	while(!checkRoomId(id));
 		return id;
 	}
 
-	public int printRooms(ArrayList<RoomEntity> roomArray) {
+	public String printRooms(ArrayList<RoomEntity> roomArray) {
 		// TODO Auto-generated method stub
-		char pre = 0;
-		char cur = 0;
+		String pre = "";
+		String cur = "";
 		ArrayList<RoomEntity> list = RoomController.getInstance().listRooms(RoomStatus.VACANT, roomArray);
 		System.out.println("Avalible rooms");
 		for(RoomEntity room:list) {
-			cur = String.valueOf(room.getRoomId()).charAt(0);
-			if(cur!=pre) {
+			cur = room.getRoomId().substring(0, 2);
+			if(!cur.equals(pre)) {
 				System.out.print("\nLevel "+cur+": ");
 			}
 			pre = cur;
@@ -62,14 +62,32 @@ public class CheckInBoundary extends Boundary {
 			System.out.print(" ");
 		}
 		while(true) {
-			System.out.println("\nEnter Room ID:");
-			int id = sc.nextInt();
+			String id = getRoomId();
 			for(RoomEntity room:list) {
-				if(id==room.getRoomId()) {
+				if(id.equals(room.getRoomId())) {
 					return id;
 				}
 			}
 			System.out.println("Invalid room ID");
 		}
+	}
+	
+	private boolean checkRoomId(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("\\d{2}-\\d{2}")));
+		if (!check)
+		{
+			System.out.println("Invalid Room Id Number.");
+			System.out.println("Format: xx-xx");
+		}
+		return check;
+	}
+
+	public int getId() {
+		// TODO Auto-generated method stub
+		System.out.println("Enter Reservation ID: ");
+		return sc.nextInt();
 	}
 }

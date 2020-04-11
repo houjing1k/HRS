@@ -75,20 +75,20 @@ public class CheckInController extends Controller {
 	
 	private void reserveCheckIn() {
 		// TODO Auto-generated method stub
-		int reserveId =checkInBoundary.getId(false);
+		int reserveId =checkInBoundary.getId();
 		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
 			checkIn(room.getGuestId(),room.getRoomId());
 		}
 		else {
-			System.out.print("Reservation not found");
+			System.out.println("Reservation not found");
 			this.processMain();
 		}
 	}
 
 	private void checkOut() {
 		// TODO Auto-generated method stub
-		int roomId =checkInBoundary.getId(true);
+		String roomId =checkInBoundary.getRoomId();
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		mainController.processMain();
@@ -125,11 +125,11 @@ public class CheckInController extends Controller {
 					return;
 			}
 		}
-		int roomId = selectRoom();
+		String roomId = selectRoom();
 		checkIn(guestId,roomId);
 	}
 	
-	private void checkIn(int guestId,int roomId) {
+	private void checkIn(int guestId,String roomId) {
 		try {
 			roomController.checkIn(guestId, roomId);
 			System.out.println("Check in successful");
@@ -140,7 +140,7 @@ public class CheckInController extends Controller {
 		}
 	}
 	
-	private int selectRoom() {
+	private String selectRoom() {
 		RoomType roomType = null;
 		boolean loop = true;
 		ArrayList<RoomEntity> roomArray = null;
@@ -174,7 +174,7 @@ public class CheckInController extends Controller {
 				loop = true;
 			}
 		}
-		int id = checkInBoundary.printRooms(roomArray);
+		String id = checkInBoundary.printRooms(roomArray);
 		return id;
 	}
 }

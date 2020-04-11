@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import java.io.File;
+
 public abstract class Controller {
 	Scanner scan = new Scanner(System.in);
 	public int handleMenu(String []menu)
@@ -55,6 +57,16 @@ public abstract class Controller {
 		}
 		return object;
 	}
-
+	
+	public <T> void replaceFile(T object,String fileName) {
+		File file = new File(fileName);
+		try {
+			file.delete();
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		this.toFile(object, fileName);
+	}
+	
 	public abstract void processMain();
 }
