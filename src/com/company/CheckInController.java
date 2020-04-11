@@ -12,14 +12,9 @@ public class CheckInController extends Controller {
 	private RoomController roomController;
 	private MainController mainController;
 	
-	private String[] menuMain = {
-            "1. Walk In Check In",
-            "2. Reservation Check In"
-    };
-	
 	private String[] menuWalkIn = {
-			"1. New Guest",
-			"2. Existing Guest"
+			"New Guest",
+			"Existing Guest"
 	};
 	
 	String [] menuGuestId = {
@@ -27,19 +22,11 @@ public class CheckInController extends Controller {
 	};
 	
 	String [] menuRoomType = {
-            "Please select the room type:",
             "1. Single room",
             "2. Double room",
             "3. Deluxe room"
     };
 	
-	String [] menuRoomId = {
-			"Enter Room Id:"
-	};
-	
-	String [] menuReserveId = {
-			"Enter Reservation Id:"
-	};
 	
 	private CheckInController() {
 		checkInBoundary = new CheckInBoundary();
@@ -56,33 +43,42 @@ public class CheckInController extends Controller {
 	}
 	
 	public void processMain() {
-		switch (checkInBoundary.printMenu(menuMain))
+		boolean loop = true;
+
+		while (loop)
 		{
-			case 1:
-				//go to check in
-				walkInCheckIn();
-				break;
-			case 2:
-				//go to reserve check in
-				reserveCheckIn();
-				break;
-			case 3:
-				//check out
-				checkOut();
-				break;
-			default:
-				break;
-					
-			
+			loop = false;
+			switch (checkInBoundary.process())
+			{
+				case 1:
+					//go to check in
+					walkInCheckIn();
+					break;
+				case 2:
+					//go to reserve check in
+					reserveCheckIn();
+					break;
+				case 3:
+					//check out
+					checkOut();
+					break;
+				case 0:
+					//return
+					break;
+				default:
+					checkInBoundary.invalidInputWarning();
+					loop = true;
+					break;
+			}
 		}
 	}
 	
 	private void reserveCheckIn() {
 		// TODO Auto-generated method stub
-		int reserveId =checkInBoundary.printMenu(menuReserveId);
-		RoomEntity room = roomController.listRerservation(reserveId);
+		int reserveId =checkInBoundary.getId(false);
+		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
-			checkIn(room.getGuestId(),room.getReserveId());
+			checkIn(room.getGuestId(),room.getRoomId());
 		}
 		else {
 			System.out.print("Reservation not found");
@@ -92,33 +88,42 @@ public class CheckInController extends Controller {
 
 	private void checkOut() {
 		// TODO Auto-generated method stub
-		int roomId =checkInBoundary.printMenu(menuRoomId);
+		int roomId =checkInBoundary.getId(true);
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		mainController.processMain();
 	}
 
 	private void walkInCheckIn() {
-		int guestId;
-		switch(checkInBoundary.printMenu(menuWalkIn))
-		{
-			case 1:
-				 guestId = guestController.addGuest();
-				 break;
+		int guestId = 0;
+		boolean loop = true;
+		while(loop) {
+			loop = false;
+			checkInBoundary.setMenu(menuWalkIn, "Check In");
+			switch(checkInBoundary.process())
+			{
+				case 1:
+					guestId = guestController.addGuest();
+					break;
 				 
-			case 2:
-				guestId = checkInBoundary.printMenu(menuGuestId);
-				GuestEntity guestObj = guestController.searchGuest(guestId);
-				if(guestObj==null) {
+				case 2:
+					checkInBoundary.setMenu(menuGuestId, "Check In");
+					guestId = checkInBoundary.process();
+					GuestEntity guestObj = guestController.searchGuest(guestId);
+					if(guestObj==null) {
+						System.out.println("Invalid Input");
+						this.processMain();
+						return;
+					}
+					break;
+				case 0:
+					//return
+					mainController.processMain();
+				default:
 					System.out.println("Invalid Input");
-					this.processMain();
+					loop = true;
 					return;
-				}
-				break;
-			default:
-				System.out.println("Invalid Input");
-				this.processMain();
-				return;
+			}
 		}
 		int roomId = selectRoom();
 		checkIn(guestId,roomId);
@@ -137,24 +142,39 @@ public class CheckInController extends Controller {
 	
 	private int selectRoom() {
 		RoomType roomType = null;
-		switch(checkInBoundary.printMenu(menuRoomType))
-		{
-			case 1:
-				roomType = RoomType.SINGLE;
-				break;
-			case 2:
-				roomType = RoomType.DOUBLE;
-				break;
-			case 3:
-				roomType = RoomType.DELUXE;
-				break;
-			default:
+		boolean loop = true;
+		ArrayList<RoomEntity> roomArray = null;
+		while(loop) {
+			loop = false;
+			checkInBoundary.setMenu(menuRoomType, "Please select the room type");
+			switch(checkInBoundary.process())
+			{
+				case 1:
+					roomType = RoomType.SINGLE;
+					break;
+				case 2:
+					roomType = RoomType.DOUBLE;
+					break;
+				case 3:
+					roomType = RoomType.DELUXE;
+					break;
+				case 0:
+					//return
+					this.processMain();
+					break;
+					
+				default:
+					loop = true;
+					System.out.println("Invalid Input");
+			
+			}
+			roomArray = roomController.listRooms(roomType);	
+			if(roomArray==null) {
 				System.out.println("Invalid Input");
-				return 0;
+				loop = true;
+			}
 		}
-		ArrayList<Object> roomArray = roomController.listRooms(roomType);
-		roomController.print(roomArray);
-		int id = checkInBoundary.printMenu(menuRoomId);
+		int id = checkInBoundary.printRooms(roomArray);
 		return id;
 	}
 }
