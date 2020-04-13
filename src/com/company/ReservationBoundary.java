@@ -53,7 +53,7 @@ public class ReservationBoundary extends Boundary {
         {
             System.out.println(String.format("[Reservation ID]: %d \n" +
                             "Guest Name: %s \n" +
-                            "Room Number: %d \n" +
+                            "Room Number: %s \n" +
                             "Start Date: %s \n" +
                             "End Date: %s\n" +
                             "Reservation State: %s",
@@ -74,10 +74,10 @@ public class ReservationBoundary extends Boundary {
         System.out.println("There are no available rooms");
     }
 
-    public void printRoomHasBeenReserved()
+    public void printRoomHasBeenReserved(String roomID)
     {
         printDivider();
-        System.out.println("There are no available rooms");
+        System.out.println(String.format("The room %s has been reserved",roomID));
     }
 
     public void getReservation(ArrayList<ReservationEntity> arrayList, int guestId)
@@ -93,7 +93,7 @@ public class ReservationBoundary extends Boundary {
             if(arrayList.get(i).getGuestId()==guestId && arrayList.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED)
             {
                 System.out.println(String.format("[Reservation ID]: %d \n" +
-                                "Room Number: %d \n" +
+                                "Room Number: %s \n" +
                                 "Start Date: %s \n" +
                                 "End Date: %s\n" +
                                 "Reservation State: %s",

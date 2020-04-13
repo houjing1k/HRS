@@ -11,9 +11,10 @@ public class ReservationEntity implements Serializable {
         CANCELLED
     }
     LocalDate startDate, endDate;
-    int roomId, reservationId, guestId;
+    String roomId;
+    int reservationId, guestId;
     ReservationState reservationState;
-    ReservationEntity(LocalDate startDate,LocalDate endDate,int roomId,int reservationId, int guestId)
+    ReservationEntity(LocalDate startDate,LocalDate endDate,String roomId,int reservationId, int guestId)
     {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -55,7 +56,7 @@ public class ReservationEntity implements Serializable {
         return reservationId;
     }
 
-    public int getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 

@@ -17,7 +17,7 @@ public class ReservationController extends Controller {
     ReservationBoundary reservationBoundary = new ReservationBoundary();
     ReservationController()
     {
-        reservations = (ArrayList<ReservationEntity>) fromFile("reservationData");
+        loadReservationsFromFile();
         if(reservations == null)
         {
             reservations = new ArrayList<>();
@@ -25,8 +25,9 @@ public class ReservationController extends Controller {
 
     }
 
-    private boolean isRoomReserved(int roomId, LocalDate startDateRequest, LocalDate endDateRequest)
+    private boolean isRoomReserved(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
     {
+        loadReservationsFromFile();
         for(int i = 0 ; i < reservations.size() ; i ++)
         {
             //to check if the reservation has any clashes
@@ -44,8 +45,9 @@ public class ReservationController extends Controller {
         return false;
     }
 
-    public void createReservation(int roomId)
+    public void createReservation()
     {
+        loadReservationsFromFile();
         ArrayList<GuestEntity> guestEntityArrayList;
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         System.out.println("Has guest registered before?(Y/N)");
@@ -97,19 +99,23 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        if(!isRoomReserved(roomId,startDate,endDate)) {
-            reservations.add(new ReservationEntity(startDate, endDate, 1, newReservationId, guestId));
-            saveReservationsTofIle();
-            reservationBoundary.printRoomHasBeenReserved();
-        }
-        else
+        String tempRoomIDs[] = {"1","2","3"};
+        for(int i = 0 ; i < tempRoomIDs.length;i++)
         {
+            if(!isRoomReserved(tempRoomIDs[i],startDate,endDate))
+            {
+                reservations.add(new ReservationEntity(startDate, endDate, tempRoomIDs[i], newReservationId, guestId));
+                saveReservationsTofIle();
+                reservationBoundary.printRoomHasBeenReserved(tempRoomIDs[i]);
+                break;
+            }
             reservationBoundary.printNoAvailableRooms();
         }
     }
 
     public boolean cancelReservation(int reservationId)
     {
+        loadReservationsFromFile();
         boolean cancelled = false;
         for(int i = 0 ; i < reservations.size() ; i ++)
         {
@@ -129,8 +135,11 @@ public class ReservationController extends Controller {
         toFile(reservations,"reservationData");
     }
 
+    private void loadReservationsFromFile() {reservations = fromFile("reservationData");}
+
     private void printAllReservations()
     {
+        loadReservationsFromFile();
         GuestController guestController = new GuestController();
         Map<Integer, String> guestNames = new HashMap<>();
         ArrayList<Integer> addedNames = new ArrayList<>();
@@ -160,7 +169,7 @@ public class ReservationController extends Controller {
             switch (choice)
             {
                 case 1:
-                    createReservation(1);
+                    createReservation();
                     break;
                 case 2:
                     printAllReservations();
@@ -190,7 +199,21 @@ public class ReservationController extends Controller {
                     }
 
                     break;
+                case 5:
+                    cancelExpiredReservations();
             }
         }while (choice > 0);
+    }
+
+    public void cancelExpiredReservations()
+    {
+        for(int i = 0; i < reservations.size(); i ++)
+        {
+            if(reservations.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED && (reservations.get(i).getStartDate().isEqual(LocalDate.now())||reservations.get(i).getStartDate().isBefore(LocalDate.now())))
+            {
+                reservations.get(i).cancelReservation();
+            }
+        }
+        saveReservationsTofIle();
     }
 }
