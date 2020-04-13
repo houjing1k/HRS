@@ -108,6 +108,7 @@ public class RoomController extends Controller {
 		return list;	
 	}
 	
+	
 	//Return the list based on bed type
 	@SuppressWarnings("unchecked")
 	public <T> ArrayList<T> listRooms(BedType bedType){
@@ -152,6 +153,16 @@ public class RoomController extends Controller {
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T> ArrayList<T> listRooms(RoomStatus roomStatus,RoomType roomType,BedType bedType,boolean smoking){
+		ArrayList<T> list = new ArrayList<>();
+		for(RoomEntity room:roomList) {
+			if(room.getRoomStatus()==roomStatus && room.getRoomType()==roomType && room.getBedType()==bedType && room.isSmoking()==smoking) {
+				list.add((T) room);
+			}
+		}
+		return list;
+	}
 	public void saveFile() {
 		replaceFile(roomList,roomFile);
 	}
