@@ -184,11 +184,11 @@ public class ReservationController extends Controller {
                     reservationId = scan.nextInt();
                     if(cancelReservation(reservationId))
                     {
-
+                        reservationBoundary.printReservationCancelled();
                     }
                     else
                     {
-
+                        reservationBoundary.printReservationCancellationFailed();
                     }
 
                     break;

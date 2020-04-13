@@ -69,6 +69,18 @@ public class ReservationBoundary extends Boundary {
         }
     }
 
+    public void printReservationCancellationFailed()
+    {
+        printDivider();
+        System.out.println("Failed to cancel reservation");
+    }
+
+    public void printReservationCancelled()
+    {
+        printDivider();
+        System.out.println("The reservation has been cancelled");
+    }
+
     public void printNoAvailableRooms()
     {
         printDivider();
