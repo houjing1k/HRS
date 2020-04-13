@@ -1,10 +1,5 @@
 package com.company;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -25,7 +20,7 @@ public class ReservationController extends Controller {
 
     }
 
-    private boolean isRoomReserved(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
+    private boolean isRoomAvailable(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
     {
         loadReservationsFromFile();
         for (ReservationEntity reservation : reservations) {
@@ -35,12 +30,12 @@ public class ReservationController extends Controller {
                             reservation.getStartDate().equals(endDateRequest)) &&
                     (startDateRequest.isBefore(reservation.getEndDate()) ||
                             startDateRequest.equals(reservation.getEndDate()))
-                    && reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED
+                    && reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED
             ) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public void createReservation()
@@ -97,15 +92,51 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        String[] tempRoomIDs = {"02-01","02-02","02-03","02-04","02-05"};
+        String[] tempRoomIDs = {"02-01","02-02"};
+        boolean waitListDecision;
+        boolean reserved = false;
         for (String tempRoomID : tempRoomIDs) {
-            if (!isRoomReserved(tempRoomID, startDate, endDate)) {
-                reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId));
+            if (isRoomAvailable(tempRoomID, startDate, endDate)) {
+                reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
                 saveReservationsTofIle();
                 reservationBoundary.printRoomHasBeenReserved(tempRoomID);
+                reserved = true;
                 break;
             }
-            reservationBoundary.printNoAvailableRooms();
+        }
+        if(!reserved)
+        {
+            waitListDecision = reservationBoundary.printNoAvailableRooms();
+            if(waitListDecision)
+            {
+                reservations.add(new ReservationEntity(startDate, endDate, newReservationId, guestId, ReservationEntity.ReservationState.WAITLISTED,tempRoomIDs));
+                saveReservationsTofIle();
+            }
+        }
+
+    }
+
+    public void waitListUpdate(String roomId)
+    {
+        loadReservationsFromFile();
+        for(int i = 0; i < reservations.size();i++)
+        {
+            if(reservations.get(i).getReservationState()==ReservationEntity.ReservationState.WAITLISTED)
+            {
+                for(String waitListRoomId:reservations.get(i).getWaitListRoomIds())
+                {
+                    if(waitListRoomId.equals(roomId))
+                    {
+                        if (isRoomAvailable(roomId, reservations.get(i).getStartDate(), reservations.get(i).getEndDate())) {
+                            System.out.println("Wait List Updated");
+                            //reservations.add(new ReservationEntity(reservation.getStartDate(), reservation.getEndDate(), roomId, newReservationId, guestId));
+                            reservations.get(i).reserve(roomId);
+                            saveReservationsTofIle();
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -115,9 +146,10 @@ public class ReservationController extends Controller {
         boolean cancelled = false;
         for (ReservationEntity reservation : reservations) {
             //to check if the reservation has any clashes
-            if (reservation.getReservationId() == reservationId && reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED) {
+            if (reservation.getReservationId() == reservationId && reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED) {
                 reservation.cancelReservation();
                 saveReservationsTofIle();
+                waitListUpdate(reservation.getRoomId());
                 cancelled = true;
             }
         }
@@ -148,7 +180,8 @@ public class ReservationController extends Controller {
             }
             if (!addedNamesBool) {
                 addedIds.add(reservation.getGuestId());
-                guestNames.put(reservation.getGuestId(), guestController.searchGuest(reservation.guestId).getName());
+                //guestNames.put(reservation.getGuestId(), guestController.searchGuest(reservation.guestId).getName());
+                guestNames.put(reservation.getGuestId(), String.valueOf(reservation.getGuestId()));
             }
         }
         //new GuestController()
@@ -204,11 +237,12 @@ public class ReservationController extends Controller {
         }while (choice > 0);
     }
 
-    public void cancelExpiredReservations()
+    public void triggerExpiredReservations()
     {
         for (ReservationEntity reservation : reservations) {
-            if (reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
-                reservation.cancelReservation();
+            if (reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
+                reservation.expireReservation();
+                waitListUpdate(reservation.getRoomId());
             }
         }
         saveReservationsTofIle();
@@ -229,7 +263,7 @@ public class ReservationController extends Controller {
     {
         RoomController roomController = RoomController.getInstance();
         for (ReservationEntity reservation : reservations) {
-            if (reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
+            if (reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
                 roomController.reserve(reservation.getRoomId(),reservation.getGuestId(),reservation.getReservationId());
             }
         }

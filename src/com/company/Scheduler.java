@@ -25,7 +25,7 @@ public class Scheduler {
         @Override
         public void run() {
             System.out.println("All expired reservations have been cleared");
-            //reservationController.cancelExpiredReservations();
+            reservationController.triggerExpiredReservations();
         }
     }
     class timerTask12MN extends TimerTask {
