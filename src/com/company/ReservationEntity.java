@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class ReservationEntity implements Serializable {
@@ -9,10 +10,10 @@ public class ReservationEntity implements Serializable {
         CHECKED_IN,
         CANCELLED
     }
-    Date startDate, endDate;
+    LocalDate startDate, endDate;
     int roomId, reservationId, guestId;
     ReservationState reservationState;
-    ReservationEntity(Date startDate,Date endDate,int roomId,int reservationId, int guestId)
+    ReservationEntity(LocalDate startDate,LocalDate endDate,int roomId,int reservationId, int guestId)
     {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -38,11 +39,11 @@ public class ReservationEntity implements Serializable {
 
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 

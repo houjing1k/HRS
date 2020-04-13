@@ -5,6 +5,8 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -23,18 +25,17 @@ public class ReservationController extends Controller {
 
     }
 
-    private boolean isRoomReserved(int roomId, String startDateRequestString, String endDateRequestString)
+    private boolean isRoomReserved(int roomId, LocalDate startDateRequest, LocalDate endDateRequest)
     {
-        Date startDateRequest = new Date(startDateRequestString);
-        Date endDateRequest = new Date(endDateRequestString);
         for(int i = 0 ; i < reservations.size() ; i ++)
         {
             //to check if the reservation has any clashes
             if(reservations.get(i).getRoomId() == roomId &&
-                    (reservations.get(i).getStartDate().before(endDateRequest) ||
+                    (reservations.get(i).getStartDate().isBefore(endDateRequest) ||
                     reservations.get(i).getStartDate().equals(endDateRequest)) &&
-                    (startDateRequest.before(reservations.get(i).getEndDate()) ||
+                    (startDateRequest.isBefore(reservations.get(i).getEndDate()) ||
                             startDateRequest.equals(reservations.get(i).getEndDate()))
+                    && reservations.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED
             )
             {
                 return true;
@@ -43,19 +44,67 @@ public class ReservationController extends Controller {
         return false;
     }
 
-    public void createReservation(int roomId,String startDateString,String endDateString,int guestId)
+    public void createReservation(int roomId)
     {
-        int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        Date startDate,endDate;
-        startDate = new Date(startDateString);
-        endDate = new Date(endDateString);
-        if(!isRoomReserved(roomId,startDate.toGMTString(),endDate.toGMTString())) {
-            reservations.add(new ReservationEntity(startDate, endDate, 1, newReservationId, guestId));
-            saveReservationsTofIle();
+        ArrayList<GuestEntity> guestEntityArrayList;
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        System.out.println("Has guest registered before?(Y/N)");
+        String decision;
+        LocalDate startDate,endDate;
+        int guestId;
+        do {
+            decision = scan.next();
+            decision = decision.toUpperCase();
+        }while (!decision.equals("Y") && !decision.equals("N"));
+        if(decision.equals("Y"))
+        {
+            guestEntityArrayList = reservationBoundary.requestGuestName();
+            reservationBoundary.listGuests(guestEntityArrayList);
+            System.out.println("Key in the ID of the guest");
+            guestId = scan.nextInt();
         }
         else
         {
-            System.out.println("Reservation Exists");
+            guestId = new GuestController().addGuest();
+        }
+        String tempString;
+        startDate = endDate = null;
+        System.out.println("Please type the start date(dd/mm/yyyy):");
+        while (startDate == null){
+            try {
+                tempString = scan.next();
+                startDate = LocalDate.parse(tempString, dateFormat);
+            }catch (Exception e)
+            {
+                //e.printStackTrace();
+                System.out.println("Please use the format dd/mm/yyyy for end date");
+            }
+        }
+        System.out.println("Please type the end date(mm/dd/yyyy):");
+        while (endDate == null){
+            try {
+                tempString = scan.next();
+                endDate = LocalDate.parse(tempString, dateFormat);
+                if(endDate.isBefore(startDate))
+                {
+                    System.out.println("Please key in a date after the start date");
+                    endDate = null;
+                }
+            }catch (Exception e)
+            {
+                //e.printStackTrace();
+                System.out.println("Please use the format 'dd/mm/yyyy' for end date");
+            }
+        }
+        int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
+        if(!isRoomReserved(roomId,startDate,endDate)) {
+            reservations.add(new ReservationEntity(startDate, endDate, 1, newReservationId, guestId));
+            saveReservationsTofIle();
+            reservationBoundary.printRoomHasBeenReserved();
+        }
+        else
+        {
+            reservationBoundary.printNoAvailableRooms();
         }
     }
 
@@ -82,7 +131,22 @@ public class ReservationController extends Controller {
 
     private void printAllReservations()
     {
-        reservationBoundary.printReservations(reservations);
+        GuestController guestController = new GuestController();
+        Map<Integer, String> guestNames = new HashMap<>();
+        ArrayList<Integer> addedNames = new ArrayList<>();
+        boolean addedNamesBool;
+        for(int i = 0; i < reservations.size(); i++)
+        {
+            addedNamesBool = false;
+            for(int x = 0; x < addedNames.size();x++){
+                if (addedNames.get(x) == reservations.get(i).getGuestId())
+                    addedNamesBool = true;
+            }
+            if(!addedNamesBool)
+                guestNames.put(reservations.get(i).getGuestId(),guestController.searchGuest(reservations.get(i).guestId).getName());
+        }
+        //new GuestController()
+        reservationBoundary.printReservations(reservations,guestNames);
     }
 
 
@@ -90,42 +154,26 @@ public class ReservationController extends Controller {
     public void processMain() {
         int guestId;
         int reservationId;
+        ArrayList<GuestEntity> guestEntityArrayList;
         do {
             choice = reservationBoundary.process();
             switch (choice)
             {
                 case 1:
-                    System.out.println("Has guest registered before?(Y/N");
-                    String decision;
-                    do {
-                        decision = scan.next();
-                        decision = decision.toUpperCase();
-                    }while (!decision.equals("Y") && !decision.equals("N"));
-                    if(decision.equals("Y"))
-                    {
-                        ArrayList<GuestEntity> guestEntityArrayList = reservationBoundary.requestGuestName();
-                        reservationBoundary.listGuests(guestEntityArrayList);
-                        System.out.println("Key in the ID of the guest");
-                        guestId = scan.nextInt();
-                    }
-                    else
-                    {
-                        guestId = new GuestController().addGuest();
-                    }
-                    System.out.println("Please type the start date(mm/dd/yy):");
-                    String startDate = scan.next();
-                    System.out.println("Please type the end date(mm/dd/yy):");
-                    String endDate = scan.next();
-                    createReservation(1,startDate,endDate,guestId);
+                    createReservation(1);
                     break;
                 case 2:
                     printAllReservations();
                     break;
                 case 3:
-                    reservationBoundary.getReservation(reservations,scan.nextInt());
+                    guestEntityArrayList = reservationBoundary.requestGuestName();
+                    reservationBoundary.listGuests(guestEntityArrayList);
+                    System.out.println("Key in the ID of the guest");
+                    guestId = scan.nextInt();
+                    reservationBoundary.getReservation(reservations,guestId);
                     break;
                 case 4:
-                    ArrayList<GuestEntity> guestEntityArrayList = reservationBoundary.requestGuestName();
+                    guestEntityArrayList = reservationBoundary.requestGuestName();
                     reservationBoundary.listGuests(guestEntityArrayList);
                     System.out.println("Key in the ID of the guest");
                     guestId = scan.nextInt();

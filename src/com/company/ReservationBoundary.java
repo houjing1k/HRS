@@ -2,7 +2,9 @@ package com.company;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ReservationBoundary extends Boundary {
@@ -23,9 +25,9 @@ public class ReservationBoundary extends Boundary {
         printMainTitle("Manage Reservations");
         String [] menuList = {
                 "1. Reserve A Room",
-                "2. Print Reservations",
-                "3. Get reservation",
-                "4. Cancel reservation"
+                "2. Print All Reservations",
+                "3. Get Reservation By Guest Name",
+                "4. Cancel Reservation"
         };
         printMenuList(menuList, "Go back to Main Menu");
         System.out.println();
@@ -43,23 +45,53 @@ public class ReservationBoundary extends Boundary {
         return 1;
     }
 
-    public void printReservations(ArrayList arrayList)
+    public void printReservations(ArrayList<ReservationEntity> arrayList, Map guestNames)
     {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         printMainTitle("All reservations");
         for(int i = 0 ; i < arrayList.size() ; i ++)
         {
-            System.out.println(arrayList.get(i).toString());
+            System.out.println(String.format("[Reservation ID]: %d \n" +
+                            "Guest Name: %s \n" +
+                            "Room Number: %d \n" +
+                            "Start Date: %s \n" +
+                            "End Date: %s\n" +
+                            "Reservation State: %s",
+                    arrayList.get(i).getReservationId(),
+                    guestNames.get(arrayList.get(i).getGuestId()),
+                    arrayList.get(i).getRoomId(),
+                    arrayList.get(i).getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    arrayList.get(i).getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    arrayList.get(i).getReservationState()
+            ));
+            printDivider();
         }
+    }
+
+    public void printNoAvailableRooms()
+    {
+        printDivider();
+        System.out.println("There are no available rooms");
+    }
+
+    public void printRoomHasBeenReserved()
+    {
+        printDivider();
+        System.out.println("There are no available rooms");
     }
 
     public void getReservation(ArrayList<ReservationEntity> arrayList, int guestId)
     {
         printMainTitle("Reservations for guest");
+        if (arrayList.size() == 0)
+        {
+            System.out.println("This Guest has no reservations");
+        }
+        else
         for(int i = 0 ; i < arrayList.size() ; i ++)
         {
-            if(arrayList.get(i).getGuestId()==guestId)
+            if(arrayList.get(i).getGuestId()==guestId && arrayList.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED)
             {
-                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                 System.out.println(String.format("[Reservation ID]: %d \n" +
                                 "Room Number: %d \n" +
                                 "Start Date: %s \n" +
@@ -67,8 +99,8 @@ public class ReservationBoundary extends Boundary {
                                 "Reservation State: %s",
                         arrayList.get(i).getReservationId(),
                         arrayList.get(i).getRoomId(),
-                        dateFormat.format(arrayList.get(i).getStartDate()),
-                        dateFormat.format(arrayList.get(i).getEndDate()),
+                        arrayList.get(i).getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                        arrayList.get(i).getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                         arrayList.get(i).getReservationState()
                 ));
             }

@@ -3,7 +3,7 @@ package com.company;
 public class MainController extends Controller
 {
 	private MainBoundary mb;
-
+	private Scheduler scheduler = new Scheduler();
 	public MainController()
 	{
 		mb = new MainBoundary();
