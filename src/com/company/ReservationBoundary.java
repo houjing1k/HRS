@@ -27,7 +27,8 @@ public class ReservationBoundary extends Boundary {
                 "1. Reserve A Room",
                 "2. Print All Reservations",
                 "3. Get Reservation By Guest Name",
-                "4. Cancel Reservation"
+                "4. Cancel Reservation",
+                "5. tests"
         };
         printMenuList(menuList, "Go back to Main Menu");
         System.out.println();

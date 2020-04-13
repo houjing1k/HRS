@@ -28,17 +28,15 @@ public class ReservationController extends Controller {
     private boolean isRoomReserved(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
     {
         loadReservationsFromFile();
-        for(int i = 0 ; i < reservations.size() ; i ++)
-        {
+        for (ReservationEntity reservation : reservations) {
             //to check if the reservation has any clashes
-            if(reservations.get(i).getRoomId() == roomId &&
-                    (reservations.get(i).getStartDate().isBefore(endDateRequest) ||
-                    reservations.get(i).getStartDate().equals(endDateRequest)) &&
-                    (startDateRequest.isBefore(reservations.get(i).getEndDate()) ||
-                            startDateRequest.equals(reservations.get(i).getEndDate()))
-                    && reservations.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED
-            )
-            {
+            if (reservation.getRoomId().equals(roomId) &&
+                    (reservation.getStartDate().isBefore(endDateRequest) ||
+                            reservation.getStartDate().equals(endDateRequest)) &&
+                    (startDateRequest.isBefore(reservation.getEndDate()) ||
+                            startDateRequest.equals(reservation.getEndDate()))
+                    && reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED
+            ) {
                 return true;
             }
         }
@@ -99,14 +97,12 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        String tempRoomIDs[] = {"1","2","3"};
-        for(int i = 0 ; i < tempRoomIDs.length;i++)
-        {
-            if(!isRoomReserved(tempRoomIDs[i],startDate,endDate))
-            {
-                reservations.add(new ReservationEntity(startDate, endDate, tempRoomIDs[i], newReservationId, guestId));
+        String[] tempRoomIDs = {"02-01","02-02","02-03","02-04","02-05"};
+        for (String tempRoomID : tempRoomIDs) {
+            if (!isRoomReserved(tempRoomID, startDate, endDate)) {
+                reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId));
                 saveReservationsTofIle();
-                reservationBoundary.printRoomHasBeenReserved(tempRoomIDs[i]);
+                reservationBoundary.printRoomHasBeenReserved(tempRoomID);
                 break;
             }
             reservationBoundary.printNoAvailableRooms();
@@ -117,12 +113,10 @@ public class ReservationController extends Controller {
     {
         loadReservationsFromFile();
         boolean cancelled = false;
-        for(int i = 0 ; i < reservations.size() ; i ++)
-        {
+        for (ReservationEntity reservation : reservations) {
             //to check if the reservation has any clashes
-            if(reservations.get(i).getReservationId() == reservationId && reservations.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED)
-            {
-                reservations.get(i).cancelReservation();
+            if (reservation.getReservationId() == reservationId && reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED) {
+                reservation.cancelReservation();
                 saveReservationsTofIle();
                 cancelled = true;
             }
@@ -142,17 +136,20 @@ public class ReservationController extends Controller {
         loadReservationsFromFile();
         GuestController guestController = new GuestController();
         Map<Integer, String> guestNames = new HashMap<>();
-        ArrayList<Integer> addedNames = new ArrayList<>();
+        ArrayList<Integer> addedIds = new ArrayList<>();
         boolean addedNamesBool;
-        for(int i = 0; i < reservations.size(); i++)
-        {
+        for (ReservationEntity reservation : reservations) {
             addedNamesBool = false;
-            for(int x = 0; x < addedNames.size();x++){
-                if (addedNames.get(x) == reservations.get(i).getGuestId())
+            for (Integer addedId : addedIds) {
+                if (addedId == reservation.getGuestId()) {
                     addedNamesBool = true;
+                    break;
+                }
             }
-            if(!addedNamesBool)
-                guestNames.put(reservations.get(i).getGuestId(),guestController.searchGuest(reservations.get(i).guestId).getName());
+            if (!addedNamesBool) {
+                addedIds.add(reservation.getGuestId());
+                guestNames.put(reservation.getGuestId(), guestController.searchGuest(reservation.guestId).getName());
+            }
         }
         //new GuestController()
         reservationBoundary.printReservations(reservations,guestNames);
@@ -175,11 +172,7 @@ public class ReservationController extends Controller {
                     printAllReservations();
                     break;
                 case 3:
-                    guestEntityArrayList = reservationBoundary.requestGuestName();
-                    reservationBoundary.listGuests(guestEntityArrayList);
-                    System.out.println("Key in the ID of the guest");
-                    guestId = scan.nextInt();
-                    reservationBoundary.getReservation(reservations,guestId);
+                    getReservationByGuestId();
                     break;
                 case 4:
                     guestEntityArrayList = reservationBoundary.requestGuestName();
@@ -200,18 +193,44 @@ public class ReservationController extends Controller {
 
                     break;
                 case 5:
-                    cancelExpiredReservations();
+                    ArrayList<RoomEntity> tenp = RoomController.getInstance().listRooms(RoomEntity.RoomStatus.VACANT);
+                    for(RoomEntity tem:tenp)
+                    {
+                        System.out.println(tem.getRoomId());
+                    }
+                    System.out.println("test");
+
             }
         }while (choice > 0);
     }
 
     public void cancelExpiredReservations()
     {
-        for(int i = 0; i < reservations.size(); i ++)
-        {
-            if(reservations.get(i).getReservationState() == ReservationEntity.ReservationState.RESERVED && (reservations.get(i).getStartDate().isEqual(LocalDate.now())||reservations.get(i).getStartDate().isBefore(LocalDate.now())))
-            {
-                reservations.get(i).cancelReservation();
+        for (ReservationEntity reservation : reservations) {
+            if (reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
+                reservation.cancelReservation();
+            }
+        }
+        saveReservationsTofIle();
+    }
+
+    public void getReservationByGuestId()
+    {
+        ArrayList<GuestEntity> guestEntityArrayList;
+        int guestId;
+        guestEntityArrayList = reservationBoundary.requestGuestName();
+        reservationBoundary.listGuests(guestEntityArrayList);
+        System.out.println("Key in the ID of the guest");
+        guestId = scan.nextInt();
+        reservationBoundary.getReservation(reservations,guestId);
+    }
+
+    public void setRoomReservationStatus()
+    {
+        RoomController roomController = RoomController.getInstance();
+        for (ReservationEntity reservation : reservations) {
+            if (reservation.getReservationState() == ReservationEntity.ReservationState.RESERVED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
+                roomController.reserve(reservation.getRoomId(),reservation.getGuestId(),reservation.getReservationId());
             }
         }
         saveReservationsTofIle();
