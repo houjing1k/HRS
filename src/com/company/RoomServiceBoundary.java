@@ -146,13 +146,17 @@ class RoomServiceBoundary extends Boundary {
 				
 				for (String word : wordlist)
 				{
+					int temp = builder.length();
 					builder.append(word + " ");
-					if (builder.length() >  36 ) // arbitrary value of 36
+					if (builder.length() >  40 ) // arbitrary value of 40
 					{
+						builder.setLength(temp);
 						System.out.printf("\t" + builder.toString() + "\n");
-						builder = new StringBuilder();
+						builder = new StringBuilder(word + " ");
 					}
 				}
+				int temp = builder.length();
+				builder.setLength(temp - 1);
 				System.out.printf("\t" + builder.toString() + "\n");
 				i++;
 			}
@@ -208,7 +212,7 @@ class RoomServiceBoundary extends Boundary {
 		builder.append(sc.next());
 		builder.append(sc.nextLine());
 		
-		return builder.toString();
+		return builder.toString().trim();
 	}
 	
 	public double getDoubleFromUser() {
@@ -227,7 +231,7 @@ class RoomServiceBoundary extends Boundary {
 		
 		int num;
 		while (!sc.hasNextInt()) {
-			System.out.print("Please enter an integer.");
+			System.out.println("Please enter an integer.");
 			sc.next();
 		}
 		num = sc.nextInt();

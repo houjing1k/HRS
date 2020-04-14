@@ -28,12 +28,12 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	private String remarks;
 	private double bill;
 	
-	private int room_number;
+	private String room_number;
 	private OrderStatus status;
 	private boolean paid;
 	
 	// Constructor
-	RoomServiceOrder(int order_id, LocalDateTime order_date_time, int room_number) {
+	RoomServiceOrder(int order_id, LocalDateTime order_date_time, String room_number) {
 		this.order_id = order_id;
 		this.order_date_time = order_date_time;
 		this.room_number = room_number;
@@ -131,14 +131,14 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	/**
 	 * @return the room_number
 	 */
-	int getRoom_number() {
+	String getRoom_number() {
 		return room_number;
 	}
 
 	/**
 	 * @param room_number the room_number to set
 	 */
-	void setRoom_number(int room_number) {
+	void setRoom_number(String room_number) {
 		this.room_number = room_number;
 	}
 
