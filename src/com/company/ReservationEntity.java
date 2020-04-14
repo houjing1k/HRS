@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ReservationEntity implements Serializable {
@@ -14,10 +15,10 @@ public class ReservationEntity implements Serializable {
     }
     LocalDate startDate, endDate;
     String roomId;
-    String[] waitListRoomIds;
+    ArrayList<String> waitListRoomIds;
     int reservationId, guestId;
     ReservationState reservationState;
-    ReservationEntity(LocalDate startDate,LocalDate endDate,int reservationId, int guestId,ReservationState reservationState,String[] waitListRoomIds)
+    ReservationEntity(LocalDate startDate,LocalDate endDate,int reservationId, int guestId,ReservationState reservationState,ArrayList<String> waitListRoomIds)
     {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -65,7 +66,7 @@ public class ReservationEntity implements Serializable {
         reservationState = ReservationState.EXPIRED;
     }
 
-    public String[] getWaitListRoomIds() {
+    public ArrayList<String> getWaitListRoomIds() {
         return waitListRoomIds;
     }
 

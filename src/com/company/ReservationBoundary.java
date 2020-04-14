@@ -47,6 +47,14 @@ public class ReservationBoundary extends Boundary {
     {
         printMainTitle("All reservations");
         for (ReservationEntity reservationEntity : arrayList) {
+            String waitListRoomIDs = "";
+            if(reservationEntity.getWaitListRoomIds()!=null) {
+                for (String waitListRoomID : reservationEntity.getWaitListRoomIds()) {
+                    waitListRoomID += waitListRoomID + ",";
+                }
+                waitListRoomIDs.substring(0,waitListRoomIDs.length()-1);
+            }
+
             System.out.println(String.format("[Reservation ID]: %d \n" +
                             "Guest Name: %s \n" +
                             "Room Number: %s \n" +
@@ -57,7 +65,7 @@ public class ReservationBoundary extends Boundary {
                     reservationEntity.getReservationId(),
                     guestNames.get(reservationEntity.getGuestId()),
                     reservationEntity.getRoomId(),
-                    reservationEntity.getWaitListRoomIds()!=null?reservationEntity.getWaitListRoomIds()[0]:"",
+                    waitListRoomIDs,
                     reservationEntity.getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     reservationEntity.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     reservationEntity.getReservationState()
@@ -94,6 +102,14 @@ public class ReservationBoundary extends Boundary {
     {
         printDivider();
         System.out.println(String.format("The room %s has been reserved",roomID));
+    }
+
+    public void requestRoomRequirements()
+    {
+        printDivider();
+
+        System.out.println("Please type the room type you would like(single/double/duluxe)");
+
     }
 
     public void getReservation(ArrayList<ReservationEntity> arrayList, int guestId)

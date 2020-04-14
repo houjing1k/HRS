@@ -92,7 +92,15 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        String[] tempRoomIDs = {"02-01","02-02"};
+
+        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
+        ArrayList<String> tempRoomIDs = new ArrayList<>();
+        for (RoomEntity roomEntity: roomEntities)
+        {
+            tempRoomIDs.add(roomEntity.getRoomId());
+        }
+        //String[]  = {"02-01","02-02"};
+
         boolean waitListDecision;
         boolean reserved = false;
         for (String tempRoomID : tempRoomIDs) {
