@@ -1,5 +1,7 @@
 package com.company;
 /**
+ * A single room service order that contains a list of {@code RoomServiceItem} objects.
+ * This class provides functionality to add and remove {@code RoomServiceItem}s.
  * 
  */
 
@@ -17,7 +19,7 @@ enum OrderStatus { UNCONFIRMED, CONFIRMED, PREPARING, DELIVERED };
 class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, Iterable<RoomServiceItem> {
 	
 	/**
-	 * 
+	 * use serialVersionUID for interoperability
 	 */
 	private static final long serialVersionUID = 5513143310548014542L;
 
@@ -32,7 +34,13 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	private OrderStatus status;
 	private boolean paid;
 	
-	// Constructor
+	/**
+	 * Creates an unconfirmed room service order with no initial {@code RoomServiceItem} objects.
+	 * 
+	 * @param order_id  the order id of this order
+	 * @param order_date_time  the date and time this order was created
+	 * @param room_number  the room number that this order belongs to
+	 */
 	RoomServiceOrder(int order_id, LocalDateTime order_date_time, String room_number) {
 		this.order_id = order_id;
 		this.order_date_time = order_date_time;
@@ -43,6 +51,13 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		this.paid = false;
 	}
 	
+	/**
+	 * Appends the specified quantity of the {@code RoomServiceItem} item to the order.
+	 * 
+	 * @param item  the room service item to be added
+	 * @param quantity  the quantity of specified item to be added
+	 * @return  true (as specified by Collection.add(E))
+	 */
 	boolean addItem(RoomServiceItem item, int quantity) {
 		
 		// need add error checking for positive quantity?
@@ -55,18 +70,26 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		return true;
 	}
 	
+	/**
+	 * Removes the {@code RoomServiceItem} at the specified position in the list of items.
+	 * 
+	 * @param index  the index of {@code RoomServiceItem} to be removed
+	 * @return the {@code RoomServiceItem} previously at the specified position
+	 */
 	RoomServiceItem removeItem(int index) {
 		bill -= order_items.get(index).getPrice();
 		return order_items.remove(index);
 	}
 	
+	/**
+	 * @return the list of {@code RoomServiceItem} objects
+	 */
 	List<RoomServiceItem> getOrderList(){
 		return order_items;
 	}
 	
 	/**
-	 * 
-	 * @return the number of items in order
+	 * @return the number of items in this order
 	 */
 	int size() {
 		return order_items.size();
@@ -157,14 +180,14 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	}
 
 	/**
-	 * @return the paid
+	 * @return whether the order has been paid
 	 */
 	boolean isPaid() {
 		return paid;
 	}
 
 	/**
-	 * @param paid the paid to set
+	 * @param paid set whether order has been paid
 	 */
 	void setPaid(boolean paid) {
 		this.paid = paid;
@@ -177,7 +200,6 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		return this.getOrder_id() - o.getOrder_id();
 	}
 
-	
 	@Override
 	public Iterator<RoomServiceItem> iterator() {
 		// TODO Auto-generated method stub

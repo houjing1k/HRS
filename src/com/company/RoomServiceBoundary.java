@@ -11,11 +11,18 @@ class RoomServiceBoundary extends Boundary {
 	private Scanner sc;
 	private String currency;
 	
+	/**
+	 * Initializes new Scanner object
+	 */
 	public RoomServiceBoundary() {
 		sc = new Scanner(System.in);
 		currency = "$";
 	}
 	
+	/**
+	 * Gets user input for name, description, and price to create a {@code RoomServiceItem} object.
+	 * @return an array of objects to be down-casted to String, String, double
+	 */
 	Object[] userInputForAddItem() {
 		
 		Object[] inputs = new Object[3];
@@ -45,6 +52,11 @@ class RoomServiceBoundary extends Boundary {
 		return inputs;
 	}
 	
+	/**
+	 * Gets user input for an integer to represent the index of a list
+	 * @param size  size of the list
+	 * @return  an array of 1 object to be down-casted, the integer index
+	 */
 	Object[] userInputForRemoveItem(int size) {
 		
 		Object[] inputs = new Object[1];
@@ -56,6 +68,14 @@ class RoomServiceBoundary extends Boundary {
 		return inputs;
 	}
 	
+	/**
+	 * Gets user input for an integer to represent the index of a list, and
+	 * gets user input for name, description, price, or status depending on {@code attribute} parameter.
+	 * 
+	 * @param menuSize  the size of the list
+	 * @param attribute  0: name, 1: description, 2: price, 3: status
+	 * @return  an array of objects to be down-casted
+	 */
 	Object[] userInputForUpdateItem(int menuSize, int attribute) {
 		
 		Object[] inputs = new Object[2];
@@ -100,6 +120,12 @@ class RoomServiceBoundary extends Boundary {
 		return inputs;
 	}	
 	
+	/**
+	 * Outputs a success or failure message depending on {@code flag} and {@code choice} parameters.
+	 * @param flag  true: success,  false: failure
+	 * @param choice  1: add item, 2: remove item, 3: update item name, 4: update item description, 
+	 * 5: update item price, 6: update item status
+	 */
 	void printSuccess(boolean flag, int choice) {
 		switch (choice) {
 		case 1:
@@ -132,6 +158,10 @@ class RoomServiceBoundary extends Boundary {
 	}
 	
 	
+	/**
+	 * Outputs the contents of a specified {@code RoomServiceMenu}.
+	 * @param menu  the menu to be printed
+	 */
 	void printFoodMenu(RoomServiceMenu menu) {
 		
 		if (menu.size() == 0) System.out.println("No items in menu.");
@@ -164,6 +194,10 @@ class RoomServiceBoundary extends Boundary {
 		printDivider();
 	}	
 
+	/**
+	 * Outputs the contents of a specified {@code RoomServiceOrder}.
+	 * @param order  the order to be printed
+	 */
 	void printOrder(RoomServiceOrder order) {
 		if (order == null || order.size() == 0) System.out.println("No items in order.");
 		else {
@@ -180,6 +214,10 @@ class RoomServiceBoundary extends Boundary {
 	}
 	
 
+	/**
+	 * Outputs the contents of a list of {@code RoomServiceOrder} objects.
+	 * @param list  the list of {@code RoomServiceOrder} objects to be printed
+	 */
 	void printListOfOrders(ArrayList<RoomServiceOrder> list) {
 		if (list == null || list.size() == 0) System.out.println("No orders found.");
 		else {
@@ -197,6 +235,11 @@ class RoomServiceBoundary extends Boundary {
 		System.out.println();
 	}
 	
+	/**
+	 * Gets user input of integer of which menu option chosen
+	 * @param menu  string array of menu options to choose from
+	 * @return  the index of menu option
+	 */
 	public int userInputFromMenu(String[] menu) {
 		
 		printMenu(menu);
@@ -206,6 +249,10 @@ class RoomServiceBoundary extends Boundary {
 		return choice;
 	}
 	
+	/**
+	 * Gets string user input in form of a sentence instead of single word.
+	 * @return  String sentence
+	 */
 	public String getStringFromUser() {
 		
 		StringBuilder builder = new StringBuilder();;
@@ -215,6 +262,10 @@ class RoomServiceBoundary extends Boundary {
 		return builder.toString().trim();
 	}
 	
+	/**
+	 * Gets user input of double
+	 * @return  double
+	 */
 	public double getDoubleFromUser() {
 		
 		double doub;
@@ -227,6 +278,10 @@ class RoomServiceBoundary extends Boundary {
 		return doub;
 	}
 	
+	/**
+	 * Gets user input of integer
+	 * @return  integer
+	 */
 	public int getIntFromUser() {
 		
 		int num;
@@ -239,6 +294,12 @@ class RoomServiceBoundary extends Boundary {
 		return num;
 	}
 	
+	/**
+	 * Gets user input of integer of at least {@code min} and at most {@code max}.
+	 * @param min  minimum value
+	 * @param max  maximum value
+	 * @return  integer
+	 */
 	public int getIntFromUser(int min, int max) {
 		
 		int num = getIntFromUser();
@@ -251,6 +312,10 @@ class RoomServiceBoundary extends Boundary {
 		return num;
 	}
 	
+	/**
+	 * Outputs menu options to user
+	 * @param menu  String array of menu options
+	 */
 	public void printMenu(String[] menu) {
 		
 		printMainTitle(menu[0]);

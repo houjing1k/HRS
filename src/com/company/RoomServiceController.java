@@ -72,6 +72,11 @@ public class RoomServiceController extends Controller {
 	private int next_order_id;
 	private RoomServiceBoundary boundary;
 	
+	/**
+	 * Loads up the {@code RoomServiceMenu} and {@code RoomServiceOrderHistory} from file, or creates 
+	 * a new {@code RoomServiceMenu} or {@code RoomServiceOrderHistory} if file is not found.
+	 * Initializes {@code RoomServiceBoundary} to handle input output to console.
+	 */
 	public RoomServiceController() {
 		boundary = new RoomServiceBoundary();
 		
@@ -83,11 +88,17 @@ public class RoomServiceController extends Controller {
 		this.next_order_id = order_history.getLatestOrderID() + 1;
 	}
 	
+	/**
+	 * To save {@code RoomServiceMenu} and {@code RoomServiceOrderHistory} to file.
+	 */
 	public void close() {
 		toFile(menu, filedir_menu);
 		toFile(order_history, filedir_order_history);
 	}
 	
+	/**
+	 * Main method to be called to use this class.
+	 */
 	public void processMain() {
 		int choice;
 		
@@ -118,6 +129,9 @@ public class RoomServiceController extends Controller {
 		close();
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to make changes to menu.
+	 */
 	public void editMenu() {
 		int choice;
 		
@@ -213,6 +227,9 @@ public class RoomServiceController extends Controller {
 		
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to create a new order. 
+	 */
 	public void createOrderMenu() {
 		
 		 // need to account for invalid room numbers
@@ -347,6 +364,9 @@ public class RoomServiceController extends Controller {
 		} while (choice != 0);
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to view or edit existing orders.
+	 */
 	public void viewEditOrdersMenu() {
 		
 		int choice;
@@ -425,6 +445,9 @@ public class RoomServiceController extends Controller {
 		} while (choice!=0);
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to search for an existing order.
+	 */
 	public void searchOrderMenu() {
 		
 		int choice;
@@ -493,6 +516,11 @@ public class RoomServiceController extends Controller {
 	}
 
 	// search for order with id
+	/**
+	 * Returns a list of {@code RoomServiceOrder} objects with the specified order id.
+	 * @param order_id  order id of order to be found
+	 * @return  a list of orders with the specified order id
+	 */
 	public ArrayList<RoomServiceOrder> searchForOrderWithID(int order_id){
 		
 		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
@@ -505,17 +533,27 @@ public class RoomServiceController extends Controller {
 	}
 	
 	// search for order with room number
-		public ArrayList<RoomServiceOrder> searchForOrderWithRoomNum(String room_num){
+	/**
+	 * Returns a list of {@code RoomServiceOrder} objects with the specified room number.
+	 * @param room_num  room number of order to be found
+	 * @return  a list of orders with the specified room number
+	 */
+	public ArrayList<RoomServiceOrder> searchForOrderWithRoomNum(String room_num){
 			
-			ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
-			for (RoomServiceOrder order : order_history) {
-				if (order.getRoom_number().equals(room_num))
-					list.add(order);
-			}
-			
-			return list;
+		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+		for (RoomServiceOrder order : order_history) {
+			if (order.getRoom_number().equals(room_num))
+				list.add(order);
 		}
+			
+		return list;
+	}
 	
+	/**
+	 * Returns a list of {@code RoomServiceOrder} objects with the specified room number that has yet to be paid.
+	 * @param room_number  room number of order to be found
+	 * @return  a list of orders with the specified room number that has yet to be paid
+	 */
 	public ArrayList<RoomServiceOrder> getCurrentOrdersOfRoom(String room_number){
 		
 		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
