@@ -21,6 +21,8 @@ public class PaymentController extends Controller{
 		PaymentBillList = new ArrayList<PaymentBill>();
 	}
 	
+
+	
 	@Override
 	public void processMain() {
 		String id;
@@ -214,7 +216,7 @@ public class PaymentController extends Controller{
 	
 	// Update Card Detail
 	public void updatePaymentAccount() {
-
+		
 	}
 	
 	//Print out all the payment account
