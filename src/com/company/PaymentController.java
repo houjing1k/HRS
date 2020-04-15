@@ -44,7 +44,7 @@ public class PaymentController extends Controller{
 					makePayment(id);    		//Make Payment
 					break;
 				case 5:
-					modifyCharges();
+					modifyCharges();			// Modify discount,
 					break;
 				case 6:
 					generatePaymentReport();   //Generate Financial report
