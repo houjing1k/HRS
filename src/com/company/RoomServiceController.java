@@ -11,8 +11,10 @@ package com.company;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import com.company.Controller;
+import com.company.RoomEntity.RoomStatus;
 
 public class RoomServiceController extends Controller {
 	
@@ -70,6 +72,11 @@ public class RoomServiceController extends Controller {
 	private int next_order_id;
 	private RoomServiceBoundary boundary;
 	
+	/**
+	 * Loads up the {@code RoomServiceMenu} and {@code RoomServiceOrderHistory} from file, or creates 
+	 * a new {@code RoomServiceMenu} or {@code RoomServiceOrderHistory} if file is not found.
+	 * Initializes {@code RoomServiceBoundary} to handle input output to console.
+	 */
 	public RoomServiceController() {
 		boundary = new RoomServiceBoundary();
 		
@@ -81,11 +88,17 @@ public class RoomServiceController extends Controller {
 		this.next_order_id = order_history.getLatestOrderID() + 1;
 	}
 	
+	/**
+	 * To save {@code RoomServiceMenu} and {@code RoomServiceOrderHistory} to file.
+	 */
 	public void close() {
 		toFile(menu, filedir_menu);
 		toFile(order_history, filedir_order_history);
 	}
 	
+	/**
+	 * Main method to be called to use this class.
+	 */
 	public void processMain() {
 		int choice;
 		
@@ -116,6 +129,9 @@ public class RoomServiceController extends Controller {
 		close();
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to make changes to menu.
+	 */
 	public void editMenu() {
 		int choice;
 		
@@ -211,15 +227,53 @@ public class RoomServiceController extends Controller {
 		
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to create a new order. 
+	 */
 	public void createOrderMenu() {
 		
-		System.out.println("Please enter the room number: ");
+		 // need to account for invalid room numbers
+		String room_number;
 		
-		int room_num = boundary.getIntFromUser(); // need to account for invalid room numbers
+		do {
+			System.out.println("Please enter the room number (eg. 0208): ");
+			room_number = boundary.getStringFromUser();
+			
+			String general_pattern = "^[0123456789]{4}$";
+			String valid_room_pattern = "^[0][234567][0][12345678]$";
+			
+			
+			if (!Pattern.matches(general_pattern, room_number)) {
+				System.out.println("Please enter in a valid format.");
+				continue;
+			}
+			else if (!Pattern.matches(valid_room_pattern, room_number)) {
+				System.out.println("No such room exists.");
+				continue;
+			}
+			else
+				break;
+
+		} while (true);
 		
 		System.out.println();
 		
-		RoomServiceOrder temp_order = new RoomServiceOrder(this.next_order_id, LocalDateTime.now(), room_num);
+		ArrayList<RoomEntity> occupied_rooms = RoomController.getInstance().listRooms(RoomStatus.OCCUPIED);
+		
+		boolean found = false;
+		for (RoomEntity room : occupied_rooms) {
+			if (room.getRoomId().equals(room_number)) {
+				found = true;
+				break;
+			}
+		}
+		
+		if (!found) {
+			System.out.println("The room currently is not checked in.");
+			return;
+		}
+		
+		RoomServiceOrder temp_order = new RoomServiceOrder(this.next_order_id, LocalDateTime.now(), room_number);
 		
 		int choice;
 		
@@ -310,6 +364,9 @@ public class RoomServiceController extends Controller {
 		} while (choice != 0);
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to view or edit existing orders.
+	 */
 	public void viewEditOrdersMenu() {
 		
 		int choice;
@@ -388,6 +445,9 @@ public class RoomServiceController extends Controller {
 		} while (choice!=0);
 	}
 	
+	/**
+	 * Sub method called by {@code processMain()} to search for an existing order.
+	 */
 	public void searchOrderMenu() {
 		
 		int choice;
@@ -420,7 +480,28 @@ public class RoomServiceController extends Controller {
 				}
 				
 				System.out.println("Enter room number to be searched: ");
-				int room_number = boundary.getIntFromUser(); // need to check if number is valid
+				String room_number;
+				
+				do {
+					System.out.println("Please enter the room number (eg. 0208): ");
+					room_number = boundary.getStringFromUser();
+					
+					String general_pattern = "^[0123456789]{4}$";
+					String valid_room_pattern = "^[0][234567][0][12345678]$";
+					
+					
+					if (!Pattern.matches(general_pattern, room_number)) {
+						System.out.println("Please enter in a valid format.");
+						continue;
+					}
+					else if (!Pattern.matches(valid_room_pattern, room_number)) {
+						System.out.println("No such room exists.");
+						continue;
+					}
+					else
+						break;
+
+				} while (true);
 				
 				ArrayList<RoomServiceOrder> list = searchForOrderWithRoomNum(room_number);
 				
@@ -435,6 +516,11 @@ public class RoomServiceController extends Controller {
 	}
 
 	// search for order with id
+	/**
+	 * Returns a list of {@code RoomServiceOrder} objects with the specified order id.
+	 * @param order_id  order id of order to be found
+	 * @return  a list of orders with the specified order id
+	 */
 	public ArrayList<RoomServiceOrder> searchForOrderWithID(int order_id){
 		
 		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
@@ -447,23 +533,33 @@ public class RoomServiceController extends Controller {
 	}
 	
 	// search for order with room number
-		public ArrayList<RoomServiceOrder> searchForOrderWithRoomNum(int room_num){
+	/**
+	 * Returns a list of {@code RoomServiceOrder} objects with the specified room number.
+	 * @param room_num  room number of order to be found
+	 * @return  a list of orders with the specified room number
+	 */
+	public ArrayList<RoomServiceOrder> searchForOrderWithRoomNum(String room_num){
 			
-			ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
-			for (RoomServiceOrder order : order_history) {
-				if (order.getRoom_number() == room_num)
-					list.add(order);
-			}
-			
-			return list;
+		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
+		for (RoomServiceOrder order : order_history) {
+			if (order.getRoom_number().equals(room_num))
+				list.add(order);
 		}
+			
+		return list;
+	}
 	
-	public ArrayList<RoomServiceOrder> getCurrentOrdersOfRoom(int room_number){
+	/**
+	 * Returns a list of {@code RoomServiceOrder} objects with the specified room number that has yet to be paid.
+	 * @param room_number  room number of order to be found
+	 * @return  a list of orders with the specified room number that has yet to be paid
+	 */
+	public ArrayList<RoomServiceOrder> getCurrentOrdersOfRoom(String room_number){
 		
 		ArrayList<RoomServiceOrder> list = new ArrayList<RoomServiceOrder>();
 		
 		for (RoomServiceOrder order : order_history) {
-			if (order.getRoom_number()==room_number && !order.isPaid() ) {
+			if (order.getRoom_number().equals(room_number) && !order.isPaid() ) {
 				list.add(order);
 			}
 		}
