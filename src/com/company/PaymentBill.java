@@ -6,8 +6,7 @@ public class PaymentBill {
 	/**
 	 * 
 	 */
-	private int roomID;
-	private int reservationID;
+	private String roomID;
 	private double discount=0;
 	private Status status=Status.PENDING;
 	private ArrayList<Transaction> transactionList;
@@ -50,21 +49,14 @@ public class PaymentBill {
 		return this.status.toString();
 	}
 	
-	public void setRoomID(int roomID) {
+	public void setRoomID(String roomID) {
 		 this.roomID=roomID;
 	}
 	
-	public int getRoomID() {
+	public String getRoomID() {
 		return this.roomID;
 	}
 	
-	public void setReservationID(int reservationID) {
-		 this.reservationID=reservationID;
-	}
-	
-	public int getReservationID() {
-		return this.reservationID;
-	}
 
 	public void setPaymentDetail(PaymentDetail payment) {
 		 this.payment_detail=payment;

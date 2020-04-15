@@ -23,7 +23,7 @@ public class PaymentController extends Controller{
 	
 	@Override
 	public void processMain() {
-		int id;
+		String id;
 		while (true)
 		{   int sel = pb.process();
 			switch (sel)
@@ -47,7 +47,7 @@ public class PaymentController extends Controller{
 					modifyCharges();			// Modify discount,
 					break;
 				case 6:
-					generatePaymentReport();   //Generate Financial report
+					generatePaymentReport();    //Generate Financial report
 					pb.waitInput();
 
 					break;
@@ -60,7 +60,7 @@ public class PaymentController extends Controller{
 	} 
 	
 	public void modifyPaymentAccount() {
-		int roomID;
+		String roomID;
 		while (true)
 		{
 		pb.modifyAccountMenu();
@@ -127,7 +127,7 @@ public class PaymentController extends Controller{
 			{
 				case 1:							//Add room to bill
 					System.out.println("Dummy Room Created for testing");
-					addRoomToPaymentBill(pb.requestRoomID(),"Deluxe",100.0); 
+					//addRoomToPaymentBill(pb.requestRoomID(),"Deluxe",100.0); 
 					pb.waitInput();
 					break;
 				case 2:							//Add roomService
@@ -143,7 +143,7 @@ public class PaymentController extends Controller{
 	}
 	
     //make payment
-    public void makePayment(int roomID) {
+    public void makePayment(String roomID) {
     	PaymentBill bill=getPaymentBill(roomID);
     	//return if bill does not exist or 0 transaction;
     	if(bill==null) {
@@ -189,7 +189,7 @@ public class PaymentController extends Controller{
     
     
 	//Create payment account when guest and reservation is made.
-	public void createPaymentAccount(int roomID) {
+	public void createPaymentAccount(String roomID) {
 		//Check if this payment account exist
 		if(getPaymentBill(roomID)!= null) {
 			System.out.println("PaymentAccount already exist!");
@@ -230,7 +230,7 @@ public class PaymentController extends Controller{
 		
 	}
 	// Remove Payment Account
-	public void removePaymentAccount(int roomID) {
+	public void removePaymentAccount(String roomID) {
 		PaymentBill bill =getPaymentBill(roomID);
     	if(bill==null) {
     		pb.invalidPaymentAccount();
@@ -242,28 +242,20 @@ public class PaymentController extends Controller{
 	}
 	
 	//add the room to PaymentBill.
-    public void addRoomToPaymentBill(int roomID, String roomType, Double roomCost ) {
+    public void addRoomToPaymentBill(String roomID,LocalDate startDate, LocalDate endDate ) {
     	//Search the bill
     	PaymentBill bill= getPaymentBill(roomID);
     	if(bill==null) return;
-
+    	RoomController rc= RoomController.getInstance();
+    	RoomEntity room=rc.getRoom(roomID);
+    	
     	Transaction newtrans = new Transaction();
     	newtrans.setQuantity(1);
 		//Fetch the room id,room type and price of the room. 
-		newtrans.setName("Room ID "+roomID);
-    	newtrans.setDescription(roomType);
-    	double price =roomCost;
+		newtrans.setName("Room ID "+room.getRoomId());
+    	newtrans.setDescription(room.getRoomType().toString());
+    	double price =room.getCost();
     	
-    	//get the start date and end date
-    	LocalDate startDate;
-    	LocalDate endDate;
-    	while(true) {
-		startDate = pb.readDate(sc, "Start Date (dd/MM/yyyy ):");
-		endDate = pb.readDate(sc, "End Date (dd/MM/yyyy ):");
-		if (Period.between(startDate, endDate).getDays()<1) 
-			System.out.println("Enter Valid Period of Day!");	
-		else break;
-    	}
 		
 		//iterate through date.
 		for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
@@ -281,7 +273,7 @@ public class PaymentController extends Controller{
     }
     
     //add room service to PaymentBill.
-    public void addRoomServiceToPaymentBill(int roomID) {
+    public void addRoomServiceToPaymentBill(String roomID) {
 		PaymentBill bill =getPaymentBill(roomID);
     	if(bill==null) {
     		pb.invalidPaymentAccount();
@@ -307,7 +299,7 @@ public class PaymentController extends Controller{
     }
 
     // Find the PaymentBill based on roomID
-    public PaymentBill getPaymentBill(int roomID) {
+    public PaymentBill getPaymentBill(String roomID) {
     	for(PaymentBill bill : PaymentBillList) {
     		if(bill.getRoomID()==roomID) {
     			return bill;
@@ -317,7 +309,7 @@ public class PaymentController extends Controller{
     }
 
     //print the invoice
-    public void printInvoice(int roomID) {
+    public void printInvoice(String roomID) {
     	PaymentBill bill=getPaymentBill(roomID);
     	if(bill==null) {
     		pb.invalidPaymentAccount();
@@ -351,7 +343,7 @@ public class PaymentController extends Controller{
 	} 
 
 	public void setDiscount(){
-		int id=pb.requestRoomID();
+		String id=pb.requestRoomID();
 		PaymentBill bill =getPaymentBill(id);
     	if(bill==null) {
     		pb.invalidPaymentAccount();

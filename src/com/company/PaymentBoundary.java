@@ -105,9 +105,9 @@ public class PaymentBoundary extends Boundary{
 	}
 	
    
-    protected int requestRoomID()
+    protected String requestRoomID()
 	{
-		return readInt(scan, "Enter Room Id :");
+		return readString(scan, "Enter Room Id :");
 
 	}
 
