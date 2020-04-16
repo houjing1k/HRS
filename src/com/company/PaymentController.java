@@ -3,6 +3,7 @@ package com.company;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 /**
@@ -12,16 +13,39 @@ import java.time.Period;
 
 public class PaymentController extends Controller{
 	private ArrayList<PaymentBill> PaymentBillList;
-	private double service_charge=0.1;
-	private double GST =0.07;
+	private ArrayList<Double> ChargesList;
 	PaymentBoundary pb= new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
-	//String report= fromFile( "PaymentReport.txt");
-	public PaymentController() {
-		PaymentBillList = new ArrayList<PaymentBill>();
-	}
+	String PaymentBillsFile= "PaymentBills.txt";
+	String chargesRateFile ="Charges.txt";   // index 0 : gst , index 1: service charge
 	
+	public PaymentController() {
+		PaymentBillList = (ArrayList<PaymentBill>) fromFile(PaymentBillsFile);
+		ChargesList= (ArrayList<Double>) fromFile(chargesRateFile);
+		if (PaymentBillList == null)
+		{
+			PaymentBillList = new ArrayList<PaymentBill>();
+		}
+		setCharges(ChargesList);
+	}
 
+	//load GST and service charges
+	public void setCharges(ArrayList<Double> charges) {
+		if(charges==null) {
+			ChargesList = new ArrayList<Double>();
+			ChargesList.add(PaymentBill.getGST());   //Add default GST to list
+			ChargesList.add(PaymentBill.getServiceCharge()); //add default service charge
+		}
+		else {
+			try {
+			PaymentBill.setGST(ChargesList.get(0));
+			PaymentBill.setServiceCharge(ChargesList.get(1));
+			}
+			catch(Exception e){
+	    		System.out.println("Failed to Load Charges!");
+			}
+		}		
+	}
 	
 	@Override
 	public void processMain() {
@@ -76,14 +100,10 @@ public class PaymentController extends Controller{
 					pb.waitInput();
 					break;
 				case 2:
-					updatePaymentAccount(); 		//modify Payment Account
-					break;
-				case 3:
 					viewAllPaymentAccount();		//View all Payment Account
 					pb.waitInput();
-
 					break;
-				case 4:
+				case 3:
 					roomID=pb.requestRoomID();
 					removePaymentAccount(roomID);		// remove payment account
 				case 0:
@@ -128,13 +148,15 @@ public class PaymentController extends Controller{
 			switch (sel)
 			{
 				case 1:							//Add room to bill
-					System.out.println("Dummy Room Created for testing");
-					//addRoomToPaymentBill(pb.requestRoomID(),"Deluxe",100.0); 
+					addRoomToPaymentBill(pb.requestRoomID(),pb.readDate(scan, "Start Date"), pb.readDate(scan, "End Date"));
 					pb.waitInput();
 					break;
 				case 2:							//Add roomService
 					addRoomServiceToPaymentBill(pb.requestRoomID());
 					break;
+				case 3:
+					//add dummy
+					addSmtgtoBill();
 				case 0:
 					return;
 				default:
@@ -142,6 +164,11 @@ public class PaymentController extends Controller{
 			}
 		}
 
+	}
+	void addSmtgtoBill(){
+		PaymentBill pay=getPaymentBill(pb.requestRoomID());
+		Transaction trans = new Transaction("dummy","dummy", 100,1, pb.readDate(scan, "Start Date").atStartOfDay());
+		pay.AddTransaction(trans);
 	}
 	
     //make payment
@@ -200,6 +227,7 @@ public class PaymentController extends Controller{
 		PaymentBill bill =new PaymentBill();
 		bill.setRoomID(roomID);
 		PaymentBillList.add(bill);
+		saveBillsToFile();
 	}
 	
 	// Enter Card Detail
@@ -213,10 +241,7 @@ public class PaymentController extends Controller{
 		return card;
 	}
 	
-	// Update Card Detail
-	public void updatePaymentAccount() {
-		
-	}
+
 	
 	//Print out all the payment account
 	public void viewAllPaymentAccount() {
@@ -230,6 +255,7 @@ public class PaymentController extends Controller{
     	}
 		
 	}
+	
 	// Remove Payment Account
 	public void removePaymentAccount(String roomID) {
 		PaymentBill bill =getPaymentBill(roomID);
@@ -239,7 +265,6 @@ public class PaymentController extends Controller{
     	}
 		PaymentBillList.remove(bill);
 		//System.out.println("Payment Account Succesfully Remove\n");	
-
 	}
 	
 	//add the room to PaymentBill.
@@ -272,6 +297,8 @@ public class PaymentController extends Controller{
 		    tempTrans.setTime(date.atTime(12, 00));
 		    bill.AddTransaction(tempTrans);
 		}
+		saveBillsToFile();
+
     }
     
     //add room service to PaymentBill.
@@ -303,7 +330,7 @@ public class PaymentController extends Controller{
     // Find the PaymentBill based on roomID
     public PaymentBill getPaymentBill(String roomID) {
     	for(PaymentBill bill : PaymentBillList) {
-    		if(bill.getRoomID()==roomID) {
+    		if(bill.getRoomID().equals(roomID)) {
     			return bill;
     		}
     	}
@@ -320,8 +347,8 @@ public class PaymentController extends Controller{
     	bill.printPaymentBill();
     	double totalPaymentBill=0;
     	totalPaymentBill=calculatePaymentBill(bill);
-    	System.out.println("\nThe total price :" + totalPaymentBill +" ( Include GST :"+  String.format("%.2f",GST*100)+"% , Service Charge:"
-		+service_charge*100+" %, Discount: "+bill.getDiscount()*100+"% )");
+    	System.out.println("\nThe total price :" + totalPaymentBill +" ( Include GST :"+  String.format("%.2f",PaymentBill.getGST()*100)+"% , Service Charge:"
+		+PaymentBill.getServiceCharge()*100+" %, Discount: "+bill.getDiscount()*100+"% )");
 
     }
     
@@ -333,17 +360,31 @@ public class PaymentController extends Controller{
 			sum+=trans.getPrice();
 		}
 		// GST , Discount , service charge	
-		sum =sum* (1+ this.GST -  paymentbill.getDiscount() + this.service_charge);
+		sum =sum* (1+ PaymentBill.getGST() -  paymentbill.getDiscount() + PaymentBill.getServiceCharge());
 		return Double.valueOf(String.format("%.2f",sum));	
 	}    	
 	
-	
-	public void setServiceCharge() {
-		System.out.println("Current Service Charge : "+ service_charge);
-		double charge = pb.readDouble(sc, "New Service Charge : ");
-		this.service_charge= charge;	
-	} 
 
+    //Change serviceCharge
+	public void setServiceCharge() {
+		System.out.println("Current Service Charge : "+ PaymentBill.getServiceCharge());
+		double charge = pb.readDouble(sc, "New Service Charge : ");
+		PaymentBill.setServiceCharge(charge);
+		ChargesList.set(1, charge);  //save service charge to file 
+		saveChargesToFile();
+
+	} 
+	
+	//set GST
+	public void setGST() {
+		System.out.println("Current GST : "+ PaymentBill.getGST());
+		double gst = pb.readDouble(sc, "New GST : ");
+		PaymentBill.setGST(Double.valueOf(String.format("%.2f",gst)));	
+		ChargesList.set(0, gst);  //save gst to file
+		saveChargesToFile();
+	}
+	
+	//set Discount 
 	public void setDiscount(){
 		String id=pb.requestRoomID();
 		PaymentBill bill =getPaymentBill(id);
@@ -354,15 +395,18 @@ public class PaymentController extends Controller{
 		System.out.println("Current Discount Rate : "+ bill.getDiscount());
 		double discount = pb.readDouble(sc, "New Discount Rate:");
 		bill.setDiscount(discount);
+		saveBillsToFile();
 	}
 
-	public void setGST() {
-		System.out.println("Current GST : "+ this.GST);
-		System.out.println("New GST : ");
-		double gst = pb.readDouble(sc, "New GST : ");
-		this.GST= Double.valueOf(String.format("%.2f",gst));	
+	private void saveBillsToFile()
+	{
+		toFile(PaymentBillList, PaymentBillsFile);
 	}
-
+	
+	private void saveChargesToFile()
+	{
+		toFile(ChargesList, chargesRateFile);
+	}
 
 	public void generatePaymentReport() {
 		pb.printSubTitle("Financial Report");
@@ -375,7 +419,6 @@ public class PaymentController extends Controller{
 				sum+=calculatePaymentBill(bill);
 			str+=(String.format("%s %14s %14s",bill.getRoomID(),bill.getStatus(),calculatePaymentBill(bill))+"\n");
 		}
-
 		System.out.println(str);
 		System.out.println("\nTotal Payment : "+sum);
 		toFile(str, "PaymentReport.txt");
