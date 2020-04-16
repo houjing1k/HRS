@@ -1,5 +1,6 @@
 package com.company;
 /**
+ * A single room service item. Each item has 4 attributes: name, description, price, and status. 
  * 
  */
 
@@ -12,10 +13,13 @@ import java.io.*;
 
 enum StockStatus { IN_STOCK, OUT_OF_STOCK };
 
+
+
+
 class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	
 	/**
-	 * 
+	 * use serialVersionUID for interoperability
 	 */
 	private static final long serialVersionUID = -5042892457783999289L;
 	
@@ -24,13 +28,19 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	private double price;
 	private StockStatus status;
 	
+	/**
+	 * Constructs a room service item with values as specified and sets its status to {@code IN_STOCK}
+	 * 
+	 * @param name  the name of the item
+	 * @param description  the description of the item
+	 * @param price  the price of the item
+	 */
 	RoomServiceItem(String name, String description, double price) {
 		setName(name);
 		setDescription(description);
 		setPrice(price);
 		this.status = StockStatus.IN_STOCK;
 	}
-	
 	
 	/**
 	 * @return the name
@@ -96,6 +106,10 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 		return status;
 	}
 	
+	/**
+	 * 
+	 * @param s the status to set
+	 */
 	void setStatus(StockStatus s) {
 		this.status = s;
 	}

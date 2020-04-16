@@ -105,9 +105,9 @@ public class PaymentBoundary extends Boundary{
 	}
 	
    
-    protected int requestRoomID()
+    protected String requestRoomID()
 	{
-		return readInt(scan, "Enter Room Id :");
+		return readString(scan, "Enter Room Id :");
 
 	}
 
@@ -176,6 +176,7 @@ public class PaymentBoundary extends Boundary{
             }
         }
     }
+    
     protected LocalDate readDate(Scanner scanner, String message) {
     	
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

@@ -1,15 +1,16 @@
 package com.company;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class PaymentBill {
 	/**
 	 * 
 	 */
-	private int roomID;
-	private int reservationID;
+	private String roomID;
 	private double discount=0;
 	private Status status=Status.PENDING;
+	private LocalDate paymentDate;
 	private ArrayList<Transaction> transactionList;
 	private PaymentDetail payment_detail;
 	
@@ -50,22 +51,15 @@ public class PaymentBill {
 		return this.status.toString();
 	}
 	
-	public void setRoomID(int roomID) {
+	public void setRoomID(String roomID) {
 		 this.roomID=roomID;
 	}
 	
-	public int getRoomID() {
+	public String getRoomID() {
 		return this.roomID;
 	}
 	
-	public void setReservationID(int reservationID) {
-		 this.reservationID=reservationID;
-	}
 	
-	public int getReservationID() {
-		return this.reservationID;
-	}
-
 	public void setPaymentDetail(PaymentDetail payment) {
 		 this.payment_detail=payment;
 	}
@@ -86,6 +80,14 @@ public class PaymentBill {
 		return this.discount;
 	}
 
-
+	//set discount
+	public void setPaymentDate(LocalDate date) {
+		this.paymentDate=date;
+	}
+	
+	// return the discount
+	public LocalDate getPaymentDate() {
+		return this.paymentDate;
+	}
 
 }
