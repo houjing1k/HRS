@@ -30,11 +30,11 @@ public class GuestController extends Controller
 			{
 				case 1:
 					//add new Guest
-					addGuest();
+					if (addGuest() == -1) loop = true;
 					break;
 				case 2:
 					//Update Guest details
-					updateGuest();
+					if (!updateGuest()) loop = true;
 					break;
 				case 3:
 					//Search Guest by name
@@ -123,32 +123,44 @@ public class GuestController extends Controller
 		return result;
 	}
 
-	//Update Guest Details
-	public void updateGuest()
+	public GuestEntity searchGuest_Hybrid()
 	{
-		GuestEntity guest = null;
-		GuestEntity updGuest = null;
 		ArrayList<GuestEntity> temp = searchGuest(gb.searchGuest());
+		GuestEntity result;
 		printGuestList(temp);
 		if (temp.size() == 0)
 		{
-			return;
+			return null;
 		}
 		else if (temp.size() == 1)
 		{
-			guest = temp.get(0);
+			result = temp.get(0);
 		}
 		else
 		{
-			guest = searchGuest(gb.searchGuestID());
-			printGuest(guest);
+			result = searchGuest(gb.searchGuestID());
+			printGuest(result);
 		}
+		return result;
+	}
+
+	//Update Guest Details
+	public boolean updateGuest()
+	{
+		GuestEntity guest = null;
+		GuestEntity updGuest = null;
+
+		guest = searchGuest_Hybrid();
 
 		if (guest != null)
 		{
 			updGuest = GuestEntity.copyGuest(guest);
 			int sel = gb.updateGuest();
-			if (sel == 8) //Select update card details
+			if (sel == 0) //Back to menu
+			{
+				return false;
+			}
+			else if (sel == 8) //Select update card details
 			{
 				String[] details = gb.updateCardDetails();
 				updatePaymentDetails(updGuest, details);
@@ -156,7 +168,9 @@ public class GuestController extends Controller
 				{
 					updatePaymentDetails(guest, details);
 					saveGuestsToFile();
+					return true;
 				}
+				else return false;
 			}
 			else
 			{
@@ -166,11 +180,12 @@ public class GuestController extends Controller
 				{
 					setGuestDetails(sel, guest, newVal);
 					saveGuestsToFile();
+					return true;
 				}
+				else return false;
 			}
-
-
 		}
+		return false;
 	}
 
 	private boolean setGuestDetails(int index, GuestEntity guest, String val)
