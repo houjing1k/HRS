@@ -19,7 +19,7 @@ public class RoomController extends Controller {
 	@SuppressWarnings("unchecked")
 	private RoomController() {
 		roomReports = RoomReports.getInstance();
-		roomList = (ArrayList<RoomEntity>) fromFile(roomFile);
+		//roomList = (ArrayList<RoomEntity>) fromFile(roomFile);
 		if(roomList == null) {
 			roomList = new ArrayList<>();
 			addRoomObjects();
@@ -38,17 +38,16 @@ public class RoomController extends Controller {
 			int x = 0;
 			for(int i = 0;i<2;i++) {
 				room += 1;
-				roomId= String.format("%02d"+"-"+"%02d", level,room);
+				roomId= String.format("%02d"+"%02d", level,room);
 				this.loadObject(roomId,RoomType.SINGLE,RoomStatus.VACANT,BedType.SINGLE,smoking);
 				room += 1;
-				System.out.println(room);
-				roomId= String.format("%02d"+"-"+"%02d", level,room);
+				roomId= String.format("%02d"+"%02d", level,room);
 				this.loadObject(roomId,RoomType.DOUBLE,RoomStatus.VACANT,BedType.QUEEN,smoking);
 				room += 1;
-				roomId= String.format("%02d"+"-"+"%02d", level,room);
+				roomId= String.format("%02d"+"%02d", level,room);
 				this.loadObject(roomId,RoomType.DELUXE,RoomStatus.VACANT,BedType.KING,smoking);
 				room += 1;
-				roomId= String.format("%02d"+"-"+"%02d", level,room);
+				roomId= String.format("%02d"+"%02d", level,room);
 				this.loadObject(roomId,RoomType.SINGLE,RoomStatus.VACANT,BedType.DOUBLESINGLE,smoking);
 			}
 			level += 1;
@@ -163,6 +162,18 @@ public class RoomController extends Controller {
 		}
 		return list;
 	}
+	
+	public void addRoom(String id,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking) {
+		loadObject(id,roomType,status,bedType,smoking);
+		saveFile();
+	}
+	
+	public void deleteRoom(String id) {
+		Object room = getRoom(id);
+		roomList.remove(room);
+		saveFile();
+	}
+	
 	public void saveFile() {
 		replaceFile(roomList,roomFile);
 	}

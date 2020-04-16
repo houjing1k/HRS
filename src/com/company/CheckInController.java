@@ -1,7 +1,9 @@
 package com.company;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.company.RoomEntity.RoomStatus;
 import com.company.RoomEntity.RoomType;
 
 public class CheckInController extends Controller {
@@ -11,6 +13,7 @@ public class CheckInController extends Controller {
 	private GuestController guestController;
 	private RoomController roomController;
 	private MainController mainController;
+	private PaymentController paymentController;
 	
 	private String[] menuWalkIn = {
 			"New Guest",
@@ -33,6 +36,7 @@ public class CheckInController extends Controller {
 		guestController = new GuestController();
 		roomController = RoomController.getInstance();
 		mainController = new MainController();
+		paymentController = new PaymentController();
 	}
 	
 	public static CheckInController getInstance() {
@@ -52,15 +56,15 @@ public class CheckInController extends Controller {
 			{
 				case 1:
 					//go to check in
-					walkInCheckIn();
+					loop = walkInCheckIn();
 					break;
 				case 2:
 					//go to reserve check in
-					reserveCheckIn();
+					loop = reserveCheckIn();
 					break;
 				case 3:
 					//check out
-					checkOut();
+					loop = checkOut();
 					break;
 				case 0:
 					//return
@@ -71,30 +75,39 @@ public class CheckInController extends Controller {
 					break;
 			}
 		}
+		mainController.processMain();
 	}
 	
-	private void reserveCheckIn() {
+	private boolean reserveCheckIn() {
 		// TODO Auto-generated method stub
 		int reserveId =checkInBoundary.getId();
 		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
-			checkIn(room.getGuestId(),room.getRoomId());
+			LocalDate startDate = checkInBoundary.getStartDate();
+			LocalDate endDate = checkInBoundary.getStartDate();
+			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
 			System.out.println("Reservation not found");
-			this.processMain();
+			return true;
 		}
 	}
 
-	private void checkOut() {
+	private boolean checkOut() {
 		// TODO Auto-generated method stub
 		String roomId =checkInBoundary.getRoomId();
+		if(roomController.getRoom(roomId).getRoomStatus()!= RoomStatus.OCCUPIED) {
+			System.out.println("Room is not occupied");
+			return false;
+		}
+		paymentController.addRoomServiceToPaymentBill(roomId);
+		paymentController.makePayment(roomId);
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
-		mainController.processMain();
+		return true;
 	}
 
-	private void walkInCheckIn() {
+	private boolean walkInCheckIn() {
 		int guestId = 0;
 		boolean loop = true;
 		while(loop) {
@@ -112,31 +125,33 @@ public class CheckInController extends Controller {
 					GuestEntity guestObj = guestController.searchGuest(guestId);
 					if(guestObj==null) {
 						System.out.println("Invalid Input");
-						this.processMain();
-						return;
+						return true;
 					}
 					break;
 				case 0:
 					//return
-					mainController.processMain();
+					return true;
 				default:
 					System.out.println("Invalid Input");
 					loop = true;
-					return;
 			}
 		}
+		LocalDate startDate = checkInBoundary.getStartDate();
+		LocalDate endDate = checkInBoundary.getStartDate();
 		String roomId = selectRoom();
-		checkIn(guestId,roomId);
+		return checkIn(guestId,roomId,startDate,endDate);
 	}
 	
-	private void checkIn(int guestId,String roomId) {
+	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate) {
 		try {
+			paymentController.createPaymentAccount(roomId);
+			paymentController.addRoomToPaymentBill(roomId, startDate, endDate);
 			roomController.checkIn(guestId, roomId);
 			System.out.println("Check in successful");
-			mainController.processMain();
+			return false;
 		}catch(Exception e) {
 			System.out.println("Invalid inputs");
-			this.processMain();
+			return true;
 		}
 	}
 	
