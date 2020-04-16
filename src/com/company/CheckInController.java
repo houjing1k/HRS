@@ -100,8 +100,14 @@ public class CheckInController extends Controller {
 			System.out.println("Room is not occupied");
 			return false;
 		}
+		RoomEntity room= roomController.getRoom(roomId);
+		int guestID=room.getGuestId();
+		//get the paymentDetail from guest. 
+		PaymentDetail paymentDetail;
+		//get the roomservice that this guest ordered
 		paymentController.addRoomServiceToPaymentBill(roomId);
-		paymentController.makePayment(roomId);
+		paymentController.makePayment(roomId,paymentDetail);
+		paymentController.removePaymentAccount(roomId);
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		return true;
