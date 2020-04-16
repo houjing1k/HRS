@@ -20,8 +20,8 @@ public class MainBoundary extends Boundary
 						"Add/Manage Reservations",
 						"Room Services",
 						"Room Check-in / Check-out",
-						"Payment Options",
-						"Administrative Control"
+						"Manage Hotel Rooms",
+						"Other Admin"
 				};
 		printMenuList(menuList,"Exit Application");
 		System.out.println();

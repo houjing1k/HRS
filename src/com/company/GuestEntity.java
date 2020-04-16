@@ -6,6 +6,7 @@ public class GuestEntity implements Serializable
 {
 	private Integer guestID;
 	private String name;
+	private String creditCardNum;
 	private String address;
 	private String country;
 	private Character gender;
@@ -13,33 +14,21 @@ public class GuestEntity implements Serializable
 	private String nationality;
 	private String contactNo;
 
-	//private String creditCardNum;
-	private PaymentDetail paymentDetail;
-
 	public GuestEntity()
 	{
 	}
 
-	public GuestEntity(Integer guestID,
-	                   String name,
-	                   String address,
-	                   String country,
-	                   Character gender,
-	                   String identityNo,
-	                   String nationality,
-	                   String contactNo,
-	                   PaymentDetail paymentDetail)
+	public GuestEntity(Integer guestID, String name, String address, String country, Character gender, String identityNo, String nationality, String contactNo, String creditCardNum)
 	{
 		this.guestID = guestID;
 		this.name = name;
-		//this.creditCardNum = creditCardNum;
+		this.creditCardNum = creditCardNum;
 		this.address = address;
 		this.country = country;
 		this.gender = gender;
 		this.identityNo = identityNo;
 		this.nationality = nationality;
 		this.contactNo = contactNo;
-		this.paymentDetail=paymentDetail;
 	}
 
 	@Override
@@ -53,9 +42,8 @@ public class GuestEntity implements Serializable
 				"\nIdentity No. : " + identityNo +
 				"\nNationality  : " + nationality +
 				"\nContact No.  : " + contactNo +
-				"\n"+
-				paymentDetail.toString()
-				;
+				"\nCredit Card  : " + creditCardNum +
+				"\n";
 	}
 
 	public static GuestEntity copyGuest(GuestEntity guest)
@@ -69,8 +57,7 @@ public class GuestEntity implements Serializable
 				guest.getIdentityNo(),
 				guest.getNationality(),
 				guest.getContactNo(),
-				guest.getPaymentDetail());
-
+				guest.getCreditCardNum());
 	}
 
 
@@ -92,6 +79,16 @@ public class GuestEntity implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public String getCreditCardNum()
+	{
+		return creditCardNum;
+	}
+
+	public void setCreditCardNum(String creditCardNum)
+	{
+		this.creditCardNum = creditCardNum;
 	}
 
 	public String getAddress()
@@ -153,8 +150,4 @@ public class GuestEntity implements Serializable
 	{
 		this.contactNo = contactNo;
 	}
-
-	public PaymentDetail getPaymentDetail(){return paymentDetail;}
-
-	public void setPaymentDetail(PaymentDetail paymentDetail){this.paymentDetail=paymentDetail;}
 }

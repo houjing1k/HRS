@@ -16,7 +16,7 @@ public class Scheduler {
     {
         Calendar currTime = Calendar.getInstance();
         int hour = currTime.get(Calendar.HOUR_OF_DAY);
-        //System.out.println(currTime.get(Calendar.HOUR_OF_DAY));
+        System.out.println(currTime.get(Calendar.HOUR_OF_DAY));
         Calendar tempCalendar = Calendar.getInstance();
         Date date2pm = new java.util.Date();
         date2pm.setHours(14);
@@ -59,7 +59,7 @@ public class Scheduler {
         @Override
         public void run() {
             Date date2pm = new java.util.Date();
-            //System.out.println(date2pm);
+            System.out.println(date2pm);
         }
     }
 
