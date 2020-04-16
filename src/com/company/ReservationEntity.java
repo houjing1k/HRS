@@ -1,25 +1,42 @@
 package com.company;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ReservationEntity implements Serializable {
     enum ReservationState{
-        RESERVED,
+        CONFIRMED,
         CHECKED_IN,
+        WAITLISTED,
+        EXPIRED,
         CANCELLED
     }
-    Date startDate, endDate;
-    int roomId, reservationId, guestId;
+    LocalDate startDate, endDate;
+    String roomId;
+    ArrayList<String> waitListRoomIds;
+    int reservationId, guestId;
     ReservationState reservationState;
-    ReservationEntity(Date startDate,Date endDate,int roomId,int reservationId, int guestId)
+    ReservationEntity(LocalDate startDate,LocalDate endDate,int reservationId, int guestId,ReservationState reservationState,ArrayList<String> waitListRoomIds)
+    {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.roomId = "";
+        this.reservationId = reservationId;
+        this.guestId = guestId;
+        this.reservationState = reservationState;
+        this.waitListRoomIds = waitListRoomIds;
+    }
+    ReservationEntity(LocalDate startDate,LocalDate endDate,String roomId,int reservationId, int guestId,ReservationState reservationState)
     {
         this.startDate = startDate;
         this.endDate = endDate;
         this.roomId = roomId;
         this.reservationId = reservationId;
         this.guestId = guestId;
-        this.reservationState = ReservationState.RESERVED;
+        this.reservationState = reservationState;
+        this.waitListRoomIds = null;
     }
     @Override
     public String toString() {
@@ -32,11 +49,32 @@ public class ReservationEntity implements Serializable {
                 "]";
     }
 
-    public Date getEndDate() {
+    public void reserve(String roomId)
+    {
+        this.roomId = roomId;
+        this.waitListRoomIds = null;
+        reservationState = ReservationState.CONFIRMED;
+    }
+
+    public void cancelReservation()
+    {
+        reservationState = ReservationState.CANCELLED;
+    }
+
+    public void expireReservation()
+    {
+        reservationState = ReservationState.EXPIRED;
+    }
+
+    public ArrayList<String> getWaitListRoomIds() {
+        return waitListRoomIds;
+    }
+
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
@@ -48,8 +86,13 @@ public class ReservationEntity implements Serializable {
         return reservationId;
     }
 
-    public int getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
+
+    public ReservationState getReservationState() {
+        return reservationState;
+    }
+
 
 }

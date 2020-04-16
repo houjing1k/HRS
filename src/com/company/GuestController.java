@@ -207,7 +207,7 @@ public class GuestController extends Controller
 		gb.printGuestList(guestList);
 	}
 
-	private void printGuestList(ArrayList<GuestEntity> e)
+	public void printGuestList(ArrayList<GuestEntity> e)
 	{
 		gb.printGuestList(e);
 	}
