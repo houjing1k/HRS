@@ -19,7 +19,7 @@ public class RoomController extends Controller {
 	@SuppressWarnings("unchecked")
 	private RoomController() {
 		roomReports = RoomReports.getInstance();
-		//roomList = (ArrayList<RoomEntity>) fromFile(roomFile);
+		roomList = (ArrayList<RoomEntity>) fromFile(roomFile);
 		if(roomList == null) {
 			roomList = new ArrayList<>();
 			addRoomObjects();
