@@ -103,7 +103,7 @@ public class CheckInController extends Controller {
 		RoomEntity room= roomController.getRoom(roomId);
 		int guestID=room.getGuestId();
 		//get the paymentDetail from guest. 
-		PaymentDetail paymentDetail;
+		PaymentDetail paymentDetail=new PaymentDetail("Cash");
 		//get the roomservice that this guest ordered
 		paymentController.addRoomServiceToPaymentBill(roomId);
 		paymentController.makePayment(roomId,paymentDetail);
