@@ -190,7 +190,7 @@ public class PaymentController extends Controller{
     }
     
     
-	//Create payment account when guest and reservation is made.
+	//Create payment account when checked in
 	public void createPaymentAccount(String roomID) {
 		//Check if this payment account exist
 		if(getPaymentBill(roomID)!= null) {
@@ -247,6 +247,8 @@ public class PaymentController extends Controller{
     	//Search the bill
     	PaymentBill bill= getPaymentBill(roomID);
     	if(bill==null) return;
+    	
+    	//get the roomcontroller instance
     	RoomController rc= RoomController.getInstance();
     	RoomEntity room=rc.getRoom(roomID);
     	
@@ -257,7 +259,6 @@ public class PaymentController extends Controller{
     	newtrans.setDescription(room.getRoomType().toString());
     	double price =room.getCost();
     	
-		
 		//iterate through date.
 		for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
 		{    	
