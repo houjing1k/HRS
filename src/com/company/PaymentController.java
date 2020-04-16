@@ -16,8 +16,8 @@ public class PaymentController extends Controller{
 	private ArrayList<Double> ChargesList;
 	PaymentBoundary pb= new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
-	String PaymentBillsFile= "PaymentBills.txt";
-	String chargesRateFile ="Charges.txt";   // index 0 : gst , index 1: service charge
+	String PaymentBillsFile= "PaymentBills.ser";
+	String chargesRateFile ="Charges.ser";   // index 0 : gst , index 1: service charge
 	
 	public PaymentController() {
 		PaymentBillList = (ArrayList<PaymentBill>) fromFile(PaymentBillsFile);
@@ -29,23 +29,6 @@ public class PaymentController extends Controller{
 		setCharges(ChargesList);
 	}
 
-	//load GST and service charges
-	public void setCharges(ArrayList<Double> charges) {
-		if(charges==null) {
-			ChargesList = new ArrayList<Double>();
-			ChargesList.add(PaymentBill.getGST());   //Add default GST to list
-			ChargesList.add(PaymentBill.getServiceCharge()); //add default service charge
-		}
-		else {
-			try {
-			PaymentBill.setGST(ChargesList.get(0));
-			PaymentBill.setServiceCharge(ChargesList.get(1));
-			}
-			catch(Exception e){
-	    		System.out.println("Failed to Load Charges!");
-			}
-		}		
-	}
 	
 	@Override
 	public void processMain() {
@@ -167,8 +150,10 @@ public class PaymentController extends Controller{
 	}
 	void addSmtgtoBill(){
 		PaymentBill pay=getPaymentBill(pb.requestRoomID());
-		Transaction trans = new Transaction("dummy","dummy", 100,1, pb.readDate(scan, "Start Date").atStartOfDay());
+		Transaction trans = new Transaction("dummy","dummy", 100,1, LocalDateTime.now());
 		pay.AddTransaction(trans);
+		saveBillsToFile();
+
 	}
 	
     //make payment
@@ -240,8 +225,6 @@ public class PaymentController extends Controller{
 		card.setExpiryDate(pb.readDate(sc, "Expiry Date (dd/MM/yyyy ) :").toString());
 		return card;
 	}
-	
-
 	
 	//Print out all the payment account
 	public void viewAllPaymentAccount() {
@@ -365,6 +348,24 @@ public class PaymentController extends Controller{
 	}    	
 	
 
+	//load GST and service charges
+	public void setCharges(ArrayList<Double> charges) {
+		if(charges==null) {
+			ChargesList = new ArrayList<Double>();
+			ChargesList.add(PaymentBill.getGST());   //Add default GST to list
+			ChargesList.add(PaymentBill.getServiceCharge()); //add default service charge
+		}
+		else {
+			try {
+			PaymentBill.setGST(ChargesList.get(0));
+			PaymentBill.setServiceCharge(ChargesList.get(1));
+			}
+			catch(Exception e){
+	    		System.out.println("Failed to Load Charges!");
+			}
+		}		
+	}
+	
     //Change serviceCharge
 	public void setServiceCharge() {
 		System.out.println("Current Service Charge : "+ PaymentBill.getServiceCharge());
@@ -398,11 +399,13 @@ public class PaymentController extends Controller{
 		saveBillsToFile();
 	}
 
+	//store the PaymentBillList to file
 	private void saveBillsToFile()
 	{
 		toFile(PaymentBillList, PaymentBillsFile);
 	}
 	
+	//store chargesList to file
 	private void saveChargesToFile()
 	{
 		toFile(ChargesList, chargesRateFile);
