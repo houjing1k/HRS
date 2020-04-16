@@ -15,22 +15,16 @@ public class CheckInController extends Controller {
 	private MainController mainController;
 	private PaymentController paymentController;
 	
-	private String[] menuMain = {
-            "Walk In Check In",
-            "Reservation Check In",
-            "Check out"
-    };
-	
 	private String[] menuWalkIn = {
 			"New Guest",
 			"Existing Guest"
 	};
 	
-	private String [] menuGuestId = {
+	String [] menuGuestId = {
 			"Enter Guest Id:"
 	};
 	
-	private String [] menuRoomType = {
+	String [] menuRoomType = {
             "1. Single room",
             "2. Double room",
             "3. Deluxe room"
@@ -58,7 +52,6 @@ public class CheckInController extends Controller {
 		while (loop)
 		{
 			loop = false;
-			checkInBoundary.setMenu(menuMain, "Check In/Out Menu");
 			switch (checkInBoundary.process())
 			{
 				case 1:
@@ -82,7 +75,7 @@ public class CheckInController extends Controller {
 					break;
 			}
 		}
-		mainController.processMain(); 
+		mainController.processMain();
 	}
 	
 	private boolean reserveCheckIn() {
@@ -102,28 +95,16 @@ public class CheckInController extends Controller {
 
 	private boolean checkOut() {
 		// TODO Auto-generated method stub
-		RoomEntity room = null;
 		String roomId =checkInBoundary.getRoomId();
-		try {
-			room = roomController.getRoom(roomId);
-			if(room.getRoomStatus()!= RoomStatus.OCCUPIED) {
-				System.out.println("Room is not occupied");
-				return true;
-			}
-		}catch(Exception e) {
-			System.out.println("Invalid room Id");
-			return true;
+		if(roomController.getRoom(roomId).getRoomStatus()!= RoomStatus.OCCUPIED) {
+			System.out.println("Room is not occupied");
+			return false;
 		}
-		int guestID=room.getGuestId();
-		//get the paymentDetail from guest. 
-		PaymentDetail paymentDetail=new PaymentDetail("Cash");
-		//get the roomservice that this guest ordered
 		paymentController.addRoomServiceToPaymentBill(roomId);
-		paymentController.makePayment(roomId,paymentDetail);
-		paymentController.removePaymentAccount(roomId);
+		paymentController.makePayment(roomId);
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
-		return false;
+		return true;
 	}
 
 	private boolean walkInCheckIn() {
