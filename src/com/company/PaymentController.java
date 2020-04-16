@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Kenny Voo
@@ -401,15 +402,14 @@ public class PaymentController extends Controller{
 		pb.printSubTitle("Financial Report");
 		
 		String str=null;
-		str=(String.format("%s %10s %10s", "RoomID", "PaidAmount","PaymentDate")+"\n");
-		
+		System.out.println(String.format("%-10s %-15s %-15s", "RoomID", "PaidAmount($)","PaymentDate")+"\n");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		double sum=0;
 		for(PaymentBill bill : PaymentRecords) {
-			System.out.println(String.format("%-10s %-15s %-25s", bill.getRoomID(), 
-					bill.getTotalPrice(), bill.getPaymentDate()));
+			System.out.println(String.format("%-10s %-15s %-15s", bill.getRoomID(), 
+					bill.getTotalPrice(),bill.getPaymentDate().format(formatter) ));
 				sum+=calculatePaymentBill(bill);
 		}
-		System.out.println(str);
 		System.out.println("\nTotal Paid Amount : "+sum);
 		
 	}
