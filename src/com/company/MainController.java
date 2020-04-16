@@ -3,7 +3,7 @@ package com.company;
 public class MainController extends Controller
 {
 	private MainBoundary mb;
-
+	private Scheduler scheduler = new Scheduler();
 	public MainController()
 	{
 		mb = new MainBoundary();
@@ -30,6 +30,7 @@ public class MainController extends Controller
 					break;
 
 				case 4: //4 - Room Check-in / Check-out
+					RoomController.getInstance().processMain();
 					//new RoomController().processMain();
 					break;
 

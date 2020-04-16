@@ -1,5 +1,8 @@
 package com.company;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,20 +48,50 @@ public class CheckInBoundary extends Boundary {
 		}	while(!checkRoomId(id));
 		return id;
 	}
+		
+	public LocalDate getStartDate() {
+		// TODO Auto-generated method stub
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	while(true) {
+    		try {
+    			System.out.println("\nEnter start date: (dd/MM/yyyy)");
+    			return LocalDate.parse(sc.next(),formatter);
+
+    		} 	catch (DateTimeParseException exc) {
+    			System.out.println("Please enter the date in this format (dd/MM/yyyy)");
+    		}
+    	}
+	}
+	
+	public LocalDate getEndDate() {
+		// TODO Auto-generated method stub
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	while(true) {
+    		try {
+    			System.out.println("\nEnter end date: (dd/MM/yyyy)");
+    			return LocalDate.parse(sc.next(),formatter);
+
+    		} 	catch (DateTimeParseException exc) {
+    			System.out.println("Please enter the date in this format (dd/MM/yyyy)");
+    		}
+    	}
+	}
 
 	public String printRooms(ArrayList<RoomEntity> roomArray) {
 		// TODO Auto-generated method stub
 		String pre = "";
-		String cur = "";
+		String curLevel = "";
+		String num = ""; 
 		ArrayList<RoomEntity> list = RoomController.getInstance().listRooms(RoomStatus.VACANT, roomArray);
 		System.out.println("Avalible rooms");
 		for(RoomEntity room:list) {
-			cur = room.getRoomId().substring(0, 2);
-			if(!cur.equals(pre)) {
-				System.out.print("\nLevel "+cur+": ");
+			curLevel = room.getRoomId().substring(0, 2);
+			num = room.getRoomId().substring(2, 4);
+			if(!curLevel.equals(pre)) {
+				System.out.print("\nLevel "+curLevel+": ");
 			}
-			pre = cur;
-			System.out.print(room.getRoomId());
+			pre = curLevel;
+			System.out.print(curLevel+"-"+num);
 			System.out.print(" ");
 		}
 		while(true) {
@@ -76,11 +109,13 @@ public class CheckInBoundary extends Boundary {
 	{
 		boolean check = ((!str.equals(""))
 				&& (str != null)
-				&& (str.matches("\\d{2}-\\d{2}")));
+				&& (str.matches("\\d{4}"))
+				&& (str.matches("^[0-9]+$")));
+
 		if (!check)
 		{
 			System.out.println("Invalid Room Id Number.");
-			System.out.println("Format: xx-xx");
+			System.out.println("Format: xxxx");
 		}
 		return check;
 	}
