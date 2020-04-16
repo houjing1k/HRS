@@ -12,14 +12,12 @@ public class PaymentBill {
 	private Status status=Status.PENDING;
 	private LocalDate paymentDate;
 	private ArrayList<Transaction> transactionList;
-	private PaymentDetail payment_detail;
 	
 	public enum Status{
 		PENDING,PAID,CANCELLED;	
 	}
 	public PaymentBill() {
 		transactionList = new ArrayList<Transaction>();
-	    payment_detail= new PaymentDetail("CASH"); //default by cash
 	}
 
 	//Add transaction to the PaymentBill. 
@@ -59,16 +57,6 @@ public class PaymentBill {
 		return this.roomID;
 	}
 	
-	
-	public void setPaymentDetail(PaymentDetail payment) {
-		 this.payment_detail=payment;
-	}
-	
-	//return the paymentdetail
-	public PaymentDetail getPaymentDetail() {
-		
-		return this.payment_detail;
-	}
 
 	//set discount
 	public void setDiscount(double discount) {

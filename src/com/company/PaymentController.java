@@ -43,7 +43,7 @@ public class PaymentController extends Controller{
 					break;
 				case 4:
 					id=pb.requestRoomID();
-					makePayment(id);    		//Make Payment
+					//makePayment(id);    		//Make Payment
 					break;
 				case 5:
 					modifyCharges();			// Modify discount,
@@ -145,7 +145,7 @@ public class PaymentController extends Controller{
 	}
 	
     //make payment
-    public void makePayment(String roomID) {
+    public void makePayment(String roomID,PaymentDetail paymentDetail) {
     	PaymentBill bill=getPaymentBill(roomID);
     	//return if bill does not exist or 0 transaction;
     	if(bill==null) {
@@ -172,7 +172,7 @@ public class PaymentController extends Controller{
 				case 2:	
 					
 					printInvoice(roomID);					//Pay by Card
-					System.out.println(bill.getPaymentDetail().toString());
+					System.out.println(paymentDetail.toString());
 					System.out.println();
 					pb.paymentProcess("CARD",calculatePaymentBill(bill));
 					bill.setStatus("PAID");
@@ -199,7 +199,6 @@ public class PaymentController extends Controller{
 		}
 		PaymentBill bill =new PaymentBill();
 		bill.setRoomID(roomID);
-		bill.setPaymentDetail(createPaymentDetail());
 		PaymentBillList.add(bill);
 	}
 	
