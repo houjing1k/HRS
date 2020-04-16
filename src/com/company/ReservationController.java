@@ -20,7 +20,7 @@ public class ReservationController extends Controller {
 
     }
 
-    private boolean isRoomAvailable(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
+    public boolean isRoomAvailable(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
     {
         loadReservationsFromFile();
         for (ReservationEntity reservation : reservations) {
@@ -188,11 +188,10 @@ public class ReservationController extends Controller {
             }
             if (!addedNamesBool) {
                 addedIds.add(reservation.getGuestId());
-                //guestNames.put(reservation.getGuestId(), guestController.searchGuest(reservation.guestId).getName());
-                guestNames.put(reservation.getGuestId(), String.valueOf(reservation.getGuestId()));
+                guestNames.put(reservation.getGuestId(), guestController.searchGuest(reservation.guestId).getName());
+                //guestNames.put(reservation.getGuestId(), String.valueOf(reservation.getGuestId()));
             }
         }
-        //new GuestController()
         reservationBoundary.printReservations(reservations,guestNames);
     }
 
@@ -250,6 +249,7 @@ public class ReservationController extends Controller {
         for (ReservationEntity reservation : reservations) {
             if (reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
                 reservation.expireReservation();
+                RoomController.getInstance().checkOut(reservation.getRoomId());
                 waitListUpdate(reservation.getRoomId());
             }
         }

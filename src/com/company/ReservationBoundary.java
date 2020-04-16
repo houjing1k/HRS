@@ -58,7 +58,7 @@ public class ReservationBoundary extends Boundary {
             System.out.println(String.format("[Reservation ID]: %d \n" +
                             "Guest Name: %s \n" +
                             "Room Number: %s \n" +
-                            "Reservation Ids: %s \n" +
+                            "Wait List Room Ids: %s \n" +
                             "Start Date: %s \n" +
                             "End Date: %s\n" +
                             "Reservation State: %s",
