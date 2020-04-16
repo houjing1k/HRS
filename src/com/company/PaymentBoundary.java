@@ -107,9 +107,20 @@ public class PaymentBoundary extends Boundary{
    
     protected String requestRoomID()
 	{
-		return readString(scan, "Enter Room Id :");
-
+        while (true) {
+            String temp;
+            try {
+                temp= scan.next();
+                if(!temp.matches("\\d{4}")) {
+                	throw new Exception("Invalid Room ID. Format: xxxx");
+                }
+                else return temp;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
 	}
+	
 
     protected int requestTransactionDetail()
 	{
