@@ -14,8 +14,6 @@ public class CheckInBoundary extends Boundary {
 	private String title;
 	private Scanner sc;
 	public CheckInBoundary() {
-		this.title = "Check In/Out Menu";
-		this.menu = menuMain;
 		sc = new Scanner(System.in);
 	}
 	
@@ -32,11 +30,6 @@ public class CheckInBoundary extends Boundary {
 		this.title = title;
 	}
 	
-	private String[] menuMain = {
-            "Walk In Check In",
-            "Reservation Check In",
-            "Check out"
-    };
 	
 
 	public String getRoomId() {
