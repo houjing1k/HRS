@@ -76,11 +76,10 @@ public class GuestController extends Controller
 		gb.addGuestMenu();
 
 		String[] guestDetails = new String[8];
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			setGuestDetails(i + 1, newGuest, gb.addUpdateGuestSub(i + 1, "Enter"));
 		}
-		updatePaymentDetails(newGuest, gb.updateCardDetails());
 
 		if (gb.confirmation(newGuest))
 		{
@@ -148,28 +147,14 @@ public class GuestController extends Controller
 		{
 			updGuest = GuestEntity.copyGuest(guest);
 			int sel = gb.updateGuest();
-			if (sel == 8) //Select update card details
-			{
-				String[] details = gb.updateCardDetails();
-				updatePaymentDetails(updGuest, details);
-				if (gb.confirmation(updGuest))
-				{
-					updatePaymentDetails(guest, details);
-					saveGuestsToFile();
-				}
-			}
-			else
-			{
-				String newVal = gb.addUpdateGuestSub(sel, "New");
-				setGuestDetails(sel, updGuest, newVal);
-				if (gb.confirmation(updGuest))
-				{
-					setGuestDetails(sel, guest, newVal);
-					saveGuestsToFile();
-				}
-			}
+			String newVal = gb.addUpdateGuestSub(sel, "New");
+			setGuestDetails(sel, updGuest, newVal);
 
-
+			if (gb.confirmation(updGuest))
+			{
+				setGuestDetails(sel, guest, newVal);
+				saveGuestsToFile();
+			}
 		}
 	}
 
@@ -200,9 +185,9 @@ public class GuestController extends Controller
 				case 7:
 					guest.setContactNo(val);
 					break;
-				//case 8:
-				//guest.setCreditCardNum(val);
-				//break;
+				case 8:
+					guest.setCreditCardNum(val);
+					break;
 			}
 			return true;
 		}
@@ -211,20 +196,6 @@ public class GuestController extends Controller
 			return false;
 		}
 	}
-
-	private boolean updatePaymentDetails(GuestEntity guest, String[] cardDetails)
-	{
-		if ((guest != null) && (cardDetails != null))
-		{
-			guest.setPaymentDetail(new PaymentDetail(cardDetails[0], cardDetails[1], cardDetails[2]));
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 
 	private void saveGuestsToFile()
 	{

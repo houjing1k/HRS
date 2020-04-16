@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class GuestBoundary extends Boundary
 {
 	private Scanner sc;
-	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.", "Card Details"};
+	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.", "Credit Card No."};
 
 	public GuestBoundary()
 	{
@@ -144,10 +144,9 @@ public class GuestBoundary extends Boundary
 					case 7:
 						if (!checkContactNo(input)) throw new Exception();
 						break;
-					/*case 8:
+					case 8:
 						if (!checkCreditCardNo(input)) throw new Exception();
 						break;
-					 */
 				}
 
 			} catch (Exception e)
@@ -156,30 +155,6 @@ public class GuestBoundary extends Boundary
 			}
 		}
 		return input;
-	}
-
-	public String[] updateCardDetails()
-	{
-		String[] cardDetails = new String[3];
-		boolean loop = true;
-
-		printSubTitle("Add/Modify Card Details");
-
-		while (loop)
-		{
-			sc = new Scanner(System.in);
-			System.out.println("Card Name: ");
-			cardDetails[0] = sc.nextLine();
-			System.out.println("Card No.: ");
-			cardDetails[1] = sc.nextLine();
-			System.out.println("Expiry Date: ");
-			cardDetails[2] = sc.nextLine();
-			if (checkCardDetails(cardDetails))
-			{
-				loop = false;
-			}
-		}
-		return cardDetails;
 	}
 
 	public boolean confirmation(GuestEntity guest)
@@ -303,34 +278,16 @@ public class GuestBoundary extends Boundary
 		return check;
 	}
 
-	private boolean checkCardDetails(String[] str)
+	private boolean checkCreditCardNo(String str)
 	{
-		boolean check1, check2, check3;
-		check1 = ((!str[0].equals(""))
-				&& (str[0] != null)
-				&& (str[0].matches("^[ A-Za-z]+$")));
-		if (!check1)
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("\\d{4}-\\d{4}-\\d{4}-\\d{4}")));
+		if (!check)
 		{
-			System.out.println("Invalid Name. Only alphabetical accepted");
-		}
-
-		check2 = ((!str[1].equals(""))
-				&& (str[1] != null)
-				&& (str[1].matches("\\d{4}-\\d{4}-\\d{4}-\\d{4}")));
-		if (!check2)
-		{
-			System.out.println("Invalid Card Number.");
+			System.out.println("Invalid Credit Card Number.");
 			System.out.println("Format: xxxx-xxxx-xxxx-xxxx");
 		}
-
-		check3 = ((!str[2].equals(""))
-				&& (str[2] != null)
-				&& (str[2].matches("^(0[1-9]|1[0-2])\\/?([0-9]{2})$")));
-		if (!check3)
-		{
-			System.out.println("Invalid Expiry Date.");
-			System.out.println("Format: MM/YY");
-		}
-		return check1 && check2 && check3;
+		return check;
 	}
 }

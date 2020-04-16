@@ -199,11 +199,10 @@ public class PaymentController extends Controller{
 		}
 		PaymentBill bill =new PaymentBill();
 		bill.setRoomID(roomID);
-		//bill.setPaymentDetail(createPaymentDetail());
+		bill.setPaymentDetail(createPaymentDetail());
 		PaymentBillList.add(bill);
 	}
-
-	/*
+	
 	// Enter Card Detail
 	public PaymentDetail createPaymentDetail() {
 		pb.CreatePaymentDetail();
@@ -214,8 +213,6 @@ public class PaymentController extends Controller{
 		card.setExpiryDate(pb.readDate(sc, "Expiry Date (dd/MM/yyyy ) :").toString());
 		return card;
 	}
-
-	 */
 	
 	// Update Card Detail
 	public void updatePaymentAccount() {

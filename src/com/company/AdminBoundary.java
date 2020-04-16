@@ -13,11 +13,12 @@ public class AdminBoundary extends Boundary
 
 	protected void printMenu()
 	{
-		printMainTitle("Administrative Control");
+		printMainTitle("Manage Guests");
 		String[] menuList =
 				{
-						"Manage Rooms",
-						"Print Occupancy Reports",
+						"Add / Create Rooms",
+						"Print Room Report",
+						"Search Guests by Name",
 						"Modify Hotel Charges",
 						"Print Bill Invoice"
 				};

@@ -19,7 +19,7 @@ public class PaymentBill {
 	}
 	public PaymentBill() {
 		transactionList = new ArrayList<Transaction>();
-	    //payment_detail= new PaymentDetail("CASH"); //default by cash
+	    payment_detail= new PaymentDetail("CASH"); //default by cash
 	}
 
 	//Add transaction to the PaymentBill. 
