@@ -40,10 +40,9 @@ public class CheckInBoundary extends Boundary {
 	
 
 	public String getRoomId() {
-		// TODO Auto-generated method stub
 		String id = "";
 		do {
-			System.out.println("\nEnter Room ID: ");
+			System.out.println("Enter Room ID: ");
 			id = sc.nextLine();
 		}	while(!checkRoomId(id));
 		return id;
@@ -94,6 +93,9 @@ public class CheckInBoundary extends Boundary {
 			System.out.print(curLevel+"-"+num);
 			System.out.print(" ");
 		}
+		System.out.println(" ");
+		sc.nextLine();
+
 		while(true) {
 			String id = getRoomId();
 			for(RoomEntity room:list) {
@@ -122,12 +124,16 @@ public class CheckInBoundary extends Boundary {
 
 	public int getId() {
 		// TODO Auto-generated method stub
-		try {
-			System.out.println("Enter Reservation ID: ");
-			return sc.nextInt();
+		int id;
+		while(true) {
+			try {
+				System.out.println("Enter Reservation ID: ");
+				id = sc.nextInt(); 
+				return id;
 			}catch(Exception e) {
-			return -1;
+				sc.nextLine();
+				System.out.println("Invalid reservation id");
+			}
 		}
 	}
-	
 }

@@ -14,6 +14,7 @@ public class CheckInController extends Controller {
 	private RoomController roomController;
 	private MainController mainController;
 	private PaymentController paymentController;
+	private ReservationController reservationController;
 	
 	private String[] menuMain = {
             "Walk In Check In",
@@ -43,6 +44,7 @@ public class CheckInController extends Controller {
 		roomController = RoomController.getInstance();
 		mainController = new MainController();
 		paymentController = new PaymentController();
+		reservationController  = new ReservationController();
 	}
 	
 	public static CheckInController getInstance() {
@@ -89,9 +91,10 @@ public class CheckInController extends Controller {
 		// TODO Auto-generated method stub
 		int reserveId =checkInBoundary.getId();
 		RoomEntity room = roomController.getRerservation(reserveId);
+		ReservationEntity reservation = reservationController.getReservationById(reserveId);
 		if(room!=null) {
-			LocalDate startDate = checkInBoundary.getStartDate();
-			LocalDate endDate = checkInBoundary.getStartDate();
+			LocalDate startDate = reservation.startDate;
+			LocalDate endDate = reservation.endDate;
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
@@ -144,13 +147,6 @@ public class CheckInController extends Controller {
 					}catch(Exception e) {
 						return true;
 					}
-					/*checkInBoundary.setMenu(menuGuestId, "Check In");
-					guestId = checkInBoundary.process();
-					/ GuestEntity guestObj = guestController.searchGuest(guestId);
-					if(guestObj==null) {
-						System.out.println("Invalid Input");
-						return true;
-					}*/
 					break;
 				case 0:
 					//return
