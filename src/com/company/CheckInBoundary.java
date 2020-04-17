@@ -122,7 +122,12 @@ public class CheckInBoundary extends Boundary {
 
 	public int getId() {
 		// TODO Auto-generated method stub
-		System.out.println("Enter Reservation ID: ");
-		return sc.nextInt();
+		try {
+			System.out.println("Enter Reservation ID: ");
+			return sc.nextInt();
+			}catch(Exception e) {
+			return -1;
+		}
 	}
+	
 }
