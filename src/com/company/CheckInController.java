@@ -119,7 +119,7 @@ public class CheckInController extends Controller {
 		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
 		paymentController.addRoomServiceToPaymentBill(roomId);
-		paymentController.makePayment(roomId,guest.getPaymentDetail());
+		paymentController.makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		return false;

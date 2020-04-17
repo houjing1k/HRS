@@ -55,7 +55,7 @@ public class PaymentController extends Controller{
 					break;
 				case 4:
 					roomID=pb.requestRoomID();
-					makePayment(roomID,new PaymentDetail("Dummy", "1212", "1/1/20"));    		//Make Payment
+					makePaymentMenu(roomID,new PaymentDetail("Dummy", "1212", "1/1/20"));    		//Make Payment
 					break;
 				case 5:
 					modifyCharges();			// Modify discount,
@@ -156,7 +156,7 @@ public class PaymentController extends Controller{
 
 	
     //make payment
-    public void makePayment(String roomID,PaymentDetail paymentDetail) {
+    public void makePaymentMenu(String roomID,PaymentDetail paymentDetail) {
     	PaymentBill bill=getPaymentBill(roomID);
     	//return if bill does not exist or 0 transaction;
     	if(bill==null) {
