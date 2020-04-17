@@ -23,4 +23,9 @@ public class RoomBoundary extends Boundary
 		System.out.println();
 	}
 
+	protected void addRoom()
+	{
+
+	}
+
 }

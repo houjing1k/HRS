@@ -43,25 +43,27 @@ public class ReservationController extends Controller {
         loadReservationsFromFile();
         ArrayList<GuestEntity> guestEntityArrayList;
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        System.out.println("Has guest registered before?(Y/N)");
+        GuestController guestController = new GuestController();
         String decision;
         LocalDate startDate,endDate;
-        int guestId;
+        GuestEntity guestEntity=null;
+        int guestId = -1;
+        //boolean loop = true;
         do {
-            decision = scan.next();
-            decision = decision.toUpperCase();
-        }while (!decision.equals("Y") && !decision.equals("N"));
-        if(decision.equals("Y"))
-        {
-            guestEntityArrayList = reservationBoundary.requestGuestName();
-            reservationBoundary.listGuests(guestEntityArrayList);
-            System.out.println("Key in the ID of the guest");
-            guestId = scan.nextInt();
-        }
-        else
-        {
-            guestId = new GuestController().addGuest();
-        }
+            do {
+                System.out.println("Has guest registered before?(Y/N)");
+                decision = scan.next();
+                decision = decision.toUpperCase();
+            } while (!decision.equals("Y") && !decision.equals("N"));
+            if (decision.equals("Y")) {
+                guestEntity = guestController.searchGuest_Hybrid();
+                //if(guestEntity == null)continue;
+            } else {
+                guestId = guestController.addGuest();
+            }
+        }while(guestEntity == null && guestId == -1);
+        if(guestEntity != null)
+            guestId = guestEntity.getGuestID();
         String tempString;
         startDate = endDate = null;
         System.out.println("Please type the start date(dd/mm/yyyy):");
@@ -72,7 +74,7 @@ public class ReservationController extends Controller {
             }catch (Exception e)
             {
                 //e.printStackTrace();
-                System.out.println("Please use the format dd/mm/yyyy for end date");
+                System.out.println("Please use the format dd/mm/yyyy for start date");
             }
         }
         System.out.println("Please type the end date(mm/dd/yyyy):");
@@ -82,7 +84,7 @@ public class ReservationController extends Controller {
                 endDate = LocalDate.parse(tempString, dateFormat);
                 if(endDate.isBefore(startDate))
                 {
-                    System.out.println("Please key in a date after the start date");
+                    System.out.println("Please key in a date after the end date");
                     endDate = null;
                 }
             }catch (Exception e)
@@ -100,7 +102,6 @@ public class ReservationController extends Controller {
             tempRoomIDs.add(roomEntity.getRoomId());
         }
         //String[]  = {"02-01","02-02"};
-
         boolean waitListDecision;
         boolean reserved = false;
         for (String tempRoomID : tempRoomIDs) {

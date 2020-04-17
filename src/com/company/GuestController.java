@@ -7,7 +7,7 @@ public class GuestController extends Controller
 {
 	private GuestBoundary gb;
 	private ArrayList<GuestEntity> guestList;
-	private String guestFileName = "GuestList.txt";
+	private final String guestFileName = "./data/GuestList.ser";
 
 	public GuestController()
 	{
@@ -55,7 +55,8 @@ public class GuestController extends Controller
 					break;
 				case 7:
 					//Sort All Guests
-					Collections.sort(guestList);
+					guestList.sort(null);
+					saveGuestsToFile();
 					break;
 				case 0:
 					return;
@@ -70,7 +71,7 @@ public class GuestController extends Controller
 	//Add new Guest
 	public int addGuest()
 	{
-		int currID = 999;
+		int currID = 0;
 		GuestEntity newGuest = new GuestEntity();
 		if (guestList.size() != 0)
 		{
@@ -84,28 +85,27 @@ public class GuestController extends Controller
 				{
 					try
 					{
-
 						if (guestList.get(i).getGuestID() != (guestList.get(i + 1).getGuestID() - 1))
 						{
-							System.out.println(i+" - "+guestList.get(i).getGuestID());
-							System.out.println((i+1)+" - "+guestList.get(i + 1).getGuestID());
+							//System.out.println(i + " - " + guestList.get(i).getGuestID());
+							//System.out.println((i + 1) + " - " + guestList.get(i + 1).getGuestID());
 							currID = guestList.get(i).getGuestID() + 1;
 							break;
 						}
 					} catch (Exception e)
 					{
-						System.out.println("Exception caught.");
+						//System.out.println("Exception caught.");
 						currID = guestList.get(i).getGuestID() + 1;
 					}
 				}
 			}
-			System.out.println("currID = " + currID);
-			//currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
+			//System.out.println("currID = " + currID);
 		}
 		else
 		{
 			currID = 0;
 		}
+		//System.out.println("[Guest ID] = " + currID);
 		newGuest.setGuestID(currID);
 
 		gb.addGuest_head();
@@ -119,6 +119,7 @@ public class GuestController extends Controller
 		if (gb.confirmation(newGuest))
 		{
 			guestList.add(newGuest);
+			guestList.sort(null);
 			saveGuestsToFile();
 			return currID;
 		}
