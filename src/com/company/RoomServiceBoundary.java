@@ -12,7 +12,7 @@ class RoomServiceBoundary extends Boundary {
 	private String currency;
 	
 	/**
-	 * Initializes new Scanner object
+	 * Initializes new Scanner object and set currency
 	 */
 	public RoomServiceBoundary() {
 		sc = new Scanner(System.in);

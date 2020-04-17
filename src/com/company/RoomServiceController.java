@@ -64,8 +64,8 @@ public class RoomServiceController extends Controller {
 			"Back to Room Service Menu"
 	};
 	
-	private final String filedir_menu = "./tmp/room_service_menu.ser";
-	private final String filedir_order_history = "./tmp/order_history.ser";
+	private final String filedir_menu = "./data/room_service_menu.ser";
+	private final String filedir_order_history = "./data/order_history.ser";
 	
 	private RoomServiceMenu menu;
 	private RoomServiceOrderHistory order_history;
@@ -564,5 +564,18 @@ public class RoomServiceController extends Controller {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * Sets a list of {@code RoomServiceOrder} objects with the specified room number to paid=true.
+	 * @param room_number  the specified room_number
+	 */
+	public void setPaidCurrentOrdersOfRoom(String room_number) {
+		
+		ArrayList<RoomServiceOrder> list = getCurrentOrdersOfRoom(room_number);
+		
+		for (RoomServiceOrder order : list) {
+			order.setPaid(true);
+		}
 	}
 }
