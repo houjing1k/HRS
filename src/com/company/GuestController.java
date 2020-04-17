@@ -7,7 +7,7 @@ public class GuestController extends Controller
 {
 	private GuestBoundary gb;
 	private ArrayList<GuestEntity> guestList;
-	private String guestFileName = "./data/GuestList.ser";
+	private final String guestFileName = "./data/GuestList.ser";
 
 	public GuestController()
 	{
@@ -87,25 +87,25 @@ public class GuestController extends Controller
 					{
 						if (guestList.get(i).getGuestID() != (guestList.get(i + 1).getGuestID() - 1))
 						{
-							System.out.println(i + " - " + guestList.get(i).getGuestID());
-							System.out.println((i + 1) + " - " + guestList.get(i + 1).getGuestID());
+							//System.out.println(i + " - " + guestList.get(i).getGuestID());
+							//System.out.println((i + 1) + " - " + guestList.get(i + 1).getGuestID());
 							currID = guestList.get(i).getGuestID() + 1;
 							break;
 						}
 					} catch (Exception e)
 					{
-						System.out.println("Exception caught.");
+						//System.out.println("Exception caught.");
 						currID = guestList.get(i).getGuestID() + 1;
 					}
 				}
 			}
-			System.out.println("currID = " + currID);
+			//System.out.println("currID = " + currID);
 		}
 		else
 		{
 			currID = 0;
 		}
-		System.out.println("[Guest ID] = " + currID);
+		//System.out.println("[Guest ID] = " + currID);
 		newGuest.setGuestID(currID);
 
 		gb.addGuest_head();
