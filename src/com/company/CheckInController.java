@@ -138,13 +138,19 @@ public class CheckInController extends Controller {
 					break;
 				 
 				case 2:
-					checkInBoundary.setMenu(menuGuestId, "Check In");
+					GuestEntity guest = guestController.searchGuest_Hybrid();
+					try {
+						guestId = guest.getGuestID();
+					}catch(Exception e) {
+						return true;
+					}
+					/*checkInBoundary.setMenu(menuGuestId, "Check In");
 					guestId = checkInBoundary.process();
-					GuestEntity guestObj = guestController.searchGuest(guestId);
+					/ GuestEntity guestObj = guestController.searchGuest(guestId);
 					if(guestObj==null) {
 						System.out.println("Invalid Input");
 						return true;
-					}
+					}*/
 					break;
 				case 0:
 					//return
@@ -155,7 +161,7 @@ public class CheckInController extends Controller {
 			}
 		}
 		LocalDate startDate = checkInBoundary.getStartDate();
-		LocalDate endDate = checkInBoundary.getStartDate();
+		LocalDate endDate = checkInBoundary.getEndDate();
 		String roomId = selectRoom();
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
