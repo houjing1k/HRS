@@ -116,12 +116,10 @@ public class CheckInController extends Controller {
 		}
 		int guestID=room.getGuestId();
 		//get the paymentDetail from guest. 
-		//PaymentDetail paymentDetail=new PaymentDetail("Cash");
 		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
 		paymentController.addRoomServiceToPaymentBill(roomId);
-		paymentController.makePayment(roomId,guest.getPaymentDetail());
-		paymentController.removePaymentAccount(roomId);
+		paymentController.makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		return false;
@@ -140,11 +138,12 @@ public class CheckInController extends Controller {
 					break;
 				 
 				case 2:
-					GuestEntity guest = guestController.searchGuest_Hybrid();
-					try {
-						guestId = guest.getGuestID();
-					}catch(Exception e) {
-						loop = true;
+					checkInBoundary.setMenu(menuGuestId, "Check In");
+					guestId = checkInBoundary.process();
+					GuestEntity guestObj = guestController.searchGuest(guestId);
+					if(guestObj==null) {
+						System.out.println("Invalid Input");
+						return true;
 					}
 					break;
 				case 0:
