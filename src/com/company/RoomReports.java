@@ -39,7 +39,7 @@ public class RoomReports {
 					printRoomStatusReport();
 					break;
 				case 0:
-					new MainController().processMain();
+					//new MainController().processMain();
 					return;
 				default:
 					loop = true;
@@ -47,7 +47,7 @@ public class RoomReports {
 			}
 		}
 		roomReportBoundary.waitInput();
-		new MainController().processMain();
+		//new MainController().processMain();
 	}
 
 	private void printRoomTypeReport() {

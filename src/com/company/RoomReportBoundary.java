@@ -22,7 +22,7 @@ public class RoomReportBoundary  extends Boundary{
 						"Print Room Type Occupancy Report",
 						"Print Room Status Occupancy Report"
 				};
-		printMenuList(menuList, "Go back to Main Menu");
+		printMenuList(menuList, "Go Back");
 		System.out.println();
 	}
 	
