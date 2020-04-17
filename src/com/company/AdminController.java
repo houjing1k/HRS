@@ -27,7 +27,7 @@ public class AdminController extends Controller
 					break;
 
 				case 3: //3 - Modify Hotel Charges
-					new PaymentController().modifyCharges();
+					new PaymentController().modifyChargesMenu();
 					break;
 
 				case 4: //4 - Print Bill Invoice
