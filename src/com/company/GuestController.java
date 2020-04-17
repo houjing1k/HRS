@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GuestController extends Controller
 {
@@ -52,6 +53,10 @@ public class GuestController extends Controller
 					//Print All Guests
 					printAllGuest();
 					break;
+				case 7:
+					//Sort All Guests
+					Collections.sort(guestList);
+					break;
 				case 0:
 					return;
 				default:
@@ -65,11 +70,37 @@ public class GuestController extends Controller
 	//Add new Guest
 	public int addGuest()
 	{
-		int currID;
+		int currID = 999;
 		GuestEntity newGuest = new GuestEntity();
 		if (guestList.size() != 0)
 		{
-			currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
+			if (guestList.get(0).getGuestID() != 0)
+			{
+				currID = 0;
+			}
+			else
+			{
+				for (int i = 0; i < guestList.size(); i++)
+				{
+					try
+					{
+
+						if (guestList.get(i).getGuestID() != (guestList.get(i + 1).getGuestID() - 1))
+						{
+							System.out.println(i+" - "+guestList.get(i).getGuestID());
+							System.out.println((i+1)+" - "+guestList.get(i + 1).getGuestID());
+							currID = guestList.get(i).getGuestID() + 1;
+							break;
+						}
+					} catch (Exception e)
+					{
+						System.out.println("Exception caught.");
+						currID = guestList.get(i).getGuestID() + 1;
+					}
+				}
+			}
+			System.out.println("currID = " + currID);
+			//currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
 		}
 		else
 		{
@@ -292,4 +323,5 @@ public class GuestController extends Controller
 	{
 		return str.toLowerCase().contains(subString.toLowerCase());
 	}
+
 }

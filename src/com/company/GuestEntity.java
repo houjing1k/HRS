@@ -2,7 +2,7 @@ package com.company;
 
 import java.io.Serializable;
 
-public class GuestEntity implements Serializable
+public class GuestEntity implements Serializable, Comparable<GuestEntity>
 {
 	private Integer guestID;
 	private String name;
@@ -73,6 +73,11 @@ public class GuestEntity implements Serializable
 
 	}
 
+	@Override
+	public int compareTo(GuestEntity o)
+	{
+		return this.guestID.compareTo(o.getGuestID());
+	}
 
 	public Integer getGuestID()
 	{

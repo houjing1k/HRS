@@ -23,7 +23,8 @@ public class GuestBoundary extends Boundary
 						"Update Guest Details",
 						"Search Guests by Name",
 						"Search Guests by Guest ID",
-						"Print all Guests"
+						"Print all Guests",
+						"Sort"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
@@ -265,7 +266,7 @@ public class GuestBoundary extends Boundary
 	{
 		boolean check = ((!str.equals(""))
 				&& (str != null)
-				&& (str.equals("M") || str.equals("F")));
+				&& (str.equals("M") || str.equals("m") || str.equals("F") || str.equals("f")));
 		if (!check)
 		{
 			System.out.println("Invalid input. Only input (M / F).");
