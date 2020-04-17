@@ -212,7 +212,7 @@ public class ReservationController extends Controller {
                     printAllReservations();
                     break;
                 case 3:
-                    getReservationByGuestId();
+                    getReservationByGuestName();
                     break;
                 case 4:
                     guestEntityArrayList = reservationBoundary.requestGuestName();
@@ -256,7 +256,7 @@ public class ReservationController extends Controller {
         saveReservationsTofIle();
     }
 
-    public void getReservationByGuestId()
+    public void getReservationByGuestName()
     {
         ArrayList<GuestEntity> guestEntityArrayList;
         int guestId;
@@ -276,5 +276,17 @@ public class ReservationController extends Controller {
             }
         }
         saveReservationsTofIle();
+    }
+
+    public ReservationEntity getReservationById(int reservationId)
+    {
+        for (ReservationEntity reservation: reservations)
+        {
+            if(reservation.getReservationId()==reservationId)
+            {
+                return  reservation;
+            }
+        }
+        return null;
     }
 }

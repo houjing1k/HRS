@@ -23,7 +23,7 @@ public class ReservationBoundary extends Boundary {
         String [] menuList = {
                 "1. Reserve A Room",
                 "2. Print All Reservations",
-                "3. Get Reservation By Guest Name",
+                "3. View Reservations By Guest Name",
                 "4. Cancel Reservation",
                 "5. tests"
         };
