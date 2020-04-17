@@ -30,13 +30,16 @@ public class MainController extends Controller
 					break;
 
 				case 4: //4 - Room Check-in / Check-out
-					RoomController.getInstance().processMain();
+					CheckInController.getInstance().processMain();
 					//new RoomController().processMain();
 					break;
 
-				case 5: //6 - Admin Options
-					// new AdminController().processMain();
+				case 5: //6 - Payment Controller
 					new PaymentController().processMain();
+					break;
+
+				case 6: //6 - Admin Options
+					new AdminController().processMain();
 					break;
 
 				case 0:

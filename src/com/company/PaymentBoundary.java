@@ -42,7 +42,6 @@ public class PaymentBoundary extends Boundary{
    		String[] menuList =
    				{
    						"Add Payment Account",
-   						"Edit Payment Account",
    						"View All Payment Account",
    						"Delete Payment Account"
    				};
@@ -57,6 +56,7 @@ public class PaymentBoundary extends Boundary{
    				{
    						"Add Room to Bill",
    						"Add Room Service Records to Bill",
+   						"add dummy for testing"
 
    				};
    		printMenuList(menuList, "Go back to Payment System Menu");
@@ -107,9 +107,23 @@ public class PaymentBoundary extends Boundary{
    
     protected String requestRoomID()
 	{
-		return readString(scan, "Enter Room Id :");
+    	
+        while (true) {
+            String temp;
+    		System.out.println("Room ID :");
 
+            try {
+                temp= scan.next();
+                if(!temp.matches("\\d{4}")) {
+                	throw new Exception("Invalid Room ID. Format: xxxx");
+                }
+                else return temp;
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
 	}
+	
 
     protected int requestTransactionDetail()
 	{
