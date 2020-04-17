@@ -42,8 +42,9 @@ public class PaymentBoundary extends Boundary{
    		String[] menuList =
    				{
    						"Add Payment Account",
+   						"Delete Payment Account",
    						"View All Payment Account",
-   						"Delete Payment Account"
+
    				};
    		printMenuList(menuList, "Go back to Payment System Menu");
    		System.out.println();
