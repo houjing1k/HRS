@@ -42,7 +42,7 @@ public class Transaction implements Serializable{
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String formatDateTime = time.format(formatter);
-        return   String.format("%-10s %-15s %-8s %-5s %-25s", name, description, quantity ,price,formatDateTime);
+        return   String.format("%-12s %-15s %-8s %-5s %-25s", name, description, quantity ,price,formatDateTime);
 	}
 	
 	

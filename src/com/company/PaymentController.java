@@ -46,24 +46,20 @@ public class PaymentController extends Controller{
 					PaymentAccountMenu();  	//Add/remove Payment Account
 					break;
 				case 2:
-					addToBillMenu();  				//Add to bill
-					break;
-				case 3:
 					roomID=pb.requestRoomID();
 					printInvoice(roomID);			//Print Invoice
 					pb.waitInput();
 					break;
-				case 4:
+				case 3:
 					roomID=pb.requestRoomID();
 					makePaymentMenu(roomID,new PaymentDetail("Dummy", "1212", "1/1/20"));    		//Make Payment
 					break;
-				case 5:
+				case 4:
 					modifyChargesMenu();			// Modify gst,service charges, discount
 					break;
-				case 6:
+				case 5:
 					generatePaymentReport();    //Generate Financial report for paid bills
 					pb.waitInput();
-
 					break;
 				case 0:
 					return;
@@ -129,33 +125,7 @@ public class PaymentController extends Controller{
 		}
 	}
 	
-	//Adding Item to bill
-	public void addToBillMenu() {
-		while (true)
-		{
-			pb.addItemMenu();
-			int sel = sc.nextInt();
-			switch (sel)
-			{
-				case 1:							//Add room to bill
-					addRoomToPaymentBill(pb.requestRoomID(),pb.readDate(scan, "Start Date"), pb.readDate(scan, "End Date"));
-					pb.waitInput();
-					break;
-				case 2:							//Add roomService
-					addRoomServiceToPaymentBill(pb.requestRoomID());
-					break;
-				case 3:
-												//add dummy to try out the payment system
-					addSmtgtoBill();
-				case 0:
-					return;
-				default:
-					pb.invalidInputWarning();
-			}
-		}
-
-	}
-
+	
 	
     //make payment Menu
     public void makePaymentMenu(String roomID,PaymentDetail paymentDetail) {
@@ -169,6 +139,9 @@ public class PaymentController extends Controller{
     		System.out.println("No transactions yet!");
     		return;
     	}
+    	//Print the invoice
+    	printInvoice(roomID);
+    	
 		boolean loop = true;	
     	while (loop)
 		{
@@ -178,31 +151,24 @@ public class PaymentController extends Controller{
 			switch (sel)
 			{
 				case 1:	
-			    	printInvoice(roomID);					//Pay by CASH
+			    	//Pay by CASH
 			    	pb.paymentProcess("CASH",calculatePaymentBill(bill));
-					bill.setStatus("PAID");
-					bill.setPaymentDate(LocalDateTime.now());
-					removePaymentAccount(roomID);
-			        new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
 					break;
 				case 2:	
-					printInvoice(roomID);					//Pay by Card
+					//Pay by Card
 					System.out.println(paymentDetail.toString());
 					System.out.println();
 					pb.paymentProcess("CARD",calculatePaymentBill(bill));
-					bill.setStatus("PAID");
-					bill.setPaymentDate(LocalDateTime.now());
-					removePaymentAccount(roomID);
-			        new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
 					break;
-				case 0:
-					return;
 				default:
 					loop = true;
 					pb.invalidInputWarning();
 			}
-			
 		}
+		bill.setStatus("PAID");
+		bill.setPaymentDate(LocalDateTime.now());
+        new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
+		removePaymentAccount(roomID);
     	saveBillsToFile();
 		pb.waitInput();
     }
@@ -241,6 +207,7 @@ public class PaymentController extends Controller{
     		pb.invalidPaymentAccount();
     		return;
     	}
+    	//Save paid bills to record before removing it
     	addToRecord(bill);
 		paymentBillList.remove(bill);
 	}
@@ -248,7 +215,6 @@ public class PaymentController extends Controller{
 	
 	//Save the paid bills to record
 	void addToRecord(PaymentBill bill){
-
 		paymentRecords.add(bill);
 		saveRecordsToFile();
 	}
@@ -295,7 +261,6 @@ public class PaymentController extends Controller{
     		return;
     	} 	
         Transaction transaction = null;
-
         ArrayList<RoomServiceOrder> list = new RoomServiceController().getCurrentOrdersOfRoom(roomID);
         for (RoomServiceOrder order : list) {
             for (RoomServiceItem item: order) {
@@ -329,6 +294,7 @@ public class PaymentController extends Controller{
     		pb.invalidPaymentAccount();
     		return;
     		}
+    	
     	bill.printPaymentBill();
     	calculatePaymentBill(bill);
     	System.out.println("\nThe total price :" + bill.getTotalPrice() +" ( Include GST :"+  String.format("%.2f",PaymentBill.getGST()*100)+"% , Service Charge:"
@@ -402,16 +368,16 @@ public class PaymentController extends Controller{
 		saveBillsToFile();
 	}
 
-
+	//Print out the 
 	public void generatePaymentReport() {
 		pb.printSubTitle("Financial Report");
 		
 		String str=null;
-		System.out.println(String.format("%-10s %-15s %-15s", "RoomID", "PaidAmount($)","PaymentDate")+"\n");
+		System.out.println(String.format("%-12s %-15s %-15s", "RoomID", "PaidAmount($)","PaymentDate")+"\n");
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		double sum=0;
 		for(PaymentBill bill : paymentRecords) {
-			System.out.println(String.format("%-10s %-15s %-15s", bill.getRoomID(), 
+			System.out.println(String.format("%-12s %-15s %-15s", bill.getRoomID(), 
 					bill.getTotalPrice(),bill.getPaymentDate().format(formatter) ));
 				sum+=calculatePaymentBill(bill);
 		}
@@ -431,18 +397,11 @@ public class PaymentController extends Controller{
 		toFile(chargesList, chargesRateFile);
 	}
 
+	//store paymentRecords to file
 	private void saveRecordsToFile() {
 		toFile(paymentRecords,paymentRecordsFile);
 		
 	}
-	
-	//For testing
-	void addSmtgtoBill(){
-		PaymentBill pay=getPaymentBill(pb.requestRoomID());
-		Transaction trans = new Transaction("dummy","dummy", 100,1, LocalDateTime.now());
-		pay.AddTransaction(trans);
-		saveBillsToFile();
 
-	}
 
 }
