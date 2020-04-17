@@ -183,6 +183,7 @@ public class PaymentController extends Controller{
 					bill.setStatus("PAID");
 					bill.setPaymentDate(LocalDateTime.now());
 					removePaymentAccount(roomID);
+			        new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
 					break;
 				case 2:	
 					printInvoice(roomID);					//Pay by Card
@@ -192,6 +193,7 @@ public class PaymentController extends Controller{
 					bill.setStatus("PAID");
 					bill.setPaymentDate(LocalDateTime.now());
 					removePaymentAccount(roomID);
+			        new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
 					break;
 				case 0:
 					return;
@@ -308,7 +310,6 @@ public class PaymentController extends Controller{
             }
             bill.AddTransaction(transaction);
         }
-
     }
 
     // Find the PaymentBill based on roomID
