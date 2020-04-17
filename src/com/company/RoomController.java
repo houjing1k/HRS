@@ -13,7 +13,7 @@ public class RoomController extends Controller
 	private static RoomController instance = null;
 	private ArrayList<RoomEntity> roomList = null;
 	private RoomReports roomReports = null;
-	private String roomFile = "rooms.txt";
+	private String roomFile = "./data/Rooms.ser";
 
 	private RoomBoundary rb;
 
