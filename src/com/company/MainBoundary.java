@@ -16,12 +16,12 @@ public class MainBoundary extends Boundary
 		printMainTitle("Welcome to Hotel Reservation App");
 		String[] menuList=
 				{
-						"Add/Manage Guests",
 						"Add/Manage Reservations",
-						"Room Services",
 						"Room Check-in / Check-out",
-						"Payment Options",
-						"Administrative Control"
+						"Room Services",
+						"Add/Manage Guests",
+						"Administrative Control",
+						"Old Main Controller"
 				};
 		printMenuList(menuList,"Exit Application");
 		System.out.println();

@@ -19,9 +19,9 @@ public class PaymentDetail implements Serializable
 	public String toString()
 	{
 		return "[Card Details] " +
-				"\nCard Name       : " + card_name +
-				"\nCard No         : " + this.card_no +
-				"\nCard Expiry     : " + this.card_expiry+
+				"\nCard Name    : " + card_name +
+				"\nCard No.     : " + this.card_no +
+				"\nCard Expiry  : " + this.card_expiry+
 				"\n";
 	}
 }

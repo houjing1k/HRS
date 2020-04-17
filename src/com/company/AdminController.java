@@ -12,10 +12,11 @@ public class AdminController extends Controller
 	@Override
 	public void processMain()
 	{
-		while (true)
+		boolean loop = true;
+		while (loop)
 		{
 			int sel = ab.process();
-
+			loop = false;
 			switch (sel)
 			{
 				case 1: //1 - Manage Rooms

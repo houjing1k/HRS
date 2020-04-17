@@ -24,7 +24,7 @@ public class GuestBoundary extends Boundary
 						"Search Guests by Name",
 						"Search Guests by Guest ID",
 						"Print all Guests",
-						"Test"
+						//"Test"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
@@ -140,9 +140,11 @@ public class GuestBoundary extends Boundary
 						if (!checkCountry(input)) throw new Exception();
 						break;
 					case 4:
-						if (!checkGender(input.toUpperCase())) throw new Exception();
+						input = input.toUpperCase();
+						if (!checkGender(input)) throw new Exception();
 						break;
 					case 5:
+						input = input.toUpperCase();
 						if (!checkIdentityNo(input)) throw new Exception();
 						break;
 					case 6:

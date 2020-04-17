@@ -17,28 +17,23 @@ public class MainController extends Controller
 
 			switch (sel)
 			{
-				case 1: //1 - Add/Manage Guests
-					new GuestController().processMain();
+				case 1: //1 - Add/Manage Reservations
+					new ReservationController().processMain();
 					break;
 
-				case 2: //2 - Add/Manage Reservations
-					new ReservationController().processMain();
+				case 2: //2 - Room Check-in / Check-out
+					CheckInController.getInstance().processMain();
 					break;
 
 				case 3: //3 - Room Services
 					new RoomServiceController().processMain();
 					break;
 
-				case 4: //4 - Room Check-in / Check-out
-					CheckInController.getInstance().processMain();
-					//new RoomController().processMain();
+				case 4: //4 - Manage Guests
+					new GuestController().processMain();
 					break;
 
-				case 5: //6 - Payment Controller
-					new PaymentController().processMain();
-					break;
-
-				case 6: //6 - Admin Options
+				case 5: //5 - Admin Options
 					new AdminController().processMain();
 					break;
 
