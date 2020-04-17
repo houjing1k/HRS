@@ -7,7 +7,7 @@ public class GuestController extends Controller
 {
 	private GuestBoundary gb;
 	private ArrayList<GuestEntity> guestList;
-	private String guestFileName = "./data/GuestList.ser";
+	private String guestFileName = "GuestList.txt";
 
 	public GuestController()
 	{
@@ -55,8 +55,7 @@ public class GuestController extends Controller
 					break;
 				case 7:
 					//Sort All Guests
-					guestList.sort(null);
-					saveGuestsToFile();
+					Collections.sort(guestList);
 					break;
 				case 0:
 					return;
@@ -71,7 +70,7 @@ public class GuestController extends Controller
 	//Add new Guest
 	public int addGuest()
 	{
-		int currID = 0;
+		int currID = 999;
 		GuestEntity newGuest = new GuestEntity();
 		if (guestList.size() != 0)
 		{
@@ -85,10 +84,11 @@ public class GuestController extends Controller
 				{
 					try
 					{
+
 						if (guestList.get(i).getGuestID() != (guestList.get(i + 1).getGuestID() - 1))
 						{
-							System.out.println(i + " - " + guestList.get(i).getGuestID());
-							System.out.println((i + 1) + " - " + guestList.get(i + 1).getGuestID());
+							System.out.println(i+" - "+guestList.get(i).getGuestID());
+							System.out.println((i+1)+" - "+guestList.get(i + 1).getGuestID());
 							currID = guestList.get(i).getGuestID() + 1;
 							break;
 						}
@@ -100,12 +100,12 @@ public class GuestController extends Controller
 				}
 			}
 			System.out.println("currID = " + currID);
+			//currID = guestList.get(guestList.size() - 1).getGuestID() + 1;
 		}
 		else
 		{
 			currID = 0;
 		}
-		System.out.println("[Guest ID] = " + currID);
 		newGuest.setGuestID(currID);
 
 		gb.addGuest_head();
@@ -119,7 +119,6 @@ public class GuestController extends Controller
 		if (gb.confirmation(newGuest))
 		{
 			guestList.add(newGuest);
-			guestList.sort(null);
 			saveGuestsToFile();
 			return currID;
 		}

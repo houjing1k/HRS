@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class GuestBoundary extends Boundary
 {
 	private Scanner sc;
-	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No."};
+	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.", "Card Details"};
 
 	public GuestBoundary()
 	{
@@ -24,7 +24,7 @@ public class GuestBoundary extends Boundary
 						"Search Guests by Name",
 						"Search Guests by Guest ID",
 						"Print all Guests",
-						"Test"
+						"Sort"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
@@ -140,7 +140,7 @@ public class GuestBoundary extends Boundary
 						if (!checkCountry(input)) throw new Exception();
 						break;
 					case 4:
-						if (!checkGender(input.toUpperCase())) throw new Exception();
+						if (!checkGender(input)) throw new Exception();
 						break;
 					case 5:
 						if (!checkIdentityNo(input)) throw new Exception();
@@ -151,6 +151,10 @@ public class GuestBoundary extends Boundary
 					case 7:
 						if (!checkContactNo(input)) throw new Exception();
 						break;
+					/*case 8:
+						if (!checkCreditCardNo(input)) throw new Exception();
+						break;
+					 */
 				}
 
 			} catch (Exception e)
@@ -262,7 +266,7 @@ public class GuestBoundary extends Boundary
 	{
 		boolean check = ((!str.equals(""))
 				&& (str != null)
-				&& (str.equals("M") || str.equals("F")));
+				&& (str.equals("M") || str.equals("m") || str.equals("F") || str.equals("f")));
 		if (!check)
 		{
 			System.out.println("Invalid input. Only input (M / F).");
