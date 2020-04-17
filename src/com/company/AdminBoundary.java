@@ -19,7 +19,7 @@ public class AdminBoundary extends Boundary
 						"Manage Rooms",
 						"Print Occupancy Reports",
 						"Modify Hotel Charges",
-						"Print Bill Invoice"
+						"Generate Financial Report"
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
