@@ -39,7 +39,7 @@ public class GuestEntity implements Serializable
 		this.identityNo = identityNo;
 		this.nationality = nationality;
 		this.contactNo = contactNo;
-		this.paymentDetail=paymentDetail;
+		this.paymentDetail = paymentDetail;
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class GuestEntity implements Serializable
 				"\nIdentity No.    : " + identityNo +
 				"\nNationality     : " + nationality +
 				"\nContact No.     : " + contactNo +
-				"\n"+
+				"\n" +
 				paymentDetail.toString()
 				;
 	}
@@ -154,7 +154,13 @@ public class GuestEntity implements Serializable
 		this.contactNo = contactNo;
 	}
 
-	public PaymentDetail getPaymentDetail(){return paymentDetail;}
+	public PaymentDetail getPaymentDetail()
+	{
+		return paymentDetail;
+	}
 
-	public void setPaymentDetail(PaymentDetail paymentDetail){this.paymentDetail=paymentDetail;}
+	public void setPaymentDetail(PaymentDetail paymentDetail)
+	{
+		this.paymentDetail = paymentDetail;
+	}
 }

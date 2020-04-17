@@ -103,14 +103,14 @@ public class GuestController extends Controller
 		GuestEntity guest;
 
 		gb.removeGuest_head();
-		guest=searchGuest_Hybrid();
-		if(guest==null)
+		guest = searchGuest_Hybrid();
+		if (guest == null)
 		{
 			return false;
 		}
 		else
 		{
-			if(gb.confirmation(guest))
+			if (gb.confirmation(guest))
 			{
 				guestList.remove(guest);
 				saveGuestsToFile();
