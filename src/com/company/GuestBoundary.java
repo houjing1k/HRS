@@ -19,6 +19,7 @@ public class GuestBoundary extends Boundary
 		String[] menuList =
 				{
 						"Add new Guest",
+						"Remove Guest",
 						"Update Guest Details",
 						"Search Guests by Name",
 						"Search Guests by Guest ID",
@@ -28,9 +29,14 @@ public class GuestBoundary extends Boundary
 		System.out.println();
 	}
 
-	public void addGuestMenu()
+	public void addGuest_head()
 	{
 		printSubTitle("Add New Guest");
+	}
+
+	public void removeGuest_head()
+	{
+		printSubTitle("Remove Guest");
 	}
 
 	public void printGuestList(ArrayList<GuestEntity> list)

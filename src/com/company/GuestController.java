@@ -29,22 +29,26 @@ public class GuestController extends Controller
 			switch (sel)
 			{
 				case 1:
-					//add new Guest
+					//Add New Guest
 					if (addGuest() == -1) loop = true;
 					break;
 				case 2:
+					//Remove Guest
+					if (!removeGuest()) loop = true;
+					break;
+				case 3:
 					//Update Guest details
 					if (!updateGuest()) loop = true;
 					break;
-				case 3:
+				case 4:
 					//Search Guest by name
 					printGuestList(searchGuest(gb.searchGuest()));
 					break;
-				case 4:
+				case 5:
 					//Search Guest by ID
 					printGuest(searchGuest(gb.searchGuestID()));
 					break;
-				case 5:
+				case 6:
 					//Print All Guests
 					printAllGuest();
 					break;
@@ -73,9 +77,8 @@ public class GuestController extends Controller
 		}
 		newGuest.setGuestID(currID);
 
-		gb.addGuestMenu();
+		gb.addGuest_head();
 
-		String[] guestDetails = new String[8];
 		for (int i = 0; i < 7; i++)
 		{
 			setGuestDetails(i + 1, newGuest, gb.addUpdateGuestSub(i + 1, "Enter"));
@@ -93,6 +96,29 @@ public class GuestController extends Controller
 			return -1;
 		}
 
+	}
+
+	public boolean removeGuest()
+	{
+		GuestEntity guest;
+
+		gb.removeGuest_head();
+		guest=searchGuest_Hybrid();
+		if(guest==null)
+		{
+			return false;
+		}
+		else
+		{
+			if(gb.confirmation(guest))
+			{
+				guestList.remove(guest);
+				saveGuestsToFile();
+				return true;
+			}
+			else return false;
+
+		}
 	}
 
 	// Search Guest by Name
@@ -143,6 +169,7 @@ public class GuestController extends Controller
 		}
 		return result;
 	}
+
 
 	//Update Guest Details
 	public boolean updateGuest()
