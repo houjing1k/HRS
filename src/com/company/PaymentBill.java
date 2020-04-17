@@ -37,7 +37,7 @@ public class PaymentBill implements Serializable{
 		
 	//print the PaymentBill
 	public void printPaymentBill() {
-		System.out.println(String.format("%-10s %-15s %-8s %-5s %-25s", "Name", "Description", "Quantity" ,"Price","Date"));
+		System.out.println(String.format("%-12s %-15s %-8s %-5s %-25s", "Name", "Description", "Quantity" ,"Price","Date"));
 		for(Transaction trans : transactionList) {
 			System.out.println(trans.toString());
 
