@@ -40,6 +40,7 @@ public class RoomController extends Controller
 		int room = 0;
 		String roomId = "";
 		boolean smoking = false;
+		boolean wifi = true;
 		for (int j = 0; j < 6; j++)
 		{
 			int x = 0;
@@ -47,20 +48,21 @@ public class RoomController extends Controller
 			{
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.SINGLE, smoking);
+				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.SINGLE, smoking,wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.QUEEN, smoking);
+				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.QUEEN, smoking,wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking);
+				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking,wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking);
+				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking,wifi);
 			}
 			level += 1;
 			room = 0;
 			smoking = !smoking;
+			wifi = !wifi;
 		}
 	}
 
@@ -75,9 +77,9 @@ public class RoomController extends Controller
 	}
 
 	//Load object into the array list
-	private void loadObject(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking)
+	private void loadObject(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking,boolean wifi)
 	{
-		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking);
+		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking,wifi);
 		roomList.add(rm);
 	}
 
