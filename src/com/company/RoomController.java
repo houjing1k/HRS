@@ -48,16 +48,16 @@ public class RoomController extends Controller
 			{
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.SINGLE, smoking,wifi);
+				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.SINGLE, smoking, wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.QUEEN, smoking,wifi);
+				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.QUEEN, smoking, wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking,wifi);
+				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking, wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking,wifi);
+				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking, wifi);
 			}
 			level += 1;
 			room = 0;
@@ -77,9 +77,9 @@ public class RoomController extends Controller
 	}
 
 	//Load object into the array list
-	private void loadObject(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking,boolean wifi)
+	private void loadObject(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{
-		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking,wifi);
+		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking, wifi);
 		roomList.add(rm);
 	}
 
@@ -199,8 +199,9 @@ public class RoomController extends Controller
 		}
 		return list;
 	}
-	
-	public <T>ArrayList<T> selectRoom(){
+
+	public <T> ArrayList<T> selectRoom()
+	{
 		int selection[] = rb.selectRoomMenu();
 		int i;
 		RoomStatus roomStatus = RoomStatus.VACANT;
@@ -208,50 +209,70 @@ public class RoomController extends Controller
 		BedType bedType = null;
 		boolean smoking = false;
 		boolean wifi;
-		for(i=0;i<selection.length;i++) {
-			switch(i) {
+		for (i = 0; i < selection.length; i++)
+		{
+			switch (i)
+			{
 				case 0:
-					if(selection[0]==1) {
+					if (selection[0] == 1)
+					{
 						roomType = RoomType.SINGLE;
-					}else if(selection[0]==2) {
+					}
+					else if (selection[0] == 2)
+					{
 						roomType = RoomType.DOUBLE;
-					}else {
+					}
+					else
+					{
 						roomType = RoomType.DELUXE;
 					}
 					break;
 				case 1:
-					if(selection[1]==1) {
+					if (selection[1] == 1)
+					{
 						bedType = bedType.SINGLE;
-					}else if(selection[1]==2) {
+					}
+					else if (selection[1] == 2)
+					{
 						bedType = bedType.DOUBLESINGLE;
-					}else if(selection[1]==3){
+					}
+					else if (selection[1] == 3)
+					{
 						bedType = bedType.QUEEN;
-					}else {
+					}
+					else
+					{
 						bedType = bedType.KING;
 					}
 					break;
 				case 2:
-					if(selection[2]!=1) {
+					if (selection[2] != 1)
+					{
 						smoking = false;
-					}else {
+					}
+					else
+					{
 						smoking = true;
 					}
 					break;
 				case 3:
-					if(selection[3]!=1) {
+					if (selection[3] != 1)
+					{
 						wifi = false;
-					}else {
+					}
+					else
+					{
 						wifi = true;
 					}
 					break;
 			}
 		}
-		return listRooms(roomStatus,roomType,bedType,smoking);
+		return listRooms(roomStatus, roomType, bedType, smoking);
 	}
 
-	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking,boolean wifi)
+	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{
-		loadObject(id, roomType, status, bedType, smoking,wifi);
+		loadObject(id, roomType, status, bedType, smoking, wifi);
 		saveFile();
 	}
 
@@ -328,6 +349,10 @@ public class RoomController extends Controller
 				rb.waitInput();
 				break;
 			case 8: //4 - Filter and Display Rooms
+				DisplayRooms.showList(filterRooms(roomList, false));
+				rb.waitInput();
+				break;
+			case 9: //9 - Select Rooms
 				DisplayRooms.showList(filterRooms(roomList, true));
 				rb.waitInput();
 				break;
@@ -344,43 +369,65 @@ public class RoomController extends Controller
 		roomReports.printReports();
 	}
 
-	public ArrayList<RoomEntity> filterRooms(boolean allSelected){
-		return filterRooms(roomList,allSelected);
-	}
-	
-	public ArrayList<RoomEntity> filterRooms(ArrayList<RoomEntity> list, boolean allSelected)
+	public ArrayList<RoomEntity> filterRooms(boolean isRoomSelection)
 	{
-		final int FILTER_SIZE = 11;
+		return filterRooms(roomList, isRoomSelection);
+	}
+
+	//isRoomSelection - True    - Room Selection Mode
+	//                  False   - Administrative Mode
+	public ArrayList<RoomEntity> filterRooms(ArrayList<RoomEntity> list, boolean isRoomSelection)
+	{
+		final int FILTER_SIZE = 15;
 		boolean[] filter = new boolean[FILTER_SIZE];
 		ArrayList<RoomEntity> filteredList = new ArrayList<RoomEntity>();
+		int selectionSize = isRoomSelection ? FILTER_SIZE - 4 : FILTER_SIZE;
 
-		for (int i = 0; i < FILTER_SIZE; i++)
+		//Room Selection Mode   - Only Vacant Rooms Selected, all other flags initialised false
+		if (isRoomSelection)
 		{
-			filter[i] = allSelected;
+			for (int i = 0; i < FILTER_SIZE; i++)
+			{
+				filter[i] = false;
+			}
+			filter[11] = true;
+		}
+		//Administrative Mode   - All flags initialised true
+		else
+		{
+			for (int i = 0; i < FILTER_SIZE; i++)
+			{
+				filter[i] = true;
+			}
 		}
 
 		while (true)
 		{
-			rb.filterRoom(filter);
-			int sel = rb.getInput(0, FILTER_SIZE);
+			rb.filterRoom(filter, isRoomSelection);
+			int sel = rb.getInput(0, selectionSize);
 			if (sel == 0) break;
 			else filter[sel - 1] = !filter[sel - 1];
 		}
 
 		for (RoomEntity e : list)
 		{
-			if (((e.isVacant() == filter[0]) ||
-					(e.isOccupied() == filter[1]) ||
-					(e.isReserved() == filter[2]) ||
-					(e.isMaintenance() == filter[3]))
+			if ((((e.getRoomType() == RoomType.SINGLE) && filter[0]) ||
+					((e.getRoomType() == RoomType.DOUBLE) && filter[1]) ||
+					((e.getRoomType() == RoomType.DELUXE) && filter[2]))
 					&&
-					(((e.getRoomType() == RoomType.SINGLE) == filter[4]) ||
-							((e.getRoomType() == RoomType.DOUBLE) == filter[5]) ||
-							((e.getRoomType() == RoomType.DELUXE) == filter[6]))
+					(((e.getBedType() == BedType.SINGLE) && filter[3]) ||
+							((e.getBedType() == BedType.DOUBLESINGLE) && filter[4]) ||
+							((e.getBedType() == BedType.QUEEN) && filter[5]) ||
+							((e.getBedType() == BedType.KING) && filter[6]))
 					&&
-					((e.isSmoking() == filter[7]) || (!e.isSmoking() == filter[8]))
-				//&&
-				//Wifi Enabled
+					((e.isSmoking() && filter[7]) || (!e.isSmoking() && filter[8]))
+					&&
+					((e.isWifi() && filter[9]) || (!e.isWifi() && filter[10]))
+					&&
+					((e.isVacant() && filter[11]) ||
+							(e.isOccupied() && filter[12]) ||
+							(e.isReserved() && filter[13]) ||
+							(e.isMaintenance() && filter[14]))
 			)
 			{
 				filteredList.add(e);
