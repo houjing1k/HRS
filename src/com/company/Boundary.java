@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public abstract class Boundary
 {
-	private static final int MENULENGTH = 105;
+	private static final int MENULENGTH = 104;
 
 	public int process()
 	{
@@ -30,13 +30,13 @@ public abstract class Boundary
 
 	protected abstract void printMenu();
 
-	public void printDivider()
+	public static void printDivider()
 	{
 		printDivider(MENULENGTH);
 		System.out.println();
 	}
 
-	public void printDivider(int length)
+	public static void printDivider(int length)
 	{
 		for (int i = 0; i < length; i++)
 		{
@@ -44,14 +44,14 @@ public abstract class Boundary
 		}
 	}
 
-	public void printMainTitle(String title)
+	public static void printMainTitle(String title)
 	{
 		printDivider();
 		printSubTitle(title);
 		printDivider();
 	}
 
-	public void printSubTitle(String title)
+	public static void printSubTitle(String title)
 	{
 		int titleLen = title.length() + 2;
 		int length = (MENULENGTH - titleLen) / 2;
@@ -64,7 +64,7 @@ public abstract class Boundary
 		System.out.println();
 	}
 
-	public void printMenuList(String[] menuList, String back)
+	public static void printMenuList(String[] menuList, String back)
 	{
 		int i = 1;
 		for (String str : menuList)
@@ -77,14 +77,14 @@ public abstract class Boundary
 		printDivider();
 	}
 
-	public void waitInput()
+	public static void waitInput()
 	{
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\nPress Enter to return.");
 		sc.nextLine();
 	}
 
-	public void invalidInputWarning()
+	public static void invalidInputWarning()
 	{
 		System.out.println("--Invalid Input--");
 	}
