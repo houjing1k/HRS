@@ -36,6 +36,8 @@ public class CheckInController extends Controller {
             "2. Double room",
             "3. Deluxe room"
     };
+
+	private ArrayList<RoomEntity> roomArray;
 	
 	
 	private CheckInController() {
@@ -176,39 +178,12 @@ public class CheckInController extends Controller {
 	}
 	
 	private String selectRoom() {
-		RoomType roomType = null;
-		boolean loop = true;
-		ArrayList<RoomEntity> roomArray = null;
-		while(loop) {
-			loop = false;
-			checkInBoundary.setMenu(menuRoomType, "Please select the room type");
-			switch(checkInBoundary.process())
-			{
-				case 1:
-					roomType = RoomType.SINGLE;
-					break;
-				case 2:
-					roomType = RoomType.DOUBLE;
-					break;
-				case 3:
-					roomType = RoomType.DELUXE;
-					break;
-				case 0:
-					//return
-					this.processMain();
-					break;
-					
-				default:
-					loop = true;
-					System.out.println("Invalid Input");
-			
+		do{
+			roomArray = roomController.selectRoom();	
+			if(roomArray.isEmpty()) {
+				System.out.println("No rooms found");
 			}
-			roomArray = roomController.listRooms(roomType);	
-			if(roomArray==null) {
-				System.out.println("Invalid Input");
-				loop = true;
-			}
-		}
+		}while(roomArray.isEmpty());
 		String id = checkInBoundary.printRooms(roomArray);
 		return id;
 	}

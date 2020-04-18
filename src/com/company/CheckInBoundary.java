@@ -80,10 +80,9 @@ public class CheckInBoundary extends Boundary {
 		// TODO Auto-generated method stub
 		String pre = "";
 		String curLevel = "";
-		String num = ""; 
-		ArrayList<RoomEntity> list = RoomController.getInstance().listRooms(RoomStatus.VACANT, roomArray);
+		String num = "";
 		System.out.println("Avalible rooms");
-		for(RoomEntity room:list) {
+		for(RoomEntity room:roomArray) {
 			curLevel = room.getRoomId().substring(0, 2);
 			num = room.getRoomId().substring(2, 4);
 			if(!curLevel.equals(pre)) {
@@ -98,7 +97,7 @@ public class CheckInBoundary extends Boundary {
 
 		while(true) {
 			String id = getRoomId();
-			for(RoomEntity room:list) {
+			for(RoomEntity room:roomArray) {
 				if(id.equals(room.getRoomId())) {
 					return id;
 				}
