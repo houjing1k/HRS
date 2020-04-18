@@ -13,21 +13,21 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class PaymentController extends Controller{
-	private ArrayList<PaymentBill> paymentAccountList; 	// The bills that haven't paid yet
+	private ArrayList<PaymentBill> billingAccountList; 	// The bills that haven't paid yet
 	private ArrayList<PaymentBill> paymentRecords;		// The paid bills
 	private ArrayList<Double> chargesList;				// Store rate of gst, service charges
 	PaymentBoundary pb= new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
 	String paymentRecordsFile= "./data/paymentRecords.ser";
-	String paymentAccountsFile= "./data/paymentBills.ser";
+	String billingAccountsFile= "./data/billingAccount.ser";
 	String chargesRateFile ="./data/charges.ser";   // index 0 : gst , index 1: service charge
 	
 	public PaymentController() {
-		paymentAccountList = (ArrayList<PaymentBill>) fromFile(paymentAccountsFile);
+		billingAccountList = (ArrayList<PaymentBill>) fromFile(billingAccountsFile);
 		paymentRecords = (ArrayList<PaymentBill>) fromFile(paymentRecordsFile);
 		chargesList= (ArrayList<Double>) fromFile(chargesRateFile);
-		if (paymentAccountList == null)
-			paymentAccountList = new ArrayList<PaymentBill>();
+		if (billingAccountList == null)
+			billingAccountList = new ArrayList<PaymentBill>();
 		if (paymentRecords == null)
 			paymentRecords = new ArrayList<PaymentBill>();
 		
@@ -37,68 +37,9 @@ public class PaymentController extends Controller{
 	
 	@Override
 	public void processMain() {
-		String roomID;
-		while (true)
-		{   int sel = pb.process();
-			switch (sel)
-			{
-				case 1:
-					paymentAccountMenu();  	//Add/remove Payment Account
-					break;
-				case 2:
-					roomID=pb.requestRoomID();
-					printInvoice(roomID);			//Print Invoice
-					pb.waitInput();
-					break;
-				case 3:
-					roomID=pb.requestRoomID();
-					makePaymentMenu(roomID,new PaymentDetail("Dummy", "1212", "1/1/20"));    		//Make Payment
-					break;
-				case 4:
-					modifyChargesMenu();			// Modify gst,service charges, discount
-					break;
-				case 5:
-					generatePaymentReport();    //Generate Financial report for paid bills
-					pb.waitInput();
-					break;
-				case 0:
-					return;
-				default:
-					pb.invalidInputWarning();
-			}
-		}
+		
 	} 
 	
-	
-	//create/remove/view all account
-	public void paymentAccountMenu() {
-		String roomID;
-		while (true)
-		{
-		pb.modifyAccountMenu();
-		int sel = sc.nextInt();
-			switch (sel)
-			{
-				case 1:
-					pb.CreatePaymentAccount();
-					roomID=pb.requestRoomID();
-					createPaymentAccount(roomID);   	//Add Payment Account
-					pb.waitInput();
-					break;
-				case 2:
-					roomID=pb.requestRoomID();
-					removePaymentAccount(roomID);		// remove payment account
-					break;
-				case 4:
-					viewAllPaymentAccount();		//View all Payment Account
-					pb.waitInput();
-				case 0:
-					return;
-				default:
-					pb.invalidInputWarning();
-			}
-		}
-	}
 	
 	//Modify Rate of different Charges
 	public void modifyChargesMenu() {
@@ -132,7 +73,7 @@ public class PaymentController extends Controller{
     	PaymentBill bill=getPaymentBill(roomID);
     	//return if bill does not exist or 0 transaction;
     	if(bill==null) {
-    		pb.invalidPaymentAccount();
+    		pb.invalidbillingAccount();
     		return; 	
     	}
     	else if(bill.getTransactions().size()==0) {
@@ -168,48 +109,36 @@ public class PaymentController extends Controller{
 		bill.setStatus("PAID");
 		bill.setPaymentDate(LocalDateTime.now());
         new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
-		removePaymentAccount(roomID);
+		removebillingAccount(roomID);
     	saveBillsToFile();
 		pb.waitInput();
     }
     
     
 	//Create payment account when checked in
-	public void createPaymentAccount(String roomID) {
+	public void createbillingAccount(String roomID) {
 		//Check if this payment account exist
 		if(getPaymentBill(roomID)!= null) {
-			System.out.println("PaymentAccount already exist!");
+			System.out.println("Billing Account already exist!");
 			return;
 		}
 		PaymentBill bill =new PaymentBill();
 		bill.setRoomID(roomID);
-		paymentAccountList.add(bill);
+		billingAccountList.add(bill);
 		saveBillsToFile();
 	}
 
-	//Print out all the payment account
-	public void viewAllPaymentAccount() {
-		if(paymentAccountList.size()==0) {
-			System.out.println("No Payment Account Exist");
-			return;
-		}
-		pb.printSubTitle("Payment Account");
-		for(PaymentBill bill : paymentAccountList) {
-			System.out.println("RoomID "+bill.getRoomID());
-    	}
-		
-	}
 	
 	// Remove Payment Account
-	public void removePaymentAccount(String roomID) {
+	public void removebillingAccount(String roomID) {
 		PaymentBill bill =getPaymentBill(roomID);
     	if(bill==null) {
-    		pb.invalidPaymentAccount();
+    		pb.invalidBillingAccount();
     		return;
     	}
     	//Save paid bills to record before removing it
     	addToRecord(bill);
-		paymentAccountList.remove(bill);
+		billingAccountList.remove(bill);
 	}
 	
 	
@@ -257,7 +186,7 @@ public class PaymentController extends Controller{
     public void addRoomServiceToPaymentBill(String roomID) {
 		PaymentBill bill =getPaymentBill(roomID);
     	if(bill==null) {
-    		pb.invalidPaymentAccount();
+    		pb.invalidBillingAccount();
     		return;
     	} 	
         Transaction transaction = null;
@@ -279,7 +208,7 @@ public class PaymentController extends Controller{
 
     // Find the PaymentBill based on roomID
     public PaymentBill getPaymentBill(String roomID) {
-    	for(PaymentBill bill : paymentAccountList) {
+    	for(PaymentBill bill : billingAccountList) {
     		if(bill.getRoomID().equals(roomID)) {
     			return bill;
     		}
@@ -291,7 +220,7 @@ public class PaymentController extends Controller{
     public void printInvoice(String roomID) {
     	PaymentBill bill=getPaymentBill(roomID);
     	if(bill==null) {
-    		pb.invalidPaymentAccount();
+    		pb.invalidBillingAccount();
     		return;
     		}
     	
@@ -359,7 +288,7 @@ public class PaymentController extends Controller{
 		String id=pb.requestRoomID();
 		PaymentBill bill =getPaymentBill(id);
     	if(bill==null) {
-    		pb.invalidPaymentAccount();
+    		pb.invalidBillingAccount();
     		return;
     	}
 		System.out.println("Current Discount Rate : "+ bill.getDiscount());
@@ -368,11 +297,10 @@ public class PaymentController extends Controller{
 		saveBillsToFile();
 	}
 
-	//Print out the 
+	//Print out the paid Bills
 	public void generatePaymentReport() {
 		pb.printSubTitle("Financial Report");
 		
-		String str=null;
 		System.out.println(String.format("%-12s %-15s %-15s", "RoomID", "PaidAmount($)","PaymentDate")+"\n");
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		double sum=0;
@@ -387,10 +315,10 @@ public class PaymentController extends Controller{
 	
 	
 
-	//store the paymentAccountList to file
+	//store the billingAccountList to file
 	private void saveBillsToFile()
 	{
-		toFile(paymentAccountList, paymentAccountsFile);
+		toFile(billingAccountList, billingAccountsFile);
 	}
 	
 	//store chargesList to file
