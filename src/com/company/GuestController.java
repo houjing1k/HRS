@@ -53,14 +53,6 @@ public class GuestController extends Controller
 					//Print All Guests
 					printAllGuest();
 					break;
-					/*
-				case 7:
-					//Sort All Guests
-					guestList.sort(null);
-					saveGuestsToFile();
-					break;
-
-					 */
 				case 0:
 					return;
 				default:

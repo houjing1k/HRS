@@ -84,6 +84,11 @@ public abstract class Boundary
 		sc.nextLine();
 	}
 
+	public static int getMenulength()
+	{
+		return MENULENGTH;
+	}
+
 	public static void invalidInputWarning()
 	{
 		System.out.println("--Invalid Input--");

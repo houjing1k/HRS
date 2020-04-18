@@ -305,6 +305,26 @@ public class RoomController extends Controller
 				RoomController.getInstance().generateReports();
 				break;
 
+			case 3: //2 - Display All Rooms
+				DisplayRooms.showList(roomList);
+				rb.waitInput();
+				break;
+			case 4: //4 - List single Rooms
+				DisplayRooms.showList(listRooms(RoomType.SINGLE));
+				rb.waitInput();
+				break;
+			case 5: //4 - List Occupied Rooms
+				DisplayRooms.showList(listRooms(RoomStatus.OCCUPIED));
+				rb.waitInput();
+				break;
+			case 6: //4 - List 1 Room
+				DisplayRooms.showRoom(roomList.get(10));
+				rb.waitInput();
+				break;
+			case 7: //4 - List Smoking Rooms
+				DisplayRooms.showList(listRooms(true));
+				rb.waitInput();
+				break;
 			case 0: // 0 - Go Back
 				break;
 
