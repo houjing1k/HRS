@@ -166,7 +166,7 @@ public class CheckInController extends Controller {
 	
 	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate) {
 		try {
-			paymentController.createPaymentAccount(roomId);
+			paymentController.createBillingAccount(roomId);
 			paymentController.addRoomToPaymentBill(roomId, startDate, endDate);
 			roomController.checkIn(guestId, roomId);
 			System.out.println("Check in successful");

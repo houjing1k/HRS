@@ -116,7 +116,7 @@ public class PaymentController extends Controller{
     
     
 	//Create payment account when checked in
-	public void createbillingAccount(String roomID) {
+	public void createBillingAccount(String roomID) {
 		//Check if this payment account exist
 		if(getPaymentBill(roomID)!= null) {
 			System.out.println("Billing Account already exist!");
