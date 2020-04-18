@@ -73,7 +73,7 @@ public class PaymentController extends Controller{
     	PaymentBill bill=getPaymentBill(roomID);
     	//return if bill does not exist or 0 transaction;
     	if(bill==null) {
-    		pb.invalidbillingAccount();
+    		pb.invalidBillingAccount();
     		return; 	
     	}
     	else if(bill.getTransactions().size()==0) {
