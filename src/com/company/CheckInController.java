@@ -14,6 +14,7 @@ public class CheckInController extends Controller {
 	private RoomController roomController;
 	private MainController mainController;
 	private PaymentController paymentController;
+	private ReservationController reservationController;
 	
 	private String[] menuMain = {
             "Walk In Check In",
@@ -43,6 +44,7 @@ public class CheckInController extends Controller {
 		roomController = RoomController.getInstance();
 		mainController = new MainController();
 		paymentController = new PaymentController();
+		reservationController  = new ReservationController();
 	}
 	
 	public static CheckInController getInstance() {
@@ -89,9 +91,10 @@ public class CheckInController extends Controller {
 		// TODO Auto-generated method stub
 		int reserveId =checkInBoundary.getId();
 		RoomEntity room = roomController.getRerservation(reserveId);
+		ReservationEntity reservation = reservationController.getReservationById(reserveId);
 		if(room!=null) {
-			LocalDate startDate = checkInBoundary.getStartDate();
-			LocalDate endDate = checkInBoundary.getStartDate();
+			LocalDate startDate = reservation.startDate;
+			LocalDate endDate = reservation.endDate;
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
@@ -116,12 +119,10 @@ public class CheckInController extends Controller {
 		}
 		int guestID=room.getGuestId();
 		//get the paymentDetail from guest. 
-		//PaymentDetail paymentDetail=new PaymentDetail("Cash");
 		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
 		paymentController.addRoomServiceToPaymentBill(roomId);
-		paymentController.makePayment(roomId,guest.getPaymentDetail());
-		paymentController.removePaymentAccount(roomId);
+		paymentController.makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		return false;
@@ -144,7 +145,7 @@ public class CheckInController extends Controller {
 					try {
 						guestId = guest.getGuestID();
 					}catch(Exception e) {
-						loop = true;
+						return true;
 					}
 					break;
 				case 0:
@@ -156,7 +157,7 @@ public class CheckInController extends Controller {
 			}
 		}
 		LocalDate startDate = checkInBoundary.getStartDate();
-		LocalDate endDate = checkInBoundary.getStartDate();
+		LocalDate endDate = checkInBoundary.getEndDate();
 		String roomId = selectRoom();
 		return checkIn(guestId,roomId,startDate,endDate);
 	}

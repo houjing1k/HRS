@@ -12,30 +12,31 @@ public class AdminController extends Controller
 	@Override
 	public void processMain()
 	{
-		while (true)
+		boolean loop = true;
+		while (loop)
 		{
 			int sel = ab.process();
-
+			loop = false;
 			switch (sel)
 			{
 				case 1: //1 - Manage Rooms
-
-					break;
-
-				case 2: //2 - Print Occupancy Report
 					RoomController.getInstance().processMain();
 					break;
 
+				case 2: //2 - Print Occupancy Report
+					RoomController.getInstance().generateReports();
+					break;
+
 				case 3: //3 - Modify Hotel Charges
-					new PaymentController().modifyCharges();
+					new PaymentController().modifyChargesMenu();
 					break;
 
-				case 4: //4 - Print Bill Invoice
-
+				case 4: //4 - Generate Financial Report
+					new PaymentController().generatePaymentReport();
+					ab.waitInput();
 					break;
 
-				case 0:
-					System.exit(0);
+				case 0: // 0 - Go Back
 					break;
 
 				default:

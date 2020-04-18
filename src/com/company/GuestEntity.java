@@ -45,14 +45,14 @@ public class GuestEntity implements Serializable, Comparable<GuestEntity>
 	@Override
 	public String toString()
 	{
-		return "[Guest ID]      : " + guestID +
-				"\nFull Name       : " + name +
-				"\nAddress         : " + address +
-				"\nCountry         : " + country +
-				"\nGender          : " + gender +
-				"\nIdentity No.    : " + identityNo +
-				"\nNationality     : " + nationality +
-				"\nContact No.     : " + contactNo +
+		return "[Guest ID]   : " + guestID +
+				"\nFull Name    : " + name +
+				"\nAddress      : " + address +
+				"\nCountry      : " + country +
+				"\nGender       : " + gender +
+				"\nIdentity No. : " + identityNo +
+				"\nNationality  : " + nationality +
+				"\nContact No.  : " + contactNo +
 				"\n" +
 				paymentDetail.toString()
 				;
