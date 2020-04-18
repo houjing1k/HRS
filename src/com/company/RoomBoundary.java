@@ -1,13 +1,10 @@
 package com.company;
 
-import java.util.HashMap;
 import java.util.Scanner;
-import java.util.Set;
 
 public class RoomBoundary extends Boundary
 {
 	private Scanner sc;
-	private HashMap<String, String[]> selectRoomList;
 	
 	private String [] titleList = {
 			"return",
@@ -37,11 +34,6 @@ public class RoomBoundary extends Boundary
 	
 	public RoomBoundary() {
 		sc = new Scanner(System.in);
-		selectRoomList = new HashMap<String,String[]>();
-		selectRoomList.put("Select Room Type:",roomTypeList);
-		selectRoomList.put("Select Bed Type:",bedTypeList);
-		selectRoomList.put("Smoking:",ans);
-		selectRoomList.put("WIFI:",ans);
 	}
 
 	protected void printMenu()
