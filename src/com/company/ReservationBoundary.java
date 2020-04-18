@@ -84,10 +84,11 @@ public class ReservationBoundary extends Boundary {
         return decision.equals("Y");
     }
 
-    public void printRoomHasBeenReserved(String roomID)
+    public void printRoomHasBeenReserved(String roomID, int reserveId)
     {
         printDivider();
         System.out.println(String.format("The room %s has been reserved",roomID));
+        System.out.println(String.format("your reservation Id is: %d",reserveId));
     }
 
     public void requestRoomRequirements()

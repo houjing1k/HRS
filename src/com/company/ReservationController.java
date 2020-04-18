@@ -109,7 +109,7 @@ public class ReservationController extends Controller {
             if (isRoomAvailable(tempRoomID, startDate, endDate)) {
                 reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
                 saveReservationsToFile();
-                reservationBoundary.printRoomHasBeenReserved(tempRoomID);
+                reservationBoundary.printRoomHasBeenReserved(tempRoomID,newReservationId);
                 RoomController.getInstance().reserve(tempRoomID, guestId, newReservationId);
                 reserved = true;
                 break;
