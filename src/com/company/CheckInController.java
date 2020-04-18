@@ -1,6 +1,7 @@
 package com.company;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
 import com.company.RoomEntity.RoomStatus;
@@ -158,8 +159,14 @@ public class CheckInController extends Controller {
 					loop = true;
 			}
 		}
-		LocalDate startDate = LocalDate.now();
-		LocalDate endDate = checkInBoundary.getEndDate(startDate);
+		LocalDate startDate,endDate;
+		 while(true) {
+				startDate = LocalDate.now();
+				endDate = checkInBoundary.getEndDate(startDate);
+		        if (Period.between(startDate, endDate).getDays()<1) 
+		            System.out.println("Enter Valid Period of Day!");
+		        else break;
+		        }
 		String roomId = selectRoom();
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
