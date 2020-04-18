@@ -43,7 +43,7 @@ public class PaymentController extends Controller{
 			switch (sel)
 			{
 				case 1:
-					PaymentAccountMenu();  	//Add/remove Payment Account
+					paymentAccountMenu();  	//Add/remove Payment Account
 					break;
 				case 2:
 					roomID=pb.requestRoomID();
@@ -71,7 +71,7 @@ public class PaymentController extends Controller{
 	
 	
 	//create/remove/view all account
-	public void PaymentAccountMenu() {
+	public void paymentAccountMenu() {
 		String roomID;
 		while (true)
 		{
@@ -89,7 +89,7 @@ public class PaymentController extends Controller{
 					roomID=pb.requestRoomID();
 					removePaymentAccount(roomID);		// remove payment account
 					break;
-				case 3:
+				case 4:
 					viewAllPaymentAccount();		//View all Payment Account
 					pb.waitInput();
 				case 0:
@@ -141,7 +141,7 @@ public class PaymentController extends Controller{
     	}
     	//Print the invoice
     	printInvoice(roomID);
-    	
+    	pb.printDivider();
 		boolean loop = true;	
     	while (loop)
 		{
@@ -164,7 +164,7 @@ public class PaymentController extends Controller{
 					loop = true;
 					pb.invalidInputWarning();
 			}
-		}
+		}	
 		bill.setStatus("PAID");
 		bill.setPaymentDate(LocalDateTime.now());
         new RoomServiceController().setPaidCurrentOrdersOfRoom(roomID);
@@ -252,7 +252,7 @@ public class PaymentController extends Controller{
 		saveBillsToFile();
 
     }
-    
+    	
     //add room service to PaymentBill.
     public void addRoomServiceToPaymentBill(String roomID) {
 		PaymentBill bill =getPaymentBill(roomID);
@@ -385,6 +385,8 @@ public class PaymentController extends Controller{
 		
 	}
 	
+	
+
 	//store the paymentBillList to file
 	private void saveBillsToFile()
 	{
