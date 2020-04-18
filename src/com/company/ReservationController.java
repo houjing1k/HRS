@@ -107,7 +107,7 @@ public class ReservationController extends Controller {
         for (String tempRoomID : tempRoomIDs) {
             if (isRoomAvailable(tempRoomID, startDate, endDate)) {
                 reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
-                saveReservationsTofIle();
+                saveReservationsToFile();
                 reservationBoundary.printRoomHasBeenReserved(tempRoomID);
                 reserved = true;
                 break;
@@ -119,7 +119,7 @@ public class ReservationController extends Controller {
             if(waitListDecision)
             {
                 reservations.add(new ReservationEntity(startDate, endDate, newReservationId, guestId, ReservationEntity.ReservationState.WAITLISTED,tempRoomIDs));
-                saveReservationsTofIle();
+                saveReservationsToFile();
             }
         }
 
@@ -140,7 +140,7 @@ public class ReservationController extends Controller {
                             System.out.println("Wait List Updated");
                             //reservations.add(new ReservationEntity(reservation.getStartDate(), reservation.getEndDate(), roomId, newReservationId, guestId));
                             reservations.get(i).reserve(roomId);
-                            saveReservationsTofIle();
+                            saveReservationsToFile();
                             break;
                         }
                     }
@@ -157,7 +157,7 @@ public class ReservationController extends Controller {
             //to check if the reservation has any clashes
             if (reservation.getReservationId() == reservationId && reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED) {
                 reservation.cancelReservation();
-                saveReservationsTofIle();
+                saveReservationsToFile();
                 waitListUpdate(reservation.getRoomId());
                 cancelled = true;
             }
@@ -165,7 +165,7 @@ public class ReservationController extends Controller {
         return cancelled;
     }
 
-    private void saveReservationsTofIle()
+    private void saveReservationsToFile()
     {
         toFile(reservations,"reservationData");
     }
@@ -254,7 +254,7 @@ public class ReservationController extends Controller {
                 waitListUpdate(reservation.getRoomId());
             }
         }
-        saveReservationsTofIle();
+        saveReservationsToFile();
     }
 
     public void getReservationByGuestName()
@@ -276,7 +276,7 @@ public class ReservationController extends Controller {
                 roomController.reserve(reservation.getRoomId(),reservation.getGuestId(),reservation.getReservationId());
             }
         }
-        saveReservationsTofIle();
+        saveReservationsToFile();
     }
 
     public ReservationEntity getReservationById(int reservationId)
