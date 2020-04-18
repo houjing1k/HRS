@@ -197,6 +197,55 @@ public class RoomController extends Controller
 		}
 		return list;
 	}
+	
+	public <T>ArrayList<T> selectRoom(){
+		int selection[] = rb.selectRoomMenu();
+		int i;
+		RoomStatus roomStatus = RoomStatus.VACANT;
+		RoomType roomType = null;
+		BedType bedType = null;
+		boolean smoking = false;
+		boolean wifi;
+		for(i=0;i<selection.length;i++) {
+			switch(i) {
+				case 0:
+					if(selection[0]==1) {
+						roomType = RoomType.SINGLE;
+					}else if(selection[0]==2) {
+						roomType = RoomType.DOUBLE;
+					}else {
+						roomType = RoomType.DELUXE;
+					}
+					break;
+				case 1:
+					if(selection[1]==1) {
+						bedType = bedType.SINGLE;
+					}else if(selection[1]==2) {
+						bedType = bedType.DOUBLESINGLE;
+					}else if(selection[1]==3){
+						bedType = bedType.QUEEN;
+					}else {
+						bedType = bedType.KING;
+					}
+					break;
+				case 2:
+					if(selection[2]!=1) {
+						smoking = false;
+					}else {
+						smoking = true;
+					}
+					break;
+				case 3:
+					if(selection[3]!=1) {
+						wifi = false;
+					}else {
+						wifi = true;
+					}
+					break;
+			}
+		}
+		return listRooms(roomStatus,roomType,bedType,smoking);
+	}
 
 	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking)
 	{
