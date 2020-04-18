@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 
+import com.company.ReservationEntity.ReservationState;
 import com.company.RoomEntity.RoomStatus;
 import com.company.RoomEntity.RoomType;
 
@@ -82,7 +83,7 @@ public class CheckInController extends Controller {
 					//return
 					break;
 				default:
-					checkInBoundary.invalidInputWarning();
+					Boundary.invalidInputWarning();
 					loop = true;
 					break;
 			}
@@ -97,7 +98,12 @@ public class CheckInController extends Controller {
 		ReservationEntity reservation = reservationController.getReservationById(reserveId);
 		if(room!=null) {
 			LocalDate startDate = reservation.startDate;
+			if(LocalDate.now()!=reservation.startDate) {
+				System.out.println("Your reservation is on "+reservation.startDate);
+				return true;
+			}
 			LocalDate endDate = reservation.endDate;
+			reservation.reservationState = ReservationState.CHECKED_IN;
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
