@@ -14,7 +14,7 @@ public class MainBoundary extends Boundary
 	protected void printMenu()
 	{
 		printMainTitle("Welcome to Hotel Reservation App");
-		String[] menuList=
+		String[] menuList =
 				{
 						"Add/Manage Reservations",
 						"Room Check-in / Check-out",
@@ -23,7 +23,7 @@ public class MainBoundary extends Boundary
 						"Administrative Control",
 						"Old Main Controller"
 				};
-		printMenuList(menuList,"Exit Application");
+		printMenuList(menuList, "Exit Application");
 		System.out.println();
 	}
 }
