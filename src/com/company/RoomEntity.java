@@ -12,17 +12,19 @@ public class RoomEntity implements Serializable{
 	private  RoomStatus status;
 	private final BedType bedType;
 	private boolean smoking;
+	private boolean wifi;
 	private int guestId;
 	private int reserveId;
 	
 
 	
-	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking) {
+	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking,boolean wifi) {
 		this.roomId = roomId;
 		this.roomType = roomType; 
 		this.status = status;
 		this.bedType = bedType;
 		this.smoking = smoking;
+		this.wifi = wifi;
 
 	}
 	
@@ -35,13 +37,14 @@ public class RoomEntity implements Serializable{
 	//Method to get room status
 	public RoomStatus getRoomStatus() {return status;}
 	
-	
 	//Method to get bed type
 	public BedType getBedType() {return bedType;}
 	
 	//Method to check if room allows smoking
 	public boolean isSmoking() {return smoking;}
 	
+	//Method to check if the room have wifi
+	public boolean isWifi() {return wifi;}
 	//Method to get the cost of the room
 	public int getCost() {return roomType.cost;}
 	
