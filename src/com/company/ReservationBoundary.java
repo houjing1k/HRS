@@ -7,15 +7,11 @@ import java.util.Scanner;
 
 public class ReservationBoundary extends Boundary {
     Scanner scan = new Scanner(System.in);
-//    public int handleMenu(String []menu)
-//    {
-//        int choice;
-//        for (String s : menu) {
-//            System.out.println(s);
-//        }
-//        choice = scan.nextInt();
-//        return choice;
-//    }
+    private String [] menuRoomType = {
+            "1. Single room",
+            "2. Double room",
+            "3. Deluxe room"
+    };
 
     protected void printMenu()
     {
@@ -24,35 +20,25 @@ public class ReservationBoundary extends Boundary {
                 "1. Reserve A Room",
                 "2. Print All Reservations",
                 "3. View Reservations By Guest Name",
-                "4. Cancel Reservation",
-                "5. tests"
+                "4. Cancel Reservation"
         };
         printMenuList(menuList, "Go back to Main Menu");
         System.out.println();
     }
 
-//    public int printReservationMenu()
-//    {
-//        printMainTitle("Print Reservations");
-//        String [] menuList = {
-//                "1. Print by guest name",
-//                "2. Print by room id",
-//        };
-//        printMenuList(menuList, "Go back to Reservation Menuu");
-//        System.out.println();
-//        return 1;
-//    }
 
     public void printReservations(ArrayList<ReservationEntity> arrayList, Map<Integer,String> guestNames)
     {
         printMainTitle("All reservations");
+        StringBuilder waitListRoomIDs = new StringBuilder();
+        String waitListRoomIDsString = "";
         for (ReservationEntity reservationEntity : arrayList) {
-            String waitListRoomIDs = "";
             if(reservationEntity.getWaitListRoomIds()!=null) {
                 for (String waitListRoomID : reservationEntity.getWaitListRoomIds()) {
-                    waitListRoomID += waitListRoomID + ",";
+                    waitListRoomIDs.append(waitListRoomID).append(",");
                 }
-                waitListRoomIDs.substring(0,waitListRoomIDs.length()-1);
+                if(waitListRoomIDs.length()!=0)
+                    waitListRoomIDsString = waitListRoomIDs.substring(0,waitListRoomIDs.length()-1);
             }
 
             System.out.println(String.format("[Reservation ID]: %d \n" +
@@ -65,7 +51,7 @@ public class ReservationBoundary extends Boundary {
                     reservationEntity.getReservationId(),
                     guestNames.get(reservationEntity.getGuestId()),
                     reservationEntity.getRoomId(),
-                    waitListRoomIDs,
+                    waitListRoomIDsString,
                     reservationEntity.getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     reservationEntity.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     reservationEntity.getReservationState()
@@ -106,15 +92,39 @@ public class ReservationBoundary extends Boundary {
 
     public void requestRoomRequirements()
     {
+        boolean invalidDecision = false;
+        RoomEntity.RoomType roomType ;
+        int temp;
         printDivider();
+        do {
+            invalidDecision = false;
+            System.out.println("Please type the room type you would like(single/double/duluxe)");
+            temp = scan.nextInt();
+            //  this.
+            switch(this.process())
+            {
+                case 1:
+                    roomType = RoomEntity.RoomType.SINGLE;
+                    break;
+                case 2:
+                    roomType = RoomEntity.RoomType.DOUBLE;
+                    break;
+                case 3:
+                    roomType = RoomEntity.RoomType.DELUXE;
+                    break;
+                default:
+                    invalidDecision = true;
+                    System.out.println("Invalid Input");
 
-        System.out.println("Please type the room type you would like(single/double/duluxe)");
+            }
+        }while (invalidDecision);
+
 
     }
 
-    public void getReservation(ArrayList<ReservationEntity> arrayList, int guestId)
+    public void getReservation(ArrayList<ReservationEntity> arrayList, int guestId,String guestName)
     {
-        printMainTitle("Reservations for guest");
+        printMainTitle("Reservations for "+guestName);
         if (arrayList.size() == 0)
         {
             System.out.println("This Guest has no reservations");
@@ -137,15 +147,5 @@ public class ReservationBoundary extends Boundary {
             }
     }
 
-    public ArrayList<GuestEntity> requestGuestName()
-    {
-        printMainTitle("Please enter the guest name");
-        return new GuestController().searchGuest(scan.next());
-    }
-
-    public void listGuests(ArrayList<GuestEntity> guestEntityArrayList)
-    {
-        new GuestController().printGuestList(guestEntityArrayList);
-    }
 
 }

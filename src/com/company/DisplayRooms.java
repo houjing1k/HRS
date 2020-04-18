@@ -6,16 +6,20 @@ public class DisplayRooms
 {
 	private static final int BOX_HEIGHT = 7;
 	private static final int BOX_WIDTH = 13;
-	//private static char[] design = {'═', '╔', '╗', '╚', '╝', '╠', '╣', '║', '■'};
-	private static char[] design = {'─', '┌', '┐', '└', '┘', '├', '┤', '│', '■'};
+	private static char[] design = Boundary.getDesign();
 
 	public static void showList(ArrayList<RoomEntity> roomList)
 	{
 		Boundary.printSubTitle("View Rooms");
 		System.out.println();
-		printList(roomList);
+		if (roomList == null || roomList.isEmpty())
+		{
+			System.out.println("No Rooms Found!");
+		}
+		else printList(roomList);
 		//System.out.println();
-		System.out.println(centrePadding(design[8] + " SMK - Smoking Room" + "   |   " + design[8] + " WIFI - WiFi Enabled" + "   |   " + design[8] + " VW - With Outside View", ' ', Boundary.getMenulength()));
+		System.out.println(centrePadding(design[8] + " SM - Smoking Room" + "   |   " + design[8] + " WIFI - WiFi Enabled", ' ', Boundary.getMenulength()));
+		System.out.println(centrePadding("S - Single" + "   |   " + "D - Double Single" + "   |   " + "Q - Queen" + "   |   " + "K - King", ' ', Boundary.getMenulength()));
 		Boundary.printDivider();
 		System.out.println();
 	}
@@ -32,14 +36,14 @@ public class DisplayRooms
 		ArrayList<ArrayList<ArrayList<String>>> list = new ArrayList<ArrayList<ArrayList<String>>>();
 		ArrayList<ArrayList<RoomEntity>> roomList2D = to2DRoomList(roomList);
 
-		for(ArrayList<RoomEntity> floorList :roomList2D)
+		for (ArrayList<RoomEntity> floorList : roomList2D)
 		{
 			ArrayList<ArrayList<String>> floors = new ArrayList<ArrayList<String>>();
 
 			for (int j = 0; j < BOX_HEIGHT; j++)
 			{
 				ArrayList<String> rows = new ArrayList<String>();
-				for (RoomEntity roomEntity :floorList)
+				for (RoomEntity roomEntity : floorList)
 				{
 					String rooms = boxBuilder(j, roomEntity);
 					rows.add(rooms);
@@ -69,8 +73,7 @@ public class DisplayRooms
 		switch (rowNo)
 		{
 			case 0:
-				//String roomId = roomEntity.getRoomId().substring(0, 2) + "-" + roomEntity.getRoomId().substring(2, 4);
-				String roomId=String.format("%02d", getRoomLevel(roomEntity))+"-"+String.format("%02d", getRoomNum(roomEntity));
+				String roomId = String.format("%02d", getRoomLevel(roomEntity)) + "-" + String.format("%02d", getRoomNum(roomEntity));
 				str = design[1] + centrePadding(" " + roomId + " ", design[0], width) + design[2];
 				break;
 
@@ -90,15 +93,14 @@ public class DisplayRooms
 
 			case 4:
 				char smoking = roomEntity.isSmoking() ? design[8] : ' ';
-				char wifi = true ? design[8] : ' ';
-				char view = true ? design[8] : ' ';
-
-				String roomDetail = smoking + "   " + wifi + "   " + view;
+				char wifi = roomEntity.isWifi() ? design[8] : ' ';
+				char bed = convertBedType(roomEntity.getBedType());
+				String roomDetail = bed + "   " + smoking + "   " + wifi;
 				str = design[7] + centrePadding(roomDetail, ' ', width) + design[7];
 				break;
 
 			case 5:
-				String roomDetailDescription = "SMK WIFI VW";
+				String roomDetailDescription = "BED SM WIFI";
 				str = design[7] + centrePadding(roomDetailDescription, ' ', width) + design[7];
 				break;
 
@@ -131,7 +133,7 @@ public class DisplayRooms
 		return left + data + right;
 	}
 
-	private static ArrayList<ArrayList<RoomEntity>> to2DRoomList (ArrayList<RoomEntity> roomList)
+	private static ArrayList<ArrayList<RoomEntity>> to2DRoomList(ArrayList<RoomEntity> roomList)
 	{
 		ArrayList<ArrayList<RoomEntity>> list = new ArrayList<ArrayList<RoomEntity>>();
 
@@ -178,5 +180,29 @@ public class DisplayRooms
 	private static int getRoomNum(RoomEntity room)
 	{
 		return Integer.parseInt(room.getRoomId().substring(2, 4));
+	}
+
+	private static char convertBedType(RoomEntity.BedType bedType)
+	{
+		if (bedType == RoomEntity.BedType.SINGLE)
+		{
+			return 'S';
+		}
+		else if (bedType == RoomEntity.BedType.DOUBLESINGLE)
+		{
+			return 'D';
+		}
+		else if (bedType == RoomEntity.BedType.QUEEN)
+		{
+			return 'Q';
+		}
+		else if (bedType == RoomEntity.BedType.KING)
+		{
+			return 'K';
+		}
+		else
+		{
+			return ' ';
+		}
 	}
 }

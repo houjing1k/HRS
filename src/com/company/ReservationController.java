@@ -13,10 +13,6 @@ public class ReservationController extends Controller {
     ReservationController()
     {
         loadReservationsFromFile();
-        if(reservations == null)
-        {
-            reservations = new ArrayList<>();
-        }
 
     }
 
@@ -41,7 +37,6 @@ public class ReservationController extends Controller {
     public void createReservation()
     {
         loadReservationsFromFile();
-        ArrayList<GuestEntity> guestEntityArrayList;
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         GuestController guestController = new GuestController();
         String decision;
@@ -71,6 +66,11 @@ public class ReservationController extends Controller {
             try {
                 tempString = scan.next();
                 startDate = LocalDate.parse(tempString, dateFormat);
+                if(startDate.isBefore(LocalDate.now()))
+                {
+                    System.out.println("Please key in a date after today");
+                    startDate = null;
+                }
             }catch (Exception e)
             {
                 //e.printStackTrace();
@@ -94,8 +94,9 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-
-        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
+        //String roomId = RoomController.getInstance().
+        //ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
+        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().selectRoom();
         ArrayList<String> tempRoomIDs = new ArrayList<>();
         for (RoomEntity roomEntity: roomEntities)
         {
@@ -167,10 +168,16 @@ public class ReservationController extends Controller {
 
     private void saveReservationsToFile()
     {
-        toFile(reservations,"reservationData");
+        toFile(reservations,"data/reservations.ser");
     }
 
-    private void loadReservationsFromFile() {reservations = fromFile("reservationData");}
+    private void loadReservationsFromFile() {
+        reservations = fromFile("data/reservations.ser");
+        if(reservations == null)
+        {
+            reservations = new ArrayList<>();
+        }
+    }
 
     private void printAllReservations()
     {
@@ -201,7 +208,7 @@ public class ReservationController extends Controller {
     public void processMain() {
         int guestId;
         int reservationId;
-        ArrayList<GuestEntity> guestEntityArrayList;
+        GuestEntity guestEntity;
         do {
             choice = reservationBoundary.process();
             switch (choice)
@@ -216,33 +223,22 @@ public class ReservationController extends Controller {
                     getReservationByGuestName();
                     break;
                 case 4:
-                    guestEntityArrayList = reservationBoundary.requestGuestName();
-                    reservationBoundary.listGuests(guestEntityArrayList);
-                    System.out.println("Key in the ID of the guest");
-                    guestId = scan.nextInt();
-                    reservationBoundary.getReservation(reservations,guestId);
+                    guestEntity = new GuestController().searchGuest_Hybrid();
+                    if(guestEntity == null) continue;
+                    guestId = guestEntity.getGuestID();
+                    reservationBoundary.getReservation(reservations,guestId,guestEntity.getName());
                     System.out.println("Key in the ID of the reservation");
                     reservationId = scan.nextInt();
                     if(cancelReservation(reservationId))
-                    {
                         reservationBoundary.printReservationCancelled();
-                    }
                     else
-                    {
                         reservationBoundary.printReservationCancellationFailed();
-                    }
 
                     break;
-                case 5:
-                    ArrayList<RoomEntity> tenp = RoomController.getInstance().listRooms(RoomEntity.RoomStatus.VACANT);
-                    for(RoomEntity tem:tenp)
-                    {
-                        System.out.println(tem.getRoomId());
-                    }
-                    System.out.println("test");
-
+                default:
+                    System.out.println("--Invalid Input--");
             }
-        }while (choice > 0);
+        }while (choice != 0);
     }
 
     public void triggerExpiredReservations()
@@ -259,13 +255,12 @@ public class ReservationController extends Controller {
 
     public void getReservationByGuestName()
     {
-        ArrayList<GuestEntity> guestEntityArrayList;
         int guestId;
-        guestEntityArrayList = reservationBoundary.requestGuestName();
-        reservationBoundary.listGuests(guestEntityArrayList);
-        System.out.println("Key in the ID of the guest");
-        guestId = scan.nextInt();
-        reservationBoundary.getReservation(reservations,guestId);
+        GuestEntity guestEntity;
+        guestEntity = new GuestController().searchGuest_Hybrid();
+        if(guestEntity==null) return;
+        guestId = guestEntity.getGuestID();
+        reservationBoundary.getReservation(reservations,guestId,guestEntity.getName());
     }
 
     public void setRoomReservationStatus()
