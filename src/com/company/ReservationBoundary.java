@@ -37,7 +37,8 @@ public class ReservationBoundary extends Boundary {
                 for (String waitListRoomID : reservationEntity.getWaitListRoomIds()) {
                     waitListRoomIDs.append(waitListRoomID).append(",");
                 }
-                waitListRoomIDsString = waitListRoomIDs.substring(0,waitListRoomIDs.length()-1);
+                if(waitListRoomIDs.length()!=0)
+                    waitListRoomIDsString = waitListRoomIDs.substring(0,waitListRoomIDs.length()-1);
             }
 
             System.out.println(String.format("[Reservation ID]: %d \n" +
