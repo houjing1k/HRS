@@ -28,6 +28,26 @@ public abstract class Boundary
 		//return 0;
 	}
 
+	public static int getInput(int min, int max)
+	{
+		while (true)
+		{
+			try
+			{
+				Scanner sc = new Scanner(System.in);
+				int sel = Integer.parseInt(sc.next());
+				if (sel >= min && sel <= max)
+					return sel;
+				else
+					throw new Exception();
+			} catch (Exception e)
+			{
+				invalidInputWarning();
+				System.out.println();
+			}
+		}
+	}
+
 	protected abstract void printMenu();
 
 	public static void printDivider()
@@ -77,6 +97,26 @@ public abstract class Boundary
 		printDivider();
 	}
 
+	public static void printMenuList(String[] menuList)
+	{
+		int i = 1;
+		for (String str : menuList)
+		{
+			System.out.println(i + " - " + str);
+			i++;
+		}
+		printDivider();
+	}
+
+	public static void printList(String[] menuList)
+	{
+		for (String str : menuList)
+		{
+			System.out.println(str);
+		}
+		printDivider();
+	}
+
 	public static void waitInput()
 	{
 		Scanner sc = new Scanner(System.in);
@@ -92,5 +132,11 @@ public abstract class Boundary
 	public static void invalidInputWarning()
 	{
 		System.out.println("--Invalid Input--");
+	}
+
+	public static char characterSelect(boolean select, char charTrue, char charFalse)
+	{
+		if (select) return charTrue;
+		else return charFalse;
 	}
 }

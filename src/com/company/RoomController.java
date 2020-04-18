@@ -325,6 +325,10 @@ public class RoomController extends Controller
 				DisplayRooms.showList(listRooms(true));
 				rb.waitInput();
 				break;
+			case 8: //4 - Filter and Display Rooms
+				DisplayRooms.showList(filterRooms(roomList, true));
+				rb.waitInput();
+				break;
 			case 0: // 0 - Go Back
 				break;
 
@@ -336,6 +340,47 @@ public class RoomController extends Controller
 	public void generateReports()
 	{
 		roomReports.printReports();
+	}
+
+	public ArrayList<RoomEntity> filterRooms(ArrayList<RoomEntity> list, boolean allSelected)
+	{
+		final int FILTER_SIZE = 11;
+		boolean[] filter = new boolean[FILTER_SIZE];
+		ArrayList<RoomEntity> filteredList = new ArrayList<RoomEntity>();
+
+		for (int i = 0; i < FILTER_SIZE; i++)
+		{
+			filter[i] = allSelected;
+		}
+
+		while (true)
+		{
+			rb.filterRoom(filter);
+			int sel = rb.getInput(0, FILTER_SIZE);
+			if (sel == 0) break;
+			else filter[sel - 1] = !filter[sel - 1];
+		}
+
+		for (RoomEntity e : list)
+		{
+			if (((e.isVacant() == filter[0]) ||
+					(e.isOccupied() == filter[1]) ||
+					(e.isReserved() == filter[2]) ||
+					(e.isMaintenance() == filter[3]))
+					&&
+					(((e.getRoomType() == RoomType.SINGLE) == filter[4]) ||
+							((e.getRoomType() == RoomType.DOUBLE) == filter[5]) ||
+							((e.getRoomType() == RoomType.DELUXE) == filter[6]))
+					&&
+					((e.isSmoking() == filter[7]) || (!e.isSmoking() == filter[8]))
+				//&&
+				//Wifi Enabled
+			)
+			{
+				filteredList.add(e);
+			}
+		}
+		return filteredList;
 	}
 
 }
