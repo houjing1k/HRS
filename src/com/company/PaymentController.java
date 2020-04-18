@@ -13,21 +13,21 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class PaymentController extends Controller{
-	private ArrayList<PaymentBill> paymentBillList; 	// The bills that haven't paid yet
+	private ArrayList<PaymentBill> paymentAccountList; 	// The bills that haven't paid yet
 	private ArrayList<PaymentBill> paymentRecords;		// The paid bills
 	private ArrayList<Double> chargesList;				// Store rate of gst, service charges
 	PaymentBoundary pb= new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
 	String paymentRecordsFile= "./data/paymentRecords.ser";
-	String paymentBillsFile= "./data/paymentBills.ser";
+	String paymentAccountsFile= "./data/paymentBills.ser";
 	String chargesRateFile ="./data/charges.ser";   // index 0 : gst , index 1: service charge
 	
 	public PaymentController() {
-		paymentBillList = (ArrayList<PaymentBill>) fromFile(paymentBillsFile);
+		paymentAccountList = (ArrayList<PaymentBill>) fromFile(paymentAccountsFile);
 		paymentRecords = (ArrayList<PaymentBill>) fromFile(paymentRecordsFile);
 		chargesList= (ArrayList<Double>) fromFile(chargesRateFile);
-		if (paymentBillList == null)
-			paymentBillList = new ArrayList<PaymentBill>();
+		if (paymentAccountList == null)
+			paymentAccountList = new ArrayList<PaymentBill>();
 		if (paymentRecords == null)
 			paymentRecords = new ArrayList<PaymentBill>();
 		
@@ -183,18 +183,18 @@ public class PaymentController extends Controller{
 		}
 		PaymentBill bill =new PaymentBill();
 		bill.setRoomID(roomID);
-		paymentBillList.add(bill);
+		paymentAccountList.add(bill);
 		saveBillsToFile();
 	}
 
 	//Print out all the payment account
 	public void viewAllPaymentAccount() {
-		if(paymentBillList.size()==0) {
+		if(paymentAccountList.size()==0) {
 			System.out.println("No Payment Account Exist");
 			return;
 		}
 		pb.printSubTitle("Payment Account");
-		for(PaymentBill bill : paymentBillList) {
+		for(PaymentBill bill : paymentAccountList) {
 			System.out.println("RoomID "+bill.getRoomID());
     	}
 		
@@ -209,7 +209,7 @@ public class PaymentController extends Controller{
     	}
     	//Save paid bills to record before removing it
     	addToRecord(bill);
-		paymentBillList.remove(bill);
+		paymentAccountList.remove(bill);
 	}
 	
 	
@@ -279,7 +279,7 @@ public class PaymentController extends Controller{
 
     // Find the PaymentBill based on roomID
     public PaymentBill getPaymentBill(String roomID) {
-    	for(PaymentBill bill : paymentBillList) {
+    	for(PaymentBill bill : paymentAccountList) {
     		if(bill.getRoomID().equals(roomID)) {
     			return bill;
     		}
@@ -387,10 +387,10 @@ public class PaymentController extends Controller{
 	
 	
 
-	//store the paymentBillList to file
+	//store the paymentAccountList to file
 	private void saveBillsToFile()
 	{
-		toFile(paymentBillList, paymentBillsFile);
+		toFile(paymentAccountList, paymentAccountsFile);
 	}
 	
 	//store chargesList to file
