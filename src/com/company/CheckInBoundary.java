@@ -47,20 +47,6 @@ public class CheckInBoundary extends Boundary {
 		}	while(!checkRoomId(id));
 		return id;
 	}
-		
-	public LocalDate getStartDate() {
-		// TODO Auto-generated method stub
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    	while(true) {
-    		try {
-    			System.out.println("\nEnter start date: (dd/MM/yyyy)");
-    			return LocalDate.parse(sc.next(),formatter);
-
-    		} 	catch (DateTimeParseException exc) {
-    			System.out.println("Please enter the date in this format (dd/MM/yyyy)");
-    		}
-    	}
-	}
 	
 	public LocalDate getEndDate(LocalDate startDate) {
 		// TODO Auto-generated method stub

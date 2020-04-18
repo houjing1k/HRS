@@ -98,8 +98,8 @@ public class CheckInController extends Controller {
 		ReservationEntity reservation = reservationController.getReservationById(reserveId);
 		if(room!=null) {
 			LocalDate startDate = reservation.startDate;
-			if(LocalDate.now()!=reservation.startDate) {
-				System.out.println("Your reservation is on "+reservation.startDate);
+			if(startDate.compareTo(LocalDate.now())!=0) {
+				System.out.println("Your reservation is for "+startDate);
 				return true;
 			}
 			LocalDate endDate = reservation.endDate;
