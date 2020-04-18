@@ -249,9 +249,9 @@ public class RoomController extends Controller
 		return listRooms(roomStatus,roomType,bedType,smoking);
 	}
 
-	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking)
+	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking,boolean wifi)
 	{
-		loadObject(id, roomType, status, bedType, smoking);
+		loadObject(id, roomType, status, bedType, smoking,wifi);
 		saveFile();
 	}
 
@@ -344,6 +344,10 @@ public class RoomController extends Controller
 		roomReports.printReports();
 	}
 
+	public ArrayList<RoomEntity> filterRooms(boolean allSelected){
+		return filterRooms(roomList,allSelected);
+	}
+	
 	public ArrayList<RoomEntity> filterRooms(ArrayList<RoomEntity> list, boolean allSelected)
 	{
 		final int FILTER_SIZE = 11;
