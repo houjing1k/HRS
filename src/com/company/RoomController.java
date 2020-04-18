@@ -129,22 +129,6 @@ public class RoomController extends Controller
 		return list;
 	}
 
-
-	//Return the list based on bed type
-	@SuppressWarnings ("unchecked")
-	public <T> ArrayList<T> listRooms(BedType bedType)
-	{
-		ArrayList<T> list = new ArrayList<>();
-		for (RoomEntity room : roomList)
-		{
-			if (room.getBedType() == bedType)
-			{
-				list.add((T) room);
-			}
-		}
-		return list;
-	}
-
 	//Return the list based on room id
 	public RoomEntity getRoom(String roomId)
 	{
@@ -184,90 +168,6 @@ public class RoomController extends Controller
 			}
 		}
 		return list;
-	}
-
-	@SuppressWarnings ("unchecked")
-	public <T> ArrayList<T> listRooms(RoomStatus roomStatus, RoomType roomType, BedType bedType, boolean smoking)
-	{
-		ArrayList<T> list = new ArrayList<>();
-		for (RoomEntity room : roomList)
-		{
-			if (room.getRoomStatus() == roomStatus && room.getRoomType() == roomType && room.getBedType() == bedType && room.isSmoking() == smoking)
-			{
-				list.add((T) room);
-			}
-		}
-		return list;
-	}
-
-	public <T> ArrayList<T> selectRoom()
-	{
-		int selection[] = rb.selectRoomMenu();
-		int i;
-		RoomStatus roomStatus = RoomStatus.VACANT;
-		RoomType roomType = null;
-		BedType bedType = null;
-		boolean smoking = false;
-		boolean wifi;
-		for (i = 0; i < selection.length; i++)
-		{
-			switch (i)
-			{
-				case 0:
-					if (selection[0] == 1)
-					{
-						roomType = RoomType.SINGLE;
-					}
-					else if (selection[0] == 2)
-					{
-						roomType = RoomType.DOUBLE;
-					}
-					else
-					{
-						roomType = RoomType.DELUXE;
-					}
-					break;
-				case 1:
-					if (selection[1] == 1)
-					{
-						bedType = bedType.SINGLE;
-					}
-					else if (selection[1] == 2)
-					{
-						bedType = bedType.DOUBLESINGLE;
-					}
-					else if (selection[1] == 3)
-					{
-						bedType = bedType.QUEEN;
-					}
-					else
-					{
-						bedType = bedType.KING;
-					}
-					break;
-				case 2:
-					if (selection[2] != 1)
-					{
-						smoking = false;
-					}
-					else
-					{
-						smoking = true;
-					}
-					break;
-				case 3:
-					if (selection[3] != 1)
-					{
-						wifi = false;
-					}
-					else
-					{
-						wifi = true;
-					}
-					break;
-			}
-		}
-		return listRooms(roomStatus, roomType, bedType, smoking);
 	}
 
 	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
