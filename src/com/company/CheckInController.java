@@ -158,8 +158,8 @@ public class CheckInController extends Controller {
 					loop = true;
 			}
 		}
-		LocalDate startDate = checkInBoundary.getStartDate();
-		LocalDate endDate = checkInBoundary.getEndDate();
+		LocalDate startDate = LocalDate.now();
+		LocalDate endDate = checkInBoundary.getEndDate(startDate);
 		String roomId = selectRoom();
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
@@ -179,7 +179,7 @@ public class CheckInController extends Controller {
 	
 	private String selectRoom() {
 		do{
-			roomArray = roomController.selectRoom();	
+			roomArray = roomController.filterRooms(true);	
 			if(roomArray.isEmpty()) {
 				System.out.println("No rooms found");
 			}
