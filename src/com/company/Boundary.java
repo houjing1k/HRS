@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public abstract class Boundary
 {
-	private final int menuLength = 50;
+	private static final int MENULENGTH = 105;
 
 	public int process()
 	{
@@ -32,7 +32,7 @@ public abstract class Boundary
 
 	public void printDivider()
 	{
-		printDivider(menuLength);
+		printDivider(MENULENGTH);
 		System.out.println();
 	}
 
@@ -54,7 +54,7 @@ public abstract class Boundary
 	public void printSubTitle(String title)
 	{
 		int titleLen = title.length() + 2;
-		int length = (menuLength - titleLen) / 2;
+		int length = (MENULENGTH - titleLen) / 2;
 		if ((titleLen % 2) == 1)
 			printDivider(length + 1);
 		else
