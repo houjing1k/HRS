@@ -62,14 +62,19 @@ public class CheckInBoundary extends Boundary {
     	}
 	}
 	
-	public LocalDate getEndDate() {
+	public LocalDate getEndDate(LocalDate startDate) {
 		// TODO Auto-generated method stub
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    	LocalDate endDate = null;
     	while(true) {
     		try {
     			System.out.println("\nEnter end date: (dd/MM/yyyy)");
-    			return LocalDate.parse(sc.next(),formatter);
-
+    			endDate = LocalDate.parse(sc.next(),formatter);
+    			if(endDate.compareTo(startDate)>=0) {
+    				return endDate;
+    			}else {
+    				System.out.println("Invalid Date");
+    			}
     		} 	catch (DateTimeParseException exc) {
     			System.out.println("Please enter the date in this format (dd/MM/yyyy)");
     		}
