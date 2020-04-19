@@ -54,14 +54,12 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	 */
 	void setName(String name) {
 		// remove excess whitespace and capitalize words
-		String temp = "";
-		name.trim();
-		for (String str : name.split(" ")) {
-			if (str.length()==0) continue;
-			temp += str.substring(0,1).toUpperCase().concat((str.substring(1))).concat(" ");
+		StringBuilder temp = new StringBuilder();
+		for (String word : name.trim().split(" ")) {
+			if (word.equals(" ")) continue;
+			temp.append(word.substring(0,1).toUpperCase() + word.substring(1) + " ");
 		}
-		temp.trim();
-		this.name = temp;
+		this.name = temp.toString().trim();
 	}
 	
 	/**
@@ -77,8 +75,7 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	void setDescription(String description) {
 		// remove excess whitespace
 		StringBuilder temp = new StringBuilder();
-		description.trim();
-		for (String word : description.split(" ")) {
+		for (String word : description.trim().split(" ")) {
 			if (word.equals(" ")) continue;
 			temp.append(word + " ");
 		}
