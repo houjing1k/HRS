@@ -1,6 +1,7 @@
 package com.company;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -39,10 +40,12 @@ public class RoomVisualiser
 	public static void showSchedule(ArrayList<RoomEntity> roomList, ArrayList<ReservationEntity> reservationList, LocalDate startDate)
 	{
 		ArrayList<ArrayList<RoomEntity>> roomList2D = to2DRoomList(roomList);
+		final int DATE_HEADER = 7;
+		final int MONTH_HEADER = 8;
 
 		Boundary.printSubTitle("Schedule Visualiser");
-		printMonth(startDate, "        ", NUM_OF_DAYS);
-		printDate(startDate, "       ", NUM_OF_DAYS);
+		printMonth(startDate, charRepeater(' ', MONTH_HEADER), NUM_OF_DAYS);
+		printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
 
 		for (ArrayList<RoomEntity> floor : roomList2D)
 		{
@@ -51,29 +54,61 @@ public class RoomVisualiser
 				printRoomSchedule(room, scheduleBuilder(room, startDate, reservationList, design[9], design[10]));
 			}
 			if (!floor.isEmpty())
-				printDate(startDate, "       ", NUM_OF_DAYS);
+				printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
 		}
 
+		for (ReservationEntity e : reservationList)
+		{
+			System.out.print(e.roomId);
+		}
 	}
 
 	private static String scheduleBuilder(RoomEntity room, LocalDate startDate, ArrayList<ReservationEntity> reservationList, char checkedInChar, char reservedChar)
 	{
 		String schedule = "";
-
+		char dayStatus;
 		LocalDate date = startDate;
+		LocalDate tempDate;
 
-
-		for (ReservationEntity e : reservationList)
+		for (int i = 0; i < NUM_OF_DAYS; i++)
 		{
-			if (e.roomId == room.getRoomId())
-			{
-				System.out.println("Found");
+			dayStatus = ' ';
 
+			if (room.isOccupied())
+			{
+				if (isWithinDate(date, room.getCheckInDate(), room.getCheckOutDate()))
+				{
+					dayStatus = design[10];
+				}
 			}
+
+			//System.out.print(room.getRoomId());
+			for (ReservationEntity e : reservationList)
+			{
+				if (e.roomId.equals(room.getRoomId()) && (e.getReservationState() == ReservationEntity.ReservationState.CONFIRMED))
+				{
+					//dayStatus = design[9];
+					if (isWithinDate(date, e.startDate, e.endDate))
+					{
+						dayStatus = design[9];
+						//break;
+					}
+				}
+			}
+			schedule = schedule + charRepeater(dayStatus);
+			date = date.plusDays(1);
 		}
 
-
 		return schedule;
+	}
+
+
+	private static boolean isWithinDate(LocalDate date, LocalDate startDate, LocalDate endDate)
+	{
+		if (date == null || startDate == null || endDate == null)
+			return false;
+		else
+			return !(date.isBefore(startDate) || date.isAfter(endDate));
 	}
 
 	private static String charRepeater(char character)
@@ -86,7 +121,7 @@ public class RoomVisualiser
 		String str = "";
 		for (int i = 0; i < repetition; i++)
 		{
-			str = str + repetition;
+			str = str + character;
 		}
 		return str;
 	}

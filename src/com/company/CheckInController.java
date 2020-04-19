@@ -180,7 +180,7 @@ public class CheckInController extends Controller {
 		try {
 			paymentController.createBillingAccount(roomId);
 			paymentController.addRoomToPaymentBill(roomId, startDate, endDate);
-			roomController.checkIn(guestId, roomId);
+			roomController.checkIn(guestId, roomId, startDate, endDate);
 			System.out.println("Check in successful");
 			return false;
 		}catch(Exception e) {

@@ -1,5 +1,6 @@
 package com.company;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.company.RoomEntity.BedType;
@@ -213,10 +214,10 @@ public class RoomController extends Controller
 		}
 	}
 
-	public void checkIn(int guestId, String roomId)
+	public void checkIn(int guestId, String roomId, LocalDate startDate, LocalDate endDate)
 	{
 		// TODO Auto-generated method stub
-		this.getRoom(roomId).checkIn(guestId);
+		this.getRoom(roomId).checkIn(guestId, startDate, endDate);
 		saveFile();
 	}
 

@@ -306,4 +306,16 @@ public class ReservationController extends Controller {
     {
         return reservations;
     }
+
+    public ReservationEntity getReservationByRoomId(String roomId)
+    {
+        for (ReservationEntity reservation: reservations)
+        {
+            if(reservation.getRoomId().equals(roomId))
+            {
+                return  reservation;
+            }
+        }
+        return null;
+    }
 }
