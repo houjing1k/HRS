@@ -581,5 +581,6 @@ public class RoomServiceController extends Controller {
 			order.setStatus(OrderStatus.DELIVERED); 
 			// set status to delivered here if staff did not manually change status to delivered.
 		}
+		close();
 	}
 }
