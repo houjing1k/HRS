@@ -29,16 +29,6 @@ public class CheckInController extends Controller {
 			"Existing Guest"
 	};
 	
-	private String [] menuGuestId = {
-			"Enter Guest Id:"
-	};
-	
-	private String [] menuRoomType = {
-            "1. Single room",
-            "2. Double room",
-            "3. Deluxe room"
-    };
-
 	private ArrayList<RoomEntity> roomArray;
 	
 	
@@ -103,7 +93,7 @@ public class CheckInController extends Controller {
 				return true;
 			}
 			LocalDate endDate = reservation.endDate;
-			reservation.reservationState = ReservationState.CHECKED_IN;
+			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
@@ -173,7 +163,7 @@ public class CheckInController extends Controller {
 		            System.out.println("Enter Valid Period of Day!");
 		        else break;
 		        }
-		String roomId = selectRoom();
+		String roomId = selectRoom(startDate,endDate);
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
 	
@@ -190,13 +180,18 @@ public class CheckInController extends Controller {
 		}
 	}
 	
-	private String selectRoom() {
+	private String selectRoom(LocalDate startDate, LocalDate endDate) {
 		do{
 			roomArray = roomController.filterRooms(true);	
 			if(roomArray.isEmpty()) {
 				System.out.println("No rooms found");
 			}
 		}while(roomArray.isEmpty());
+			for(RoomEntity room:roomArray) {
+				if (!reservationController.isRoomAvailable(room.getRoomId(), startDate, endDate)){
+					roomArray.remove(room);
+				}
+			}
 		String id = checkInBoundary.printRooms(roomArray);
 		return id;
 	}
