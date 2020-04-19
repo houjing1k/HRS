@@ -38,7 +38,12 @@ public class MainController extends Controller
 					mb.waitInput();
 					break;
 
-				case 6: //6 - Admin Options
+				case 6: //6 - Schedule Overview
+					RoomVisualiser.scheduleOverviewMenu();
+					mb.waitInput();
+					break;
+
+				case 7: //7 - Admin Options
 					new AdminController().processMain();
 					break;
 

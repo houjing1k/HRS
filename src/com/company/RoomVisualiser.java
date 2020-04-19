@@ -14,6 +14,45 @@ public class RoomVisualiser
 	private static final int NUM_OF_DAYS = 32;
 	private static char[] design = Boundary.getDesign();
 
+	private static RoomVisualiserBoundary rvb;
+
+	public static void roomOverviewMenu()
+	{
+
+	}
+
+	public static void scheduleOverviewMenu()
+	{
+		rvb = new RoomVisualiserBoundary();
+		LocalDate date = LocalDate.now();
+
+		boolean loop = true;
+		while (loop)
+		{
+			loop = false;
+			switch (rvb.scheduleMenu())
+			{
+				case 1:
+					break;
+
+				case 2: //2 - Print Occupancy Report
+					date = rvb.selectDate();
+					break;
+
+				case 0: // 0 - Go Back
+					return;
+
+				default:
+					rvb.invalidInputWarning();
+					loop = true;
+			}
+		}
+		RoomVisualiser.showSchedule(
+				RoomController.getInstance().filterRooms(false),
+				new ReservationController().getReservations(),
+				date);
+	}
+
 	public static void showList(ArrayList<RoomEntity> roomList)
 	{
 		Boundary.printSubTitle("View Rooms");
@@ -43,7 +82,8 @@ public class RoomVisualiser
 		final int DATE_HEADER = 7;
 		final int MONTH_HEADER = 8;
 
-		Boundary.printSubTitle("Schedule Visualiser");
+		System.out.println();
+		Boundary.printMainTitle("Schedule Visualiser");
 		printMonth(startDate, charRepeater(' ', MONTH_HEADER), NUM_OF_DAYS);
 		printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
 
@@ -56,11 +96,9 @@ public class RoomVisualiser
 			if (!floor.isEmpty())
 				printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
 		}
-
-		for (ReservationEntity e : reservationList)
-		{
-			System.out.print(e.roomId);
-		}
+		System.out.println();
+		System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied Rooms" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved Rooms", ' ', Boundary.getMenulength()));
+		Boundary.printDivider();
 	}
 
 	private static String scheduleBuilder(RoomEntity room, LocalDate startDate, ArrayList<ReservationEntity> reservationList, char checkedInChar, char reservedChar)
