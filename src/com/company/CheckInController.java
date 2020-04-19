@@ -29,16 +29,6 @@ public class CheckInController extends Controller {
 			"Existing Guest"
 	};
 	
-	private String [] menuGuestId = {
-			"Enter Guest Id:"
-	};
-	
-	private String [] menuRoomType = {
-            "1. Single room",
-            "2. Double room",
-            "3. Deluxe room"
-    };
-
 	private ArrayList<RoomEntity> roomArray;
 	
 	
@@ -103,7 +93,7 @@ public class CheckInController extends Controller {
 				return true;
 			}
 			LocalDate endDate = reservation.endDate;
-			reservation.reservationState = ReservationState.CHECKED_IN;
+			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
