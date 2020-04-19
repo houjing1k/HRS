@@ -77,7 +77,7 @@ public class ReservationController extends Controller {
                 System.out.println("Please use the format dd/mm/yyyy for start date");
             }
         }
-        System.out.println("Please type the end date(mm/dd/yyyy):");
+        System.out.println("Please type the end date(dd/mm/yyyy):");
         while (endDate == null){
             try {
                 tempString = scan.next();

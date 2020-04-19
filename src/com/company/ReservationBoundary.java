@@ -8,19 +8,19 @@ import java.util.Scanner;
 public class ReservationBoundary extends Boundary {
     Scanner scan = new Scanner(System.in);
     private String [] menuRoomType = {
-            "1. Single room",
-            "2. Double room",
-            "3. Deluxe room"
+            "Single room",
+            "Double room",
+            "Deluxe room"
     };
 
     protected void printMenu()
     {
         printMainTitle("Manage Reservations");
         String [] menuList = {
-                "1. Reserve A Room",
-                "2. Print All Reservations",
-                "3. View Reservations By Guest Name",
-                "4. Cancel Reservation"
+                "Reserve A Room",
+                "Print All Reservations",
+                "View Reservations By Guest Name",
+                "Cancel Reservation"
         };
         printMenuList(menuList, "Go back to Main Menu");
         System.out.println();
