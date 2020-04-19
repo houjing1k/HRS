@@ -20,6 +20,7 @@ public class MainBoundary extends Boundary
 						"Check-in / Check-out Services",
 						"Room Services",
 						"Manage Guests",
+						"Room Overview",
 						"Administrative Control",
 				};
 		printMenuList(menuList, "Exit Application");
