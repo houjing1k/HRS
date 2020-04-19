@@ -1,11 +1,16 @@
 package com.company;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class DisplayRooms
+public class RoomVisualiser
 {
 	private static final int BOX_HEIGHT = 7;
 	private static final int BOX_WIDTH = 13;
+	private static final int NUM_OF_DAYS = 32;
 	private static char[] design = Boundary.getDesign();
 
 	public static void showList(ArrayList<RoomEntity> roomList)
@@ -29,6 +34,69 @@ public class DisplayRooms
 		ArrayList<RoomEntity> roomList = new ArrayList<RoomEntity>();
 		roomList.add(roomEntity);
 		printList(roomList);
+	}
+
+	public static void showSchedule(ArrayList<RoomEntity> roomList, LocalDate startDate)
+	{
+		ArrayList<ArrayList<RoomEntity>> roomList2D = to2DRoomList(roomList);
+
+		Boundary.printSubTitle("Schedule Visualiser");
+		printMonth(startDate, "        ", NUM_OF_DAYS);
+		printDate(startDate, "       ", NUM_OF_DAYS);
+
+		for (ArrayList<RoomEntity> floor : roomList2D)
+		{
+			for (RoomEntity room : floor)
+			{
+				printRoomSchedule(room, "████████");
+			}
+			if(!floor.isEmpty())
+				printDate(startDate, "       ", NUM_OF_DAYS);
+		}
+
+	}
+
+	private static void printDate(LocalDate startDate, String header, int numDays)
+	{
+		LocalDate date = startDate;
+		System.out.print(header);
+		for (int i = 0; i < numDays; i++)
+		{
+			System.out.print(String.format("|%02d", date.getDayOfMonth()));
+			date = date.plusDays(1);
+		}
+		System.out.print("|\n");
+	}
+
+	private static void printMonth(LocalDate startDate, String header, int numDays)
+	{
+		LocalDate date = startDate;
+		Month month = date.getMonth();
+		Month nextMonth;
+		String monthStr = month.getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase();
+
+		System.out.print(header);
+		System.out.print(monthStr);
+
+		for (int i = 0; i < numDays - 1; i++)
+		{
+			month = date.getMonth();
+			date = date.plusDays(1);
+			nextMonth = date.getMonth();
+			if (month != nextMonth)
+				monthStr = nextMonth.getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase();
+			else
+				monthStr = "   ";
+			System.out.print(monthStr);
+		}
+		System.out.print("\n");
+
+	}
+
+	private static void printRoomSchedule(RoomEntity room, String scheduleBar)
+	{
+		String roomId = getRoomID(room);
+		System.out.println(roomId + "  " + scheduleBar);
 	}
 
 	private static void printList(ArrayList<RoomEntity> roomList)
@@ -180,6 +248,11 @@ public class DisplayRooms
 	private static int getRoomNum(RoomEntity room)
 	{
 		return Integer.parseInt(room.getRoomId().substring(2, 4));
+	}
+
+	private static String getRoomID(RoomEntity room)
+	{
+		return String.format("%02d", getRoomLevel(room)) + "-" + String.format("%02d", getRoomNum(room));
 	}
 
 	private static char convertBedType(RoomEntity.BedType bedType)
