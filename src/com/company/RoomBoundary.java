@@ -20,9 +20,9 @@ public class RoomBoundary extends Boundary
 				{
 						"Add Rooms",
 						"Remove Rooms",
-						"Change Room To Maintenace",
-						"Change Room bed Type",
-						"Change Room smoking allowed",
+						"Change Room To Maintenance",
+						"Change Room Bed Type",
+						"Change Smoking Room",
 						"Change Room Wifi",
 						"Search Room by Room Id",
 						"Search Room by guest"

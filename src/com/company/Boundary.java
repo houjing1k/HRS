@@ -6,8 +6,8 @@ public abstract class Boundary
 {
 	private static final int MENULENGTH = 104;
 	//private static char[] DESIGN = {'═', '╔', '╗', '╚', '╝', '╠', '╣', '║', '■'};
-	private static final char[] DESIGN = {'─', '┌', '┐', '└', '┘', '├', '┤', '│', '■'};
-	//                      index -  0    1    2    3    4    5    6    7    8
+	private static final char[] DESIGN = {'─', '┌', '┐', '└', '┘', '├', '┤', '│', '■', '▒', '█'};
+	//                            index -  0    1    2    3    4    5    6    7    8    9    10
 
 	public int process()
 	{

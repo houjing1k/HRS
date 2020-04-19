@@ -236,6 +236,7 @@ public class ReservationController extends Controller {
                         reservationBoundary.printReservationCancellationFailed();
 
                     break;
+                case 0: break;
                 default:
                     System.out.println("--Invalid Input--");
             }
@@ -299,5 +300,10 @@ public class ReservationController extends Controller {
             }
         }
         return false;
+    }
+
+    public ArrayList<ReservationEntity> getReservations ()
+    {
+        return reservations;
     }
 }

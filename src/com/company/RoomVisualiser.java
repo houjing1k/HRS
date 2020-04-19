@@ -36,7 +36,7 @@ public class RoomVisualiser
 		printList(roomList);
 	}
 
-	public static void showSchedule(ArrayList<RoomEntity> roomList, LocalDate startDate)
+	public static void showSchedule(ArrayList<RoomEntity> roomList, ArrayList<ReservationEntity> reservationList, LocalDate startDate)
 	{
 		ArrayList<ArrayList<RoomEntity>> roomList2D = to2DRoomList(roomList);
 
@@ -48,12 +48,47 @@ public class RoomVisualiser
 		{
 			for (RoomEntity room : floor)
 			{
-				printRoomSchedule(room, "████████");
+				printRoomSchedule(room, scheduleBuilder(room, startDate, reservationList, design[9], design[10]));
 			}
-			if(!floor.isEmpty())
+			if (!floor.isEmpty())
 				printDate(startDate, "       ", NUM_OF_DAYS);
 		}
 
+	}
+
+	private static String scheduleBuilder(RoomEntity room, LocalDate startDate, ArrayList<ReservationEntity> reservationList, char checkedInChar, char reservedChar)
+	{
+		String schedule = "";
+
+		LocalDate date = startDate;
+
+
+		for (ReservationEntity e : reservationList)
+		{
+			if (e.roomId == room.getRoomId())
+			{
+				System.out.println("Found");
+
+			}
+		}
+
+
+		return schedule;
+	}
+
+	private static String charRepeater(char character)
+	{
+		return charRepeater(character, 3);
+	}
+
+	private static String charRepeater(char character, int repetition)
+	{
+		String str = "";
+		for (int i = 0; i < repetition; i++)
+		{
+			str = str + repetition;
+		}
+		return str;
 	}
 
 	private static void printDate(LocalDate startDate, String header, int numDays)
