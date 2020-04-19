@@ -310,16 +310,17 @@ public class RoomServiceController extends Controller {
 			}
 			case 2: // remove item from order
 			{
+				boundary.printMainTitle("Current Order");
 				boundary.printOrder(temp_order);
+				System.out.println();
 
-				System.out.println("Enter item to be removed: ");
+				System.out.println("Enter name of item to be removed: ");
 				
-				int index_to_remove = boundary.getIntFromUser(1, temp_order.size()) - 1;
+				String item_to_remove = boundary.getStringFromUser();
 				
-				boolean flag = true;
-				if (temp_order.removeItem(index_to_remove) == null) flag = false;
+				if (temp_order.removeItem(item_to_remove)) boundary.printSuccess(true, choice);
+				else System.out.println("Item not found.");
 				
-				boundary.printSuccess(flag, choice);
 				break;
 			}
 			case 3: // add remarks
