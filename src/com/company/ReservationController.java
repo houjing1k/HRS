@@ -285,4 +285,18 @@ public class ReservationController extends Controller {
         }
         return null;
     }
+
+    public boolean checkInReservation(int reservationId)
+    {
+        for(int i = 0; i < reservations.size();i++)
+        {
+            if (reservations.get(i).getReservationId()==reservationId)
+            {
+                reservations.get(i).checkIn();
+                saveReservationsToFile();
+                return true;
+            }
+        }
+        return false;
+    }
 }

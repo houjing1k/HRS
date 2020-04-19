@@ -94,5 +94,7 @@ public class ReservationEntity implements Serializable {
         return reservationState;
     }
 
+    public void checkIn(){reservationState = ReservationState.CHECKED_IN;}
+
 
 }
