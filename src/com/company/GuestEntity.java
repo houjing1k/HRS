@@ -58,6 +58,12 @@ public class GuestEntity implements Serializable, Comparable<GuestEntity>
 				;
 	}
 
+	@Override
+	public int compareTo(GuestEntity o)
+	{
+		return this.guestID.compareTo(o.getGuestID());
+	}
+
 	public static GuestEntity copyGuest(GuestEntity guest)
 	{
 		return new GuestEntity(
@@ -71,12 +77,6 @@ public class GuestEntity implements Serializable, Comparable<GuestEntity>
 				guest.getContactNo(),
 				guest.getPaymentDetail());
 
-	}
-
-	@Override
-	public int compareTo(GuestEntity o)
-	{
-		return this.guestID.compareTo(o.getGuestID());
 	}
 
 	public Integer getGuestID()

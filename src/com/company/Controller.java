@@ -10,17 +10,6 @@ import java.util.Scanner;
 import java.io.File;
 
 public abstract class Controller {
-	Scanner scan = new Scanner(System.in);
-	public int handleMenu(String []menu)
-	{
-		int choice;
-		for(int i = 0 ; i < menu.length ; i ++)
-		{
-			System.out.println(menu[i]);
-		}
-		choice = scan.nextInt();
-		return choice;
-	}
 
 	public <T> void toFile(T object, String fileName)
 	{
