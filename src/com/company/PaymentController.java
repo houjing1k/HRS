@@ -202,14 +202,20 @@ public class PaymentController extends Controller
     	} 	
         Transaction transaction = null;
         for (RoomServiceItem item: order) {
+        	StringBuilder tempName = new StringBuilder(item.getName());
+        	StringBuilder tempDescription = new StringBuilder(item.getDescription());
+        	tempName.setLength( (20 > tempName.length()) ? tempName.length() : 20   );
+        	tempDescription.setLength( (35 > tempDescription.length()) ? tempDescription.length() : 35); 
+        	
             if (transaction == null) {
-            	transaction = new Transaction(item.getName(), item.getDescription(), item.getPrice(), 1, order.getOrder_date_time());
+            	transaction = new Transaction(tempName.toString(), tempDescription.toString(), item.getPrice(), 1, order.getOrder_date_time());
             	}
-            else if (item.getName().equals(transaction.getName())) 
+            else if (tempName.toString().equals(transaction.getName())) 
             	transaction.setQuantity( transaction.getQuantity()+1 );
             else {
             	bill.AddTransaction(transaction);
             	transaction = null;
+            	transaction = new Transaction(tempName.toString(), tempDescription.toString(), item.getPrice(), 1, order.getOrder_date_time());
             	}
             }
         if (transaction != null) bill.AddTransaction(transaction);
