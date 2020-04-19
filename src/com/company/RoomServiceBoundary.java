@@ -228,7 +228,7 @@ class RoomServiceBoundary extends Boundary {
 			for (RoomServiceOrder order : list) {
 				
 				String formatedDateTime = order.getOrder_date_time().format(formatter);
-				System.out.printf("%-9d %-13d %s%-8.2f %s\n", 
+				System.out.printf("%-9d %-13s %s%-8.2f %s\n", 
 						order.getOrder_id(), order.getRoom_number(), currency, order.getBill(), formatedDateTime);
 			}
 		}

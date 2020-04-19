@@ -183,27 +183,26 @@ public class PaymentController extends Controller{
     }
     	
     //add room service to PaymentBill.
-    public void addRoomServiceToPaymentBill(String roomID) {
+    public void addRoomServiceToPaymentBill(String roomID, RoomServiceOrder order) {
 		PaymentBill bill =getPaymentBill(roomID);
     	if(bill==null) {
     		pb.invalidBillingAccount();
     		return;
     	} 	
         Transaction transaction = null;
-        ArrayList<RoomServiceOrder> list = new RoomServiceController().getCurrentOrdersOfRoom(roomID);
-        for (RoomServiceOrder order : list) {
-            for (RoomServiceItem item: order) {
-            	if (transaction == null)
-            		transaction = new Transaction(
-                            new StringBuilder(item.getName()).substring(0,10), new StringBuilder(item.getDescription()).substring(0,15),
-                            item.getPrice(), 1, order.getOrder_date_time());
-            	else if (item.getName().equals(transaction.getName())) 
-            		transaction.setQuantity( transaction.getQuantity()+1 );
-            	else
-            		bill.AddTransaction(transaction);
+        for (RoomServiceItem item: order) {
+            if (transaction == null) {
+            	transaction = new Transaction(item.getName(), item.getDescription(), item.getPrice(), 1, order.getOrder_date_time());
+            	}
+            else if (item.getName().equals(transaction.getName())) 
+            	transaction.setQuantity( transaction.getQuantity()+1 );
+            else {
+            	bill.AddTransaction(transaction);
+            	transaction = null;
+            	}
             }
-            bill.AddTransaction(transaction);
-        }
+        if (transaction != null) bill.AddTransaction(transaction);
+        saveBillsToFile();
     }
 
     // Find the PaymentBill based on roomID

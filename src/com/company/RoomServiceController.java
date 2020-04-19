@@ -345,9 +345,11 @@ public class RoomServiceController extends Controller {
 			{
 				temp_order.setStatus(OrderStatus.CONFIRMED);
 				order_history.addOrder(temp_order);
+				new PaymentController().addRoomServiceToPaymentBill(room_number, temp_order);
 				
 				temp_order = null;
 				next_order_id += 1;
+				
 				System.out.println("Order has been confirmed.");
 				System.out.println();
 				choice=0;
@@ -576,6 +578,8 @@ public class RoomServiceController extends Controller {
 		
 		for (RoomServiceOrder order : list) {
 			order.setPaid(true);
+			order.setStatus(OrderStatus.DELIVERED); 
+			// set status to delivered here if staff did not manually change status to delivered.
 		}
 	}
 }
