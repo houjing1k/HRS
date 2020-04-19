@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -40,9 +41,11 @@ public class Transaction implements Serializable{
 	}
 
 	public String toString() {
+		NumberFormat currFormatter = NumberFormat.getCurrencyInstance();
+		String formatPrice = currFormatter.format(price);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String formatDateTime = time.format(formatter);
-        return   String.format("%-15s %-15s %-15s %10s %-25s", name, description, quantity ,price,formatDateTime);
+        return   String.format("%-20s %-39s %-10s %-11s %-20s", name, description, quantity ,formatPrice,formatDateTime);
 	}
 	
 	

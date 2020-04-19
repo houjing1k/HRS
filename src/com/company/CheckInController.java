@@ -29,6 +29,16 @@ public class CheckInController extends Controller {
 			"Existing Guest"
 	};
 	
+	private String [] menuGuestId = {
+			"Enter Guest Id:"
+	};
+	
+	private String [] menuRoomType = {
+            "1. Single room",
+            "2. Double room",
+            "3. Deluxe room"
+    };
+
 	private ArrayList<RoomEntity> roomArray;
 	
 	
@@ -93,7 +103,7 @@ public class CheckInController extends Controller {
 				return true;
 			}
 			LocalDate endDate = reservation.endDate;
-			reservationController.checkInReservation(reserveId);
+			reservation.reservationState = ReservationState.CHECKED_IN;
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
@@ -120,7 +130,6 @@ public class CheckInController extends Controller {
 		//get the paymentDetail from guest. 
 		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
-		paymentController.addRoomServiceToPaymentBill(roomId);
 		paymentController.makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
@@ -163,7 +172,7 @@ public class CheckInController extends Controller {
 		            System.out.println("Enter Valid Period of Day!");
 		        else break;
 		        }
-		String roomId = selectRoom(startDate,endDate);
+		String roomId = selectRoom();
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
 	
@@ -180,18 +189,13 @@ public class CheckInController extends Controller {
 		}
 	}
 	
-	private String selectRoom(LocalDate startDate, LocalDate endDate) {
+	private String selectRoom() {
 		do{
 			roomArray = roomController.filterRooms(true);	
 			if(roomArray.isEmpty()) {
 				System.out.println("No rooms found");
 			}
 		}while(roomArray.isEmpty());
-			for(RoomEntity room:roomArray) {
-				if (!reservationController.isRoomAvailable(room.getRoomId(), startDate, endDate)){
-					roomArray.remove(room);
-				}
-			}
 		String id = checkInBoundary.printRooms(roomArray);
 		return id;
 	}

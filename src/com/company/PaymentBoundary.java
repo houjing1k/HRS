@@ -41,13 +41,14 @@ public class PaymentBoundary extends Boundary{
        
        protected void makePaymentMenu()
    	{
+	    System.out.println();
    		printMainTitle("Payment");
    		String[] menuList =
    				{
    						"Cash",
    						"Card",
    				};
-   		printMenuList(menuList, "");
+   		printMenuList(menuList);
    		System.out.println();
    	}
  

@@ -11,7 +11,7 @@ public class PaymentBill implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 
+	 *
 	 */
 	static private double serviceCharge=0.1;
 	static private double GST =0.07;
@@ -37,11 +37,14 @@ public class PaymentBill implements Serializable{
 		
 	//print the PaymentBill
 	public void printPaymentBill() {
-		System.out.println(String.format("%-15s %-15s %-15s %10s %-25s", "Name", "Description", "Quantity" ,"Price","Date"));
+		Boundary.printSubTitle("BILL");
+		System.out.println(String.format("%-20s %-39s %-10s %-11s %-20s", "Name", "Description", "Quantity" ,"Price","Date"));
+		Boundary.printDivider();
 		for(Transaction trans : transactionList) {
 			System.out.println(trans.toString());
 
 		}
+		Boundary.printDivider();
 	}
 
 	//return all the transaction of the PaymentBills

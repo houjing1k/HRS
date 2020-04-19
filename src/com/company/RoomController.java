@@ -198,7 +198,7 @@ public class RoomController extends Controller
 		}
 	}
 
-	private void saveFile()
+	public void saveFile()
 	{
 		replaceFile(roomList, roomFile);
 	}
