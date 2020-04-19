@@ -77,7 +77,7 @@ public class ReservationController extends Controller {
                 System.out.println("Please use the format dd/mm/yyyy for start date");
             }
         }
-        System.out.println("Please type the end date(mm/dd/yyyy):");
+        System.out.println("Please type the end date(dd/mm/yyyy):");
         while (endDate == null){
             try {
                 tempString = scan.next();
@@ -96,7 +96,7 @@ public class ReservationController extends Controller {
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
         //String roomId = RoomController.getInstance().
         //ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
-        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().selectRoom();
+        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().filterRooms(true);
         ArrayList<String> tempRoomIDs = new ArrayList<>();
         for (RoomEntity roomEntity: roomEntities)
         {
@@ -109,7 +109,8 @@ public class ReservationController extends Controller {
             if (isRoomAvailable(tempRoomID, startDate, endDate)) {
                 reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
                 saveReservationsToFile();
-                reservationBoundary.printRoomHasBeenReserved(tempRoomID);
+                reservationBoundary.printRoomHasBeenReserved(tempRoomID,newReservationId);
+                RoomController.getInstance().reserve(tempRoomID, guestId, newReservationId);
                 reserved = true;
                 break;
             }

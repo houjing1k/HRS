@@ -33,7 +33,12 @@ public class MainController extends Controller
 					new GuestController().processMain();
 					break;
 
-				case 5: //5 - Admin Options
+				case 5: //5 - Room Overview
+					DisplayRooms.showList(RoomController.getInstance().filterRooms(false));
+					mb.waitInput();
+					break;
+
+				case 6: //6 - Admin Options
 					new AdminController().processMain();
 					break;
 

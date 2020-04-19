@@ -1,8 +1,10 @@
 package com.company;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 
+import com.company.ReservationEntity.ReservationState;
 import com.company.RoomEntity.RoomStatus;
 import com.company.RoomEntity.RoomType;
 
@@ -81,7 +83,7 @@ public class CheckInController extends Controller {
 					//return
 					break;
 				default:
-					checkInBoundary.invalidInputWarning();
+					Boundary.invalidInputWarning();
 					loop = true;
 					break;
 			}
@@ -96,7 +98,12 @@ public class CheckInController extends Controller {
 		ReservationEntity reservation = reservationController.getReservationById(reserveId);
 		if(room!=null) {
 			LocalDate startDate = reservation.startDate;
+			if(startDate.compareTo(LocalDate.now())!=0) {
+				System.out.println("Your reservation is for "+startDate);
+				return true;
+			}
 			LocalDate endDate = reservation.endDate;
+			reservation.reservationState = ReservationState.CHECKED_IN;
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
@@ -158,15 +165,21 @@ public class CheckInController extends Controller {
 					loop = true;
 			}
 		}
-		LocalDate startDate = LocalDate.now();
-		LocalDate endDate = checkInBoundary.getEndDate(startDate);
+		LocalDate startDate,endDate;
+		 while(true) {
+				startDate = LocalDate.now();
+				endDate = checkInBoundary.getEndDate(startDate);
+		        if (Period.between(startDate, endDate).getDays()<1) 
+		            System.out.println("Enter Valid Period of Day!");
+		        else break;
+		        }
 		String roomId = selectRoom();
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
 	
 	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate) {
 		try {
-			paymentController.createPaymentAccount(roomId);
+			paymentController.createBillingAccount(roomId);
 			paymentController.addRoomToPaymentBill(roomId, startDate, endDate);
 			roomController.checkIn(guestId, roomId);
 			System.out.println("Check in successful");

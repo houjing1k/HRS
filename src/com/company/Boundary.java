@@ -5,6 +5,9 @@ import java.util.Scanner;
 public abstract class Boundary
 {
 	private static final int MENULENGTH = 104;
+	//private static char[] DESIGN = {'═', '╔', '╗', '╚', '╝', '╠', '╣', '║', '■'};
+	private static final char[] DESIGN = {'─', '┌', '┐', '└', '┘', '├', '┤', '│', '■'};
+	//                      index -  0    1    2    3    4    5    6    7    8
 
 	public int process()
 	{
@@ -124,11 +127,6 @@ public abstract class Boundary
 		sc.nextLine();
 	}
 
-	public static int getMenulength()
-	{
-		return MENULENGTH;
-	}
-
 	public static void invalidInputWarning()
 	{
 		System.out.println("--Invalid Input--");
@@ -138,5 +136,15 @@ public abstract class Boundary
 	{
 		if (select) return charTrue;
 		else return charFalse;
+	}
+
+	public static int getMenulength()
+	{
+		return MENULENGTH;
+	}
+
+	public static char[] getDesign()
+	{
+		return DESIGN;
 	}
 }

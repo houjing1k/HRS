@@ -25,21 +25,7 @@ public class PaymentBoundary extends Boundary{
 		System.out.println();
 	}
 
-       protected void modifyAccountMenu()
-   	{
-   		printMainTitle("Add/Edit Payment Account");
-   		String[] menuList =
-   				{
-   						"Add Payment Account",
-   						"Delete Payment Account",
-   						"View All Payment Account",
-
-   				};
-   		printMenuList(menuList, "Go back to Payment System Menu");
-   		System.out.println();
-   	}
-       
-       
+  
        protected void modifyChargesMenu()
    	{
    		printMainTitle("Modify charges");
@@ -66,11 +52,12 @@ public class PaymentBoundary extends Boundary{
    	}
  
        
-	protected void CreatePaymentAccount()
+	protected void CreateBillingAccount()
 	{
 		printSubTitle("Create New Payment Account");
 	}
-	protected void invalidPaymentAccount()
+	
+	protected void invalidBillingAccount()
 	{
 		System.out.println("Payment Account does not exist!");
 	}

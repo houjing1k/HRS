@@ -242,6 +242,21 @@ public class GuestController extends Controller
 		return false;
 	}
 
+	public void printAllGuest()
+	{
+		gb.printGuestList(guestList);
+	}
+
+	public void printGuestList(ArrayList<GuestEntity> list)
+	{
+		gb.printGuestList(list);
+	}
+
+	public void printGuest(GuestEntity e)
+	{
+		gb.printGuest(e);
+	}
+
 	private boolean setGuestDetails(int index, GuestEntity guest, String val)
 	{
 		if (val != null)
@@ -298,21 +313,6 @@ public class GuestController extends Controller
 	private void saveGuestsToFile()
 	{
 		toFile(guestList, guestFileName);
-	}
-
-	private void printAllGuest()
-	{
-		gb.printGuestList(guestList);
-	}
-
-	public void printGuestList(ArrayList<GuestEntity> e)
-	{
-		gb.printGuestList(e);
-	}
-
-	private void printGuest(GuestEntity e)
-	{
-		gb.printGuest(e);
 	}
 
 	private boolean containsIgnoreCase(String str, String subString)
