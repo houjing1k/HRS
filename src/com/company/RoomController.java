@@ -141,6 +141,17 @@ public class RoomController extends Controller
 		}
 		return null;
 	}
+	
+	public RoomEntity getRoom(int guestId) {
+		for (RoomEntity room : roomList)
+		{
+			if (room.getGuestId()==guestId)
+			{
+				return room;
+			}
+		}
+		return null;
+	}
 
 	//Return the list based on room id
 	public RoomEntity getRerservation(int reserveId)
@@ -170,7 +181,7 @@ public class RoomController extends Controller
 		return list;
 	}
 
-	public void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
+	private void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{
 		loadObject(id, roomType, status, bedType, smoking, wifi);
 		saveFile();
@@ -178,9 +189,13 @@ public class RoomController extends Controller
 
 	public void deleteRoom(String id)
 	{
-		Object room = getRoom(id);
+		Object room = this.getRoom(id);
+		if(room==null) {
+			System.out.println("Room does not exist");
+		}else {
 		roomList.remove(room);
 		saveFile();
+		}
 	}
 
 	public void saveFile()
@@ -190,8 +205,12 @@ public class RoomController extends Controller
 
 	public void roomMaintenace(String roomId)
 	{
+		try {
 		this.getRoom(roomId).maintenance();
 		saveFile();
+		}catch(Exception e) {
+			System.out.println("Room does not exist");
+		}
 	}
 
 	public void checkIn(int guestId, String roomId)
@@ -209,58 +228,103 @@ public class RoomController extends Controller
 
 	public void reserve(String roomId, int guestId, int reserveId)
 	{
+		try {
 		this.getRoom(roomId).reserve(guestId, reserveId);
 		saveFile();
+		}catch(Exception e) {
+			System.out.println("Room does not exist");
+		}
 	}
 
+	public void changeBedType(String roomId,BedType bedType) {
+		try {
+		this.getRoom(roomId).setBedType(bedType);
+		System.out.println("bedType changed");
+		saveFile();
+		}catch(Exception e) {
+			System.out.println("Room does not exist");
+		}
+	}
+	
+	public void changeSmoking(String roomId,boolean b) {
+		try {
+		this.getRoom(roomId).setSmoking(b);
+		System.out.println("smoking changed");
+		saveFile();
+		}catch(Exception e) {
+			System.out.println("Room does not exist");
+		}
+	}
+	public void changeWifi(String roomId,boolean b) {
+		try {
+		this.getRoom(roomId).setWIfi(b);
+		System.out.println("wifi changed");
+		saveFile();
+		}catch(Exception e) {
+			System.out.println("Room does not exist");
+		}
+	}
 	@Override
 	public void processMain()
 	{
 		int sel = rb.process();
-
+		String roomId;
+		boolean b;
 		switch (sel)
 		{
 			case 1: //1 - Add Rooms
-
+				//roomId = rb
+				//this.addRoom(id, roomType, status, bedType, smoking, wifi);
+				saveFile();
 				break;
 
 			case 2: //2 - Delete Rooms
-				RoomController.getInstance().generateReports();
+				roomId = rb.getRoomId();
+				this.deleteRoom(roomId);
 				break;
 
-			case 3: //2 - Display All Rooms
-				DisplayRooms.showList(roomList);
-				rb.waitInput();
+			case 3: //3 - Change room to maintenance
+				roomId = rb.getRoomId();
+				this.roomMaintenace(roomId);
+				System.out.println(roomId + " is under maintenace");
 				break;
-			case 4: //4 - List single Rooms
-				DisplayRooms.showList(listRooms(RoomType.SINGLE));
-				rb.waitInput();
+			case 4: //4 - Change room bed type
+				roomId = rb.getRoomId();
+				BedType bedType = rb.getBedType();
+				this.changeBedType(roomId,bedType);
 				break;
-			case 5: //4 - List Occupied Rooms
-				DisplayRooms.showList(listRooms(RoomStatus.OCCUPIED));
-				rb.waitInput();
+			case 5: //5 - change room smoking
+				roomId = rb.getRoomId();
+				System.out.println("Smoking");
+				b = rb.getBooleanInput();
+				this.changeSmoking(roomId, b);
 				break;
-			case 6: //4 - List 1 Room
-				DisplayRooms.showRoom(roomList.get(10));
-				rb.waitInput();
+			case 6: //6 -  change room wifi
+				roomId = rb.getRoomId();
+				System.out.println("WIFI");
+				b = rb.getBooleanInput();
+				this.changeWifi(roomId, b);
 				break;
-			case 7: //4 - List Smoking Rooms
-				DisplayRooms.showList(listRooms(true));
-				rb.waitInput();
-				break;
-			case 8: //4 - Filter and Display Rooms
-				DisplayRooms.showList(filterRooms(roomList, false));
-				rb.waitInput();
-				break;
-			case 9: //9 - Select Rooms
-				DisplayRooms.showList(filterRooms(roomList, true));
-				rb.waitInput();
-				break;
+			case 7://7 - Find room by room id
+				roomId = rb.getRoomId();
+				try {
+					System.out.println(this.getRoom(roomId).toString());
+				}catch(Exception e) {
+					System.out.println("Room does not exist");
+				}
+			case 8://8 - Find room by guest
+				int guest = new GuestController().searchGuest_Hybrid().getGuestID();
+				try {
+					roomId = getRoom(guest).getRoomId();
+					System.out.println(this.getRoom(roomId).toString());
+				}catch(Exception e) {
+					System.out.println("Room does not exist");
+				}
 			case 0: // 0 - Go Back
 				break;
 
 			default:
-				rb.invalidInputWarning();
+				Boundary.invalidInputWarning();
 		}
 	}
 

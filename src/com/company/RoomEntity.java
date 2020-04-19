@@ -10,7 +10,7 @@ public class RoomEntity implements Serializable{
 	private final String roomId;
 	private final RoomType roomType;
 	private  RoomStatus status;
-	private final BedType bedType;
+	private BedType bedType;
 	private boolean smoking;
 	private boolean wifi;
 	private int guestId;
@@ -66,6 +66,21 @@ public class RoomEntity implements Serializable{
 	//Method to check if room is under maintenance
 	public boolean isMaintenance() {return(this.getRoomStatus()==RoomStatus.MAINTENANCE);}
 	
+	//Method to change bed type
+	public void setBedType(BedType bedtype) {
+		this.bedType = bedtype;
+	}
+	
+	//Method to change smoking 
+	public void setSmoking(boolean b) {
+		this.smoking = b;
+	}
+	
+	//Method to change wifi
+	public void setWIfi(boolean b) {
+		this.wifi = b;
+	}
+	
 	//Method to check in
 	public void checkIn(int guest) {
 		this.guestId = guest;
@@ -97,7 +112,8 @@ public class RoomEntity implements Serializable{
 				"\nRoom Status: "+this.getRoomStatus()+
 				"\nRoom Type: "+this.getRoomType()+
 				"\nBed Type: "+this.getBedType()+
-				"\nSmoking: "+this.isSmoking());
+				"\nSmoking: "+this.isSmoking())+
+				"\nWIFI:"+this.isWifi();
 	}
 	
 	public enum RoomType{
