@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class GuestBoundary extends Boundary
 {
 	private Scanner sc;
-	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No."};
+	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.","Card Details"};
 
 	public GuestBoundary()
 	{
