@@ -142,11 +142,12 @@ public class RoomController extends Controller
 		}
 		return null;
 	}
-	
-	public RoomEntity getRoom(int guestId) {
+
+	public RoomEntity getRoom(int guestId)
+	{
 		for (RoomEntity room : roomList)
 		{
-			if (room.getGuestId()==guestId)
+			if (room.getGuestId() == guestId)
 			{
 				return room;
 			}
@@ -191,11 +192,14 @@ public class RoomController extends Controller
 	public void deleteRoom(String id)
 	{
 		Object room = this.getRoom(id);
-		if(room==null) {
+		if (room == null)
+		{
 			System.out.println("Room does not exist");
-		}else {
-		roomList.remove(room);
-		saveFile();
+		}
+		else
+		{
+			roomList.remove(room);
+			saveFile();
 		}
 	}
 
@@ -206,10 +210,12 @@ public class RoomController extends Controller
 
 	public void roomMaintenace(String roomId)
 	{
-		try {
-		this.getRoom(roomId).maintenance();
-		saveFile();
-		}catch(Exception e) {
+		try
+		{
+			this.getRoom(roomId).maintenance();
+			saveFile();
+		} catch (Exception e)
+		{
 			System.out.println("Room does not exist");
 		}
 	}
@@ -229,42 +235,55 @@ public class RoomController extends Controller
 
 	public void reserve(String roomId, int guestId, int reserveId)
 	{
-		try {
-		this.getRoom(roomId).reserve(guestId, reserveId);
-		saveFile();
-		}catch(Exception e) {
+		try
+		{
+			this.getRoom(roomId).reserve(guestId, reserveId);
+			saveFile();
+		} catch (Exception e)
+		{
 			System.out.println("Room does not exist");
 		}
 	}
 
-	public void changeBedType(String roomId,BedType bedType) {
-		try {
-		this.getRoom(roomId).setBedType(bedType);
-		System.out.println("bedType changed");
-		saveFile();
-		}catch(Exception e) {
+	public void changeBedType(String roomId, BedType bedType)
+	{
+		try
+		{
+			this.getRoom(roomId).setBedType(bedType);
+			System.out.println("bedType changed");
+			saveFile();
+		} catch (Exception e)
+		{
 			System.out.println("Room does not exist");
 		}
 	}
-	
-	public void changeSmoking(String roomId,boolean b) {
-		try {
-		this.getRoom(roomId).setSmoking(b);
-		System.out.println("smoking changed");
-		saveFile();
-		}catch(Exception e) {
+
+	public void changeSmoking(String roomId, boolean b)
+	{
+		try
+		{
+			this.getRoom(roomId).setSmoking(b);
+			System.out.println("smoking changed");
+			saveFile();
+		} catch (Exception e)
+		{
 			System.out.println("Room does not exist");
 		}
 	}
-	public void changeWifi(String roomId,boolean b) {
-		try {
-		this.getRoom(roomId).setWIfi(b);
-		System.out.println("wifi changed");
-		saveFile();
-		}catch(Exception e) {
+
+	public void changeWifi(String roomId, boolean b)
+	{
+		try
+		{
+			this.getRoom(roomId).setWIfi(b);
+			System.out.println("wifi changed");
+			saveFile();
+		} catch (Exception e)
+		{
 			System.out.println("Room does not exist");
 		}
 	}
+
 	@Override
 	public void processMain()
 	{
@@ -292,7 +311,7 @@ public class RoomController extends Controller
 			case 4: //4 - Change room bed type
 				roomId = rb.getRoomId();
 				BedType bedType = rb.getBedType();
-				this.changeBedType(roomId,bedType);
+				this.changeBedType(roomId, bedType);
 				break;
 			case 5: //5 - change room smoking
 				roomId = rb.getRoomId();
@@ -308,17 +327,21 @@ public class RoomController extends Controller
 				break;
 			case 7://7 - Find room by room id
 				roomId = rb.getRoomId();
-				try {
+				try
+				{
 					System.out.println(this.getRoom(roomId).toString());
-				}catch(Exception e) {
+				} catch (Exception e)
+				{
 					System.out.println("Room does not exist");
 				}
 			case 8://8 - Find room by guest
 				int guest = new GuestController().searchGuest_Hybrid().getGuestID();
-				try {
+				try
+				{
 					roomId = getRoom(guest).getRoomId();
 					System.out.println(this.getRoom(roomId).toString());
-				}catch(Exception e) {
+				} catch (Exception e)
+				{
 					System.out.println("Room does not exist");
 				}
 			case 0: // 0 - Go Back
@@ -334,41 +357,54 @@ public class RoomController extends Controller
 		roomReports.printReports();
 	}
 
-	public ArrayList<RoomEntity> filterRooms(boolean isRoomSelection)
+	public ArrayList<RoomEntity> filterRooms(int mode)
 	{
-		return filterRooms(roomList, isRoomSelection);
+		return filterRooms(roomList, mode);
 	}
 
-	//isRoomSelection - True    - Room Selection Mode
-	//                  False   - Administrative Mode
-	public ArrayList<RoomEntity> filterRooms(ArrayList<RoomEntity> list, boolean isRoomSelection)
+	//isRoomSelection - 0   - Administrative Mode
+	//                  1   - Only Vacant Rooms (For walk-in check-in)
+	//					2   - Reservation Mode
+	public ArrayList<RoomEntity> filterRooms(ArrayList<RoomEntity> list, int mode)
 	{
 		final int FILTER_SIZE = 15;
 		boolean[] filter = new boolean[FILTER_SIZE];
 		ArrayList<RoomEntity> filteredList = new ArrayList<RoomEntity>();
-		int selectionSize = isRoomSelection ? FILTER_SIZE - 4 : FILTER_SIZE;
+		int selectionSize = (mode == 0) ? FILTER_SIZE : FILTER_SIZE - 4;
 
+		switch (mode)
 		//Room Selection Mode   - Only Vacant Rooms Selected, all other flags initialised false
-		if (isRoomSelection)
 		{
-			for (int i = 0; i < FILTER_SIZE; i++)
-			{
-				filter[i] = false;
-			}
-			filter[11] = true;
+			case 0: //Administrative Mode   - All flags initialised true
+				for (int i = 0; i < FILTER_SIZE; i++)
+				{
+					filter[i] = true;
+				}
+				break;
+
+			case 1: //Only Vacant Rooms pre-selected, all other flags initialised false
+				for (int i = 0; i < FILTER_SIZE; i++)
+				{
+					filter[i] = false;
+				}
+				filter[11] = true;
+				break;
+
+			case 2: // Vacant, Occupied, Reserved Rooms pre-selected
+				for (int i = 0; i < FILTER_SIZE; i++)
+				{
+					filter[i] = false;
+				}
+				filter[11] = true;
+				filter[12] = true;
+				filter[13] = true;
+				break;
 		}
-		//Administrative Mode   - All flags initialised true
-		else
-		{
-			for (int i = 0; i < FILTER_SIZE; i++)
-			{
-				filter[i] = true;
-			}
-		}
+
 
 		while (true)
 		{
-			rb.filterRoom(filter, isRoomSelection);
+			rb.filterRoom(filter, mode != 0);
 			int sel = rb.getInput(0, selectionSize);
 			if (sel == 0) break;
 			else filter[sel - 1] = !filter[sel - 1];

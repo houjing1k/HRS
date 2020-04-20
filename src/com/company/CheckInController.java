@@ -191,7 +191,7 @@ public class CheckInController extends Controller {
 	
 	private String selectRoom() {
 		do{
-			roomArray = roomController.filterRooms(true);	
+			roomArray = roomController.filterRooms(1);
 			if(roomArray.isEmpty()) {
 				System.out.println("No rooms found");
 			}

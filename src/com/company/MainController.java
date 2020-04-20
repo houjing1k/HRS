@@ -34,7 +34,7 @@ public class MainController extends Controller
 					break;
 
 				case 5: //5 - Room Overview
-					RoomVisualiser.showList(RoomController.getInstance().filterRooms(false));
+					RoomVisualiser.showList(RoomController.getInstance().filterRooms(0));
 					mb.waitInput();
 					break;
 
