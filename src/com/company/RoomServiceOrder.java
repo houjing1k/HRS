@@ -11,6 +11,7 @@ package com.company;
  */
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,7 +29,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	private int order_id;
 	private LocalDateTime order_date_time;
 	private String remarks;
-	private double bill;
+	private BigDecimal bill;
 	
 	private String room_number;
 	private OrderStatus status;
@@ -47,7 +48,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		this.room_number = room_number;
 		this.status = OrderStatus.UNCONFIRMED;
 		this.remarks = "";
-		this.bill = 0;
+		this.bill = BigDecimal.ZERO;
 		this.paid = false;
 	}
 	
@@ -63,7 +64,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		for (int i=0; i < quantity; i++) {
 			if (item.getStatus() == StockStatus.OUT_OF_STOCK) return false;
 			order_items.add(item);
-			bill += item.getPrice();
+			bill = bill.add( BigDecimal.valueOf(item.getPrice()) );
 		}
 		order_items.sort(null);
 		return true;
@@ -91,7 +92,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		for (RoomServiceItem item : order_items) {
 			if (item.getName().equals(name)) {
 				order_items.remove(i);
-				bill -= item.getPrice();
+				bill = bill.subtract( BigDecimal.valueOf(item.getPrice()) );
 				return true;
 			}
 			i += 1;
@@ -158,14 +159,14 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	/**
 	 * @return the bill
 	 */
-	double getBill() {
+	BigDecimal getBill() {
 		return bill;
 	}
 
 	/**
 	 * @param bill the bill to set
 	 */
-	void setBill(double bill) {
+	void setBill(BigDecimal bill) {
 		this.bill = bill;
 	}
 
