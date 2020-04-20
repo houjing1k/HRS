@@ -18,9 +18,9 @@ public class AdminBoundary extends Boundary
 				{
 						"Manage Rooms",
 						"Manage Guests",
-						"Print Occupancy Reports",
-						"Print Bill",
 						"Modify Hotel Charges",
+						"View Existing Bill",
+						"Print Occupancy Reports",
 						"Generate Financial Report"
 				};
 		printMenuList(menuList, "Go back to Main Menu");

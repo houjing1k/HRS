@@ -33,10 +33,10 @@ public class PaymentBoundary extends Boundary{
    		printMainTitle("Modify charges");
    		String[] menuList =
    				{
+					    "Modify Room Price",
    						"Modify GST",
    						"Modify Service Charge",
-   						"Apply/modify Discount",
-   						"Modify Room Price"
+   						"Apply / Modify Discount"
    				};
    		printMenuList(menuList, "Go back to Payment System Menu");
    		System.out.println();

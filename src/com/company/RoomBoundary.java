@@ -25,10 +25,10 @@ public class RoomBoundary extends Boundary
 						"Change Room Bed Type",
 						"Change Smoking Room",
 						"Change Room Wifi",
-						"Search Room by Room Id",
-						"Search Room by guest"
+						"Search Room by Room ID",
+						"Search Room by Guest"
 				};
-		printMenuList(menuList, "Go back to Administrative Control");
+		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
 	}
 

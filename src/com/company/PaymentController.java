@@ -55,16 +55,17 @@ public class PaymentController extends Controller
 			switch (sel)
 			{
 				case 1:
-					setGST();                //Modify GST
+					roomPriceMenu();         //Modify Room Price
 					break;
 				case 2:
-					setServiceCharge();        //modify Service charge
+					setGST();                //Modify GST
 					break;
 				case 3:
+					setServiceCharge();        //modify Service charge
+					break;
+				case 4:
 					setDiscount();            //modify discount
 					break;
-				case 4: 
-					roomPriceMenu();         //Modify Room Price
 				case 0:
 					return;
 				default:
@@ -401,18 +402,22 @@ public class PaymentController extends Controller
 	//Print out the paid Bills
 	public void generatePaymentReport()
 	{
+		NumberFormat currFormatter = NumberFormat.getCurrencyInstance();
 		pb.printSubTitle("Financial Report");
-
-		System.out.println(String.format("%-12s %-15s %-15s", "RoomID", "PaidAmount($)", "PaymentDate") + "\n");
+		System.out.println(String.format("%-40s%-39s%24s", "RoomID", "Payment Date","Paid Amount"));
+		pb.printDivider();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		double sum = 0;
 		for (PaymentBill bill : paymentRecords)
 		{
-			System.out.println(String.format("%-12s %-15s %-15s", bill.getRoomID(),
-					bill.getTotalPrice(), bill.getPaymentDate().format(formatter)));
+			System.out.println(String.format("%-40s%-39s%24s", bill.getRoomID()
+					, bill.getPaymentDate().format(formatter),
+					currFormatter.format(bill.getTotalPrice())));
 			sum += calculatePaymentBill(bill);
 		}
-		System.out.println("\nTotal Paid Amount : " + sum);
+		pb.printDivider();
+		System.out.println(String.format("%-52s %50s","Total Paid Amount : ", currFormatter.format(sum)));
+		pb.printDivider();
 
 	}
 
