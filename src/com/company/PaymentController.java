@@ -17,7 +17,7 @@ public class PaymentController extends Controller
 {
 	private ArrayList<PaymentBill> billingAccountList;    // The bills that haven't paid yet
 	private ArrayList<PaymentBill> paymentRecords;        // The paid bills
-	private ArrayList<Double> chargesList;                // Store rate of gst, service charges
+	private ArrayList<Double> chargesList;                // Store rate of gst, service charges,single room,double room,deluxe room
 	PaymentBoundary pb = new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
 	String paymentRecordsFile = "./data/paymentRecords.ser";
@@ -63,6 +63,8 @@ public class PaymentController extends Controller
 				case 3:
 					setDiscount();            //modify discount
 					break;
+				case 4: 
+					roomPriceMenu();         //Modify Room Price
 				case 0:
 					return;
 				default:
@@ -70,7 +72,32 @@ public class PaymentController extends Controller
 			}
 		}
 	}
-
+	
+	//Modify room Price
+	public void roomPriceMenu()
+	{
+		while (true)
+		{
+			pb.printRoomPriceMenu();
+			int sel = sc.nextInt();
+			switch (sel)
+			{
+				case 1:
+					setRoomCharges(1);         //Single Room
+					break;
+				case 2:
+					setRoomCharges(2);        //Double Room
+					break;
+				case 3:
+					setRoomCharges(3);        //Deluxe Room
+					break;
+				case 0:
+					return;
+				default:
+					pb.invalidInputWarning();
+			}
+		}
+	}
 
 	//make payment Menu
 	public void makePaymentMenu(String roomID, PaymentDetail paymentDetail)
@@ -175,7 +202,13 @@ public class PaymentController extends Controller
 		//Fetch the room id,room type and price of the room. 
 		newtrans.setName("Room ID " + room.getRoomId());
 		newtrans.setDescription(room.getRoomType().toString());
-		double price = room.getCost();
+		double price;
+		String roomType=room.getRoomType().toString();
+		if (roomType=="SINGLE")
+			price=chargesList.get(1);
+		else if(roomType=="DOUBLE")
+			price=chargesList.get(2);
+		else price=chargesList.get(3);   //Deluxe room
 
 		//iterate through date.
 		for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
@@ -285,13 +318,17 @@ public class PaymentController extends Controller
 	}
 
 
-	//load GST and service charges
+	
+	//load GST,service charges and room charges
 	public void setCharges(ArrayList<Double> charges)
 	{
 		if (charges == null)
 		{
 			chargesList = new ArrayList<Double>();
 			chargesList.add(PaymentBill.getGST());   //Add default GST to list
+			chargesList.add(100.0);   //single room 
+			chargesList.add(150.0);	  //double room 
+			chargesList.add(200.0);	  //Deluxe room
 			chargesList.add(PaymentBill.getServiceCharge()); //add default service charge
 		}
 		else
@@ -299,21 +336,38 @@ public class PaymentController extends Controller
 			try
 			{
 				PaymentBill.setGST(chargesList.get(0));
-				PaymentBill.setServiceCharge(chargesList.get(1));
+				PaymentBill.setServiceCharge(chargesList.get(4));
 			} catch (Exception e)
 			{
 				System.out.println("Failed to Load Charges!");
 			}
 		}
 	}
-
+	
+	//room charges 1: Single. 2 : Double, 3 : Deluxe
+	public void setRoomCharges(int choice) {
+		String roomType;
+		if (choice==1) 
+			roomType="Single";
+		else if (choice==2)
+			roomType="Double";
+		else roomType="Deluxe";
+		
+		System.out.println("Current "+ roomType + " Room Price : " + chargesList.get(choice));
+		double charge = pb.readDouble(sc, "New " +roomType+" Room Price : ");
+		chargesList.set(choice, charge);  //set and save new room charge to file 
+		saveChargesToFile();
+	}
+	
+	
+	
 	//Change serviceCharge
 	public void setServiceCharge()
 	{
 		System.out.println("Current Service Charge : " + PaymentBill.getServiceCharge());
 		double charge = pb.readDouble(sc, "New Service Charge : ");
 		PaymentBill.setServiceCharge(charge);
-		chargesList.set(1, charge);  //save service charge to file 
+		chargesList.set(4, charge);  //save service charge to file 
 		saveChargesToFile();
 
 	}

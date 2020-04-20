@@ -12,19 +12,21 @@ public class PaymentBoundary extends Boundary{
 	
     protected void printMenu()
 	{
-		printMainTitle("Payment System");
+		
+	}
+    
+    protected void printRoomPriceMenu()
+	{
+		printMainTitle("Modify Room Price");
 		String[] menuList =
 				{
-						"Add/Edit Payment Account",
-						"Print Invoice",
-						"Make Payment",
-						"Modify charges",
-						"Generate Financial report"
+						"Single Room",
+						"Double Room",
+						"Deluxe Room",
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
 	}
-
   
        protected void modifyChargesMenu()
    	{
@@ -34,6 +36,7 @@ public class PaymentBoundary extends Boundary{
    						"Modify GST",
    						"Modify Service Charge",
    						"Apply/modify Discount",
+   						"Modify Room Price"
    				};
    		printMenuList(menuList, "Go back to Payment System Menu");
    		System.out.println();
@@ -53,10 +56,6 @@ public class PaymentBoundary extends Boundary{
    	}
  
        
-	protected void CreateBillingAccount()
-	{
-		printSubTitle("Create New Payment Account");
-	}
 	
 	protected void invalidBillingAccount()
 	{
