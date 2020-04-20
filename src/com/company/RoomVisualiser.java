@@ -12,9 +12,9 @@ public class RoomVisualiser
 	private static final int BOX_HEIGHT = 7;
 	private static final int BOX_WIDTH = 13;
 	private static final int NUM_OF_DAYS = 32;
-	private static char[] design = Boundary.getDesign();
 
-	private static RoomVisualiserBoundary rvb;
+	private static RoomVisualiserBoundary rvb = new RoomVisualiserBoundary();
+	private static char[] design = rvb.getDesign();
 
 	public static void scheduleOverviewMenu()
 	{
@@ -50,7 +50,7 @@ public class RoomVisualiser
 
 	public static void showList(ArrayList<RoomEntity> roomList)
 	{
-		Boundary.printSubTitle("View Rooms");
+		rvb.printSubTitle("View Rooms");
 		System.out.println();
 		if (roomList == null || roomList.isEmpty())
 		{
@@ -58,9 +58,9 @@ public class RoomVisualiser
 		}
 		else printList(roomList);
 		//System.out.println();
-		System.out.println(centrePadding(design[8] + " SM - Smoking Room" + "   |   " + design[8] + " WIFI - WiFi Enabled", ' ', Boundary.getMenulength()));
-		System.out.println(centrePadding("S - Single" + "   |   " + "D - Double Single" + "   |   " + "Q - Queen" + "   |   " + "K - King", ' ', Boundary.getMenulength()));
-		Boundary.printDivider();
+		System.out.println(centrePadding(design[8] + " SM - Smoking Room" + "   |   " + design[8] + " WIFI - WiFi Enabled", ' ', rvb.getMenulength()));
+		System.out.println(centrePadding("S - Single" + "   |   " + "D - Double Single" + "   |   " + "Q - Queen" + "   |   " + "K - King", ' ', rvb.getMenulength()));
+		rvb.printDivider();
 		System.out.println();
 	}
 
@@ -78,7 +78,7 @@ public class RoomVisualiser
 		final int MONTH_HEADER = 8;
 
 		System.out.println();
-		Boundary.printSubTitle("Schedule Visualiser");
+		rvb.printSubTitle("Schedule Visualiser");
 		if (roomList != null && !roomList.isEmpty())
 		{
 			printMonth(startDate, charRepeater(' ', MONTH_HEADER), NUM_OF_DAYS);
@@ -95,15 +95,15 @@ public class RoomVisualiser
 			}
 
 			//System.out.println();
-			System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved", ' ', Boundary.getMenulength()));
+			System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved", ' ', rvb.getMenulength()));
 		}
 		else
 		{
 			System.out.println();
-			System.out.println(centrePadding("- No Rooms To Show -", ' ', Boundary.getMenulength()));
+			System.out.println(centrePadding("- No Rooms To Show -", ' ', rvb.getMenulength()));
 			System.out.println();
 		}
-		Boundary.printDivider();
+		rvb.printDivider();
 	}
 
 	private static String scheduleBuilder(RoomEntity room, LocalDate startDate, ArrayList<ReservationEntity> reservationList, char checkedInChar, char reservedChar)

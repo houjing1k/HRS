@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 public class Scheduler {
     Timer timer2PM = new Timer();
-    Timer timer12MN = new Timer();
+    Timer timer11AM = new Timer();
     Timer testTimer = new Timer();
     Scheduler ()
     {
@@ -28,15 +28,17 @@ public class Scheduler {
             tempCalendar.add(Calendar.DATE,1);
             date2pm = tempCalendar.getTime();
         }
-        System.out.println(date2pm);
-        Date date12mn = new java.util.Date();
-        date12mn.setHours(00);
-        date12mn.setMinutes(00);
-        tempCalendar.setTime(date12mn);
-        tempCalendar.add(Calendar.DATE,1);
-        date12mn = tempCalendar.getTime();
+        Date date11AM = new java.util.Date();
+        date11AM.setHours(11);
+        date11AM.setMinutes(00);
+        if(hour > 10)
+        {
+            tempCalendar.setTime(date11AM);
+            tempCalendar.add(Calendar.DATE,1);
+            date11AM = tempCalendar.getTime();
+        }
         timer2PM.schedule(new timerTask2PM(),date2pm,86400000);
-        timer12MN.schedule(new timerTask12MN(),date12mn,86400000);
+        timer11AM.schedule(new timerTask12MN(),date11AM,86400000);
         testTimer.schedule(new testTimerTask(),1000,1000);
     }
     class timerTask2PM extends TimerTask {

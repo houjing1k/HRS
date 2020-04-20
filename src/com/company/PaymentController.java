@@ -246,21 +246,21 @@ public class PaymentController extends Controller
 			pb.invalidBillingAccount();
 			return;
 		}
-		Boundary.printSubTitle("BILL");
+		pb.printSubTitle("BILL");
 		System.out.println(String.format("%-20s %-39s %-10s %-11s %-20s", "Name", "Description", "Quantity" ,"Price","Date"));
-		Boundary.printDivider();
+		pb.printDivider();
 		for(Transaction trans : bill.getTransactions()) {
 			System.out.println(trans.toString());
 
 		}
-		Boundary.printDivider();
+		pb.printDivider();
 		calculatePaymentBill(bill);
 		String totalPrice = formatter.format(bill.getTotalPrice());
 		System.out.printf("%-52s %50s\n", "Total Payable Amount :", totalPrice);
-		Boundary.printDivider();
+		pb.printDivider();
 		System.out.println("( Includes GST : " + String.format("%.2f", PaymentBill.getGST() * 100) + " % , Service Charge : "
 				+ PaymentBill.getServiceCharge() * 100 + " %, Discount : " + bill.getDiscount() * 100 + " % )");
-		Boundary.printDivider();
+		pb.printDivider();
 	}
 
 

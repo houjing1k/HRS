@@ -83,7 +83,7 @@ public class CheckInController extends Controller {
 					//return
 					break;
 				default:
-					Boundary.invalidInputWarning();
+					checkInBoundary.invalidInputWarning();
 					loop = true;
 					break;
 			}
