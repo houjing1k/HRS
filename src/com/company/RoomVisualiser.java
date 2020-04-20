@@ -16,11 +16,6 @@ public class RoomVisualiser
 
 	private static RoomVisualiserBoundary rvb;
 
-	public static void roomOverviewMenu()
-	{
-
-	}
-
 	public static void scheduleOverviewMenu()
 	{
 		rvb = new RoomVisualiserBoundary();
@@ -48,7 +43,7 @@ public class RoomVisualiser
 			}
 		}
 		RoomVisualiser.showSchedule(
-				RoomController.getInstance().filterRooms(false),
+				RoomController.getInstance().filterRooms(0),
 				new ReservationController().getReservations(),
 				date);
 	}
@@ -83,21 +78,31 @@ public class RoomVisualiser
 		final int MONTH_HEADER = 8;
 
 		System.out.println();
-		Boundary.printMainTitle("Schedule Visualiser");
-		printMonth(startDate, charRepeater(' ', MONTH_HEADER), NUM_OF_DAYS);
-		printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
-
-		for (ArrayList<RoomEntity> floor : roomList2D)
+		Boundary.printSubTitle("Schedule Visualiser");
+		if (roomList != null && !roomList.isEmpty())
 		{
-			for (RoomEntity room : floor)
+			printMonth(startDate, charRepeater(' ', MONTH_HEADER), NUM_OF_DAYS);
+			//printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
+
+			for (ArrayList<RoomEntity> floor : roomList2D)
 			{
-				printRoomSchedule(room, scheduleBuilder(room, startDate, reservationList, design[9], design[10]));
-			}
-			if (!floor.isEmpty())
 				printDate(startDate, charRepeater(' ', DATE_HEADER), NUM_OF_DAYS);
+				for (RoomEntity room : floor)
+				{
+					printRoomSchedule(room, scheduleBuilder(room, startDate, reservationList, design[9], design[10]));
+				}
+
+			}
+
+			//System.out.println();
+			System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved", ' ', Boundary.getMenulength()));
 		}
-		System.out.println();
-		System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied Rooms" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved Rooms", ' ', Boundary.getMenulength()));
+		else
+		{
+			System.out.println();
+			System.out.println(centrePadding("- No Rooms To Show -", ' ', Boundary.getMenulength()));
+			System.out.println();
+		}
 		Boundary.printDivider();
 	}
 
@@ -129,7 +134,7 @@ public class RoomVisualiser
 					if (isWithinDate(date, e.startDate, e.endDate))
 					{
 						dayStatus = design[9];
-						//break;
+						break;
 					}
 				}
 			}
