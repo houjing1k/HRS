@@ -254,7 +254,6 @@ public class PaymentController extends Controller
 
 		}
 		Boundary.printDivider();
-		bill.printPaymentBill();
 		calculatePaymentBill(bill);
 		String totalPrice = formatter.format(bill.getTotalPrice());
 		System.out.printf("%-52s %50s\n", "Total Payable Amount :", totalPrice);
