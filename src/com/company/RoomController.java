@@ -61,7 +61,7 @@ public class RoomController extends Controller
 				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking, wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking, wifi);
+				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking, wifi);
 			}
 			level += 1;
 			room = 0;
