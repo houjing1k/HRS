@@ -118,7 +118,7 @@ public class CheckInController extends Controller {
 			if(room.getRoomStatus()!= RoomStatus.OCCUPIED) {
 				System.out.println("Room is not occupied");
 				return true;
-			}
+			}	
 		}catch(Exception e) {
 			System.out.println("Invalid room Id");
 			return true;

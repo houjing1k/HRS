@@ -41,6 +41,7 @@ public class CheckInBoundary extends Boundary {
 
 	public String getRoomId() {
 		String id = "";
+		sc = new Scanner(System.in);
 		do {
 			System.out.println("Enter Room ID: ");
 			id = sc.nextLine();
@@ -72,7 +73,7 @@ public class CheckInBoundary extends Boundary {
 		String pre = "";
 		String curLevel = "";
 		String num = "";
-		System.out.println("Avalible rooms");
+		System.out.println("Available rooms");
 		for(RoomEntity room:roomArray) {
 			curLevel = room.getRoomId().substring(0, 2);
 			num = room.getRoomId().substring(2, 4);
