@@ -29,21 +29,17 @@ public class MainController extends Controller
 					new RoomServiceController().processMain();
 					break;
 
-				case 4: //4 - Manage Guests
-					new GuestController().processMain();
-					break;
-
-				case 5: //5 - Room Overview
+				case 4: //5 - Room Overview
 					RoomVisualiser.showList(RoomController.getInstance().filterRooms(0));
 					mb.waitInput();
 					break;
 
-				case 6: //6 - Schedule Overview
+				case 5: //6 - Schedule Overview
 					RoomVisualiser.scheduleOverviewMenu();
 					mb.waitInput();
 					break;
 
-				case 7: //7 - Admin Options
+				case 6: //7 - Admin Options
 					new AdminController().processMain();
 					break;
 

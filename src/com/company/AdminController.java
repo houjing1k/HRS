@@ -21,19 +21,24 @@ public class AdminController extends Controller
 					RoomController.getInstance().processMain();
 					break;
 
-				case 2: //2 - Print Occupancy Report
+				case 2: //2 - Mange Guests
+					new GuestController().processMain();
+					break;
+
+				case 3: //3 - Print Occupancy Report
 					RoomController.getInstance().generateReports();
 					break;
-				case 3:  //3 - Print Bill 
+
+				case 4: //4 - Print Bill
 					String roomID= new PaymentBoundary().requestRoomID();
 					new PaymentController().printInvoice(roomID);
 					break;
 
-				case 4: //4 - Modify Hotel Charges
+				case 5: //5 - Modify Hotel Charges
 					new PaymentController().modifyChargesMenu();
 					break;
 
-				case 5: //5 - Generate Financial Report
+				case 6: //6 - Generate Financial Report
 					new PaymentController().generatePaymentReport();
 					ab.waitInput();
 					break;
