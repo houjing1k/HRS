@@ -16,7 +16,7 @@ public class RoomVisualiserBoundary extends Boundary
 				{
 						"Check Room Availability (Current)",
 						"Check Room Availability (Future)",
-						"Display All Rooms (Today)",
+						"Display All Rooms (Current)",
 						"Display All Rooms (Future)",
 				};
 		printMenuList(menuList, "Back to Main Application");
