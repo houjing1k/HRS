@@ -40,7 +40,7 @@ public class Scheduler {
             date11AM = tempCalendar.getTime();
         }
         timer2PM.schedule(new timerTask2PM(),date2pm,86400000);
-        timer11AM.schedule(new timerTask12MN(),date11AM,86400000);
+        timer11AM.schedule(new timerTask11AM(),date11AM,86400000);
     }
     class timerTask2PM extends TimerTask {
         ReservationController reservationController = new ReservationController();
@@ -50,7 +50,7 @@ public class Scheduler {
             reservationController.triggerExpiredReservations();
         }
     }
-    class timerTask12MN extends TimerTask {
+    class timerTask11AM extends TimerTask {
         ReservationController reservationController = new ReservationController();
         @Override
         public void run() {
