@@ -403,12 +403,12 @@ public class PaymentController extends Controller
 	{
 		pb.printSubTitle("Financial Report");
 
-		System.out.println(String.format("%-12s %-15s %-15s", "RoomID", "PaidAmount($)", "PaymentDate") + "\n");
+		System.out.println(String.format("%-20s %-20s %-20s", "RoomID", "PaidAmount($)", "PaymentDate") + "\n");
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		double sum = 0;
 		for (PaymentBill bill : paymentRecords)
 		{
-			System.out.println(String.format("%-12s %-15s %-15s", bill.getRoomID(),
+			System.out.println(String.format("%-20s %-20s %-20s", bill.getRoomID(),
 					bill.getTotalPrice(), bill.getPaymentDate().format(formatter)));
 			sum += calculatePaymentBill(bill);
 		}

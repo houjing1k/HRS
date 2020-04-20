@@ -39,7 +39,8 @@ public class AdminController extends Controller
 					break;
 
 				case 0: // 0 - Go Back
-					break;
+					return;
+
 
 				default:
 					ab.invalidInputWarning();
