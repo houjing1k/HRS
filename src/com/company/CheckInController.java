@@ -15,7 +15,6 @@ public class CheckInController extends Controller {
 	private GuestController guestController;
 	private RoomController roomController;
 	private MainController mainController;
-	private PaymentController paymentController;
 	private ReservationController reservationController;
 	
 	private String[] menuMain = {
@@ -44,7 +43,6 @@ public class CheckInController extends Controller {
 		guestController = new GuestController();
 		roomController = RoomController.getInstance();
 		mainController = new MainController();
-		paymentController = new PaymentController();
 		reservationController  = new ReservationController();
 	}
 	
@@ -127,7 +125,7 @@ public class CheckInController extends Controller {
 		//get the paymentDetail from guest. 
 		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
-		paymentController.makePaymentMenu(roomId,guest.getPaymentDetail());
+		new PaymentController().makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
 		return false;
@@ -175,8 +173,8 @@ public class CheckInController extends Controller {
 	
 	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate) {
 		try {
-			paymentController.createBillingAccount(roomId);
-			paymentController.addRoomToPaymentBill(roomId, startDate, endDate);
+			new PaymentController().createBillingAccount(roomId);
+			new PaymentController().addRoomToPaymentBill(roomId, startDate, endDate);
 			roomController.checkIn(guestId, roomId, startDate, endDate);
 			System.out.println("Check in successful");
 			return false;
