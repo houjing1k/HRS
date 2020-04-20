@@ -37,10 +37,7 @@ public class CheckInController extends Controller {
             "1. Single room",
             "2. Double room",
             "3. Deluxe room"
-    };
-
-	private ArrayList<RoomEntity> roomArray;
-	
+    };	
 	
 	private CheckInController() {
 		checkInBoundary = new CheckInBoundary();
@@ -172,7 +169,7 @@ public class CheckInController extends Controller {
 		            System.out.println("Enter Valid Period of Day!");
 		        else break;
 		        }
-		String roomId = selectRoom();
+		String roomId = selectRoom(startDate,endDate);
 		return checkIn(guestId,roomId,startDate,endDate);
 	}
 	
@@ -189,14 +186,21 @@ public class CheckInController extends Controller {
 		}
 	}
 	
-	private String selectRoom() {
-		do{
+	private String selectRoom(LocalDate startDate, LocalDate endDate) {
+		ArrayList<RoomEntity> roomArray;
+		ArrayList<RoomEntity> returnArray = new ArrayList<>();
+		while(returnArray.isEmpty()) {
 			roomArray = roomController.filterRooms(1);
-			if(roomArray.isEmpty()) {
+			for(RoomEntity room:roomArray) {
+				if(reservationController.isRoomAvailable(room.getRoomId(), startDate, endDate)) {
+					returnArray.add(room);
+				}
+			}
+			if(returnArray.isEmpty()) {
 				System.out.println("No rooms found");
 			}
-		}while(roomArray.isEmpty());
-		String id = checkInBoundary.printRooms(roomArray);
+		}
+		String id = checkInBoundary.printRooms(returnArray);
 		return id;
 	}
 }
