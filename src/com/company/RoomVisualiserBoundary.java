@@ -14,12 +14,14 @@ public class RoomVisualiserBoundary extends Boundary
 		printMainTitle("Schedule Overview");
 		String[] menuList =
 				{
-						"Display Current Schedule (Today)",
-						"Display Future Schedule",
+						"Check Room Availability (Current)",
+						"Check Room Availability (Future)",
+						"Display All Rooms (Today)",
+						"Display All Rooms (Future)",
 				};
 		printMenuList(menuList, "Back to Main Application");
 		System.out.println();
-		return getInput(0, 2);
+		return getInput(0, 4);
 	}
 
 	protected LocalDate selectDate()

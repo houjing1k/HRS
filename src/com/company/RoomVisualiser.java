@@ -19,21 +19,34 @@ public class RoomVisualiser
 
 	public static void scheduleOverviewMenu()
 	{
-		Scanner sc=new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
 		rvb = new RoomVisualiserBoundary();
 		LocalDate date = LocalDate.now();
-		int sel=0;
+
+		int sel = 0;
+		int mode = 0;
+
 		boolean loop = true;
 		while (loop)
 		{
 			loop = false;
-		    sel=rvb.scheduleMenu();
+			sel = rvb.scheduleMenu();
 			switch (sel)
 			{
 				case 1:
+					mode = 2;
 					break;
 
-				case 2: //2 - Print Occupancy Report
+				case 2: //
+					mode = 2;
+					date = rvb.selectDate();
+					break;
+				case 3:
+					mode = 0;
+					break;
+
+				case 4: //
+					mode = 0;
 					date = rvb.selectDate();
 					break;
 
@@ -45,17 +58,25 @@ public class RoomVisualiser
 					loop = true;
 			}
 		}
-		do {
-		RoomVisualiser.showSchedule(
-				RoomController.getInstance().filterRooms(1),
-				new ReservationController().getReservations(),
-				date);
-				System.out.println("Enter 0 to exit (else continue)");
-				try {
-				sel=sc.nextInt();
+		do
+		{
+			RoomVisualiser.showSchedule(
+					RoomController.getInstance().filterRooms(mode),
+					new ReservationController().getReservations(),
+					date);
+			if (sel == 1 || sel == 2)
+			{
+				System.out.println("Enter 0 to Exit, any key to Continue");
+				try
+				{
+					sc = new Scanner(System.in);
+					sel = Integer.parseInt(sc.nextLine());
+				} catch (Exception e)
+				{
 				}
-				catch(Exception e) {}
-		}while(sel!=0);
+			}
+			else sel = 0;
+		} while (sel != 0);
 	}
 
 	public static void showList(ArrayList<RoomEntity> roomList)
