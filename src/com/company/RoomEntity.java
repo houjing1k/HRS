@@ -3,7 +3,7 @@ package com.company;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class RoomEntity implements Serializable{
+public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	/**
 	 *
 	 */
@@ -160,4 +160,12 @@ public class RoomEntity implements Serializable{
 		//Bed type: King, Queen, DoubleSingle, Single
 		KING,QUEEN,DOUBLESINGLE,SINGLE;
 	}
+	
+	@Override
+	public int compareTo(RoomEntity o)
+	{
+		return this.roomId.compareTo(o.getRoomId());
+	}
+
+	
 }

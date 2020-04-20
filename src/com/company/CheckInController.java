@@ -159,13 +159,8 @@ public class CheckInController extends Controller {
 			}
 		}
 		LocalDate startDate,endDate;
-		 while(true) {
-				startDate = LocalDate.now();
-				endDate = checkInBoundary.getEndDate(startDate);
-		        if (Period.between(startDate, endDate).getDays()<1) 
-		            System.out.println("Enter Valid Period of Day!");
-		        else break;
-		        }
+		startDate = LocalDate.now();
+		endDate = checkInBoundary.getEndDate(startDate);
 		String roomId = selectRoom(startDate,endDate);
 		return checkIn(guestId,roomId,startDate,endDate);
 	}

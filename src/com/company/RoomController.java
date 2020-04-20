@@ -84,6 +84,7 @@ public class RoomController extends Controller
 	{
 		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking, wifi);
 		roomList.add(rm);
+		roomList.sort(null);
 	}
 
 
@@ -201,6 +202,7 @@ public class RoomController extends Controller
 		else
 		{
 			roomList.remove(room);
+			roomList.sort(null);
 			saveFile();
 		}
 	}
@@ -299,6 +301,10 @@ public class RoomController extends Controller
 		{
 			case 1: //1 - Add Rooms
 				roomId = rb.getRoomId();
+				if(getRoom(roomId)!=null) {
+					System.out.println("Room already exisits");
+					break;
+				}
 				roomType = rb.getRoomType();
 				bedType = rb.getBedType();
 				System.out.println("Smoking");
@@ -306,7 +312,6 @@ public class RoomController extends Controller
 				System.out.println("WIFI");
 				boolean wifi = rb.getBooleanInput();
 				this.addRoom(roomId, roomType, RoomStatus.VACANT, bedType, smoking, wifi);
-				saveFile();
 				break;
 
 			case 2: //2 - Delete Rooms
