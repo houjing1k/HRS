@@ -98,7 +98,7 @@ public class CheckInController extends Controller {
 				return true;
 			}
 			LocalDate endDate = reservation.endDate;
-			reservation.reservationState = ReservationState.CHECKED_IN;
+			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
 		else {
