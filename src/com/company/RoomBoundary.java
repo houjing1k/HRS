@@ -3,6 +3,7 @@ package com.company;
 import java.util.Scanner;
 
 import com.company.RoomEntity.BedType;
+import com.company.RoomEntity.RoomType;
 
 public class RoomBoundary extends Boundary
 {
@@ -123,6 +124,7 @@ public class RoomBoundary extends Boundary
 					" 4 - King            "
 			};
 		int sel;
+		while(true) {
 		System.out.println("Choose bed Type:");
 		printList(bedType);
 		try {
@@ -140,7 +142,8 @@ public class RoomBoundary extends Boundary
 			case 4:
 				return BedType.KING;
 			default:
-				return null;
+				System.out.print("Invalid Input");
+		}
 		}
 	}
 
@@ -166,6 +169,37 @@ public class RoomBoundary extends Boundary
 				return false;
 			default:
 				System.out.println("Invalid input");
+		}
+		}
+	}
+
+	public RoomType getRoomType() {
+		// TODO Auto-generated method stub
+		String[] bedType =
+			{
+					" 1 - Single          ",
+					" 2 - Double    	",
+					" 3 - Deluxe           ",
+			};
+		int sel;
+		while(true) {
+		System.out.println("Choose bed Type:");
+		printList(bedType);
+		try {
+			sel = sc.nextInt();
+		}catch(Exception e) {
+			return null;
+		}
+		switch(sel) {
+			case 1:
+				return RoomType.SINGLE;
+			case 2:
+				return RoomType.DOUBLE;
+			case 3:
+				return RoomType.DELUXE;
+			default:
+				System.out.print("Invalid Input");
+				
 		}
 		}
 	}

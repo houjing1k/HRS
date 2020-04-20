@@ -291,12 +291,21 @@ public class RoomController extends Controller
 	{
 		int sel = rb.process();
 		String roomId;
+		BedType bedType;
+		RoomType roomType;
+
 		boolean b;
 		switch (sel)
 		{
 			case 1: //1 - Add Rooms
-				//roomId = rb
-				//this.addRoom(id, roomType, status, bedType, smoking, wifi);
+				roomId = rb.getRoomId();
+				roomType = rb.getRoomType();
+				bedType = rb.getBedType();
+				System.out.println("Smoking");
+				boolean smoking = rb.getBooleanInput();
+				System.out.println("WIFI");
+				boolean wifi = rb.getBooleanInput();
+				this.addRoom(roomId, roomType, RoomStatus.VACANT, bedType, smoking, wifi);
 				saveFile();
 				break;
 
@@ -319,7 +328,7 @@ public class RoomController extends Controller
 				break;
 			case 4: //4 - Change room bed type
 				roomId = rb.getRoomId();
-				BedType bedType = rb.getBedType();
+				bedType = rb.getBedType();
 				this.changeBedType(roomId, bedType);
 				break;
 			case 5: //5 - change room smoking
