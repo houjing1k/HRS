@@ -30,7 +30,7 @@ public class AdminController extends Controller
 					break;
 
 				case 4: //Print Bill
-					String roomID= new PaymentBoundary().requestRoomID();
+					String roomID = new PaymentBoundary().requestRoomID();
 					new PaymentController().printInvoice(roomID);
 					ab.waitInput();
 					break;
