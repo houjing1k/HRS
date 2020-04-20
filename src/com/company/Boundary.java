@@ -4,9 +4,9 @@ import java.util.Scanner;
 
 public abstract class Boundary
 {
-	private static final int MENULENGTH = 104;
-	//private static char[] DESIGN = {'═', '╔', '╗', '╚', '╝', '╠', '╣', '║', '■'};
-	private static final char[] DESIGN = {'─', '┌', '┐', '└', '┘', '├', '┤', '│', '■', '▒', '█'};
+	private final int MENULENGTH = 104;
+	//private final char[] DESIGN = {'═', '╔', '╗', '╚', '╝', '╠', '╣', '║', '■'};
+	private final char[] DESIGN = {'─', '┌', '┐', '└', '┘', '├', '┤', '│', '■', '▒', '█'};
 	//                            index -  0    1    2    3    4    5    6    7    8    9    10
 
 	public int process()
@@ -31,7 +31,7 @@ public abstract class Boundary
 		//return 0;
 	}
 
-	public static int getInput(int min, int max)
+	public int getInput(int min, int max)
 	{
 		while (true)
 		{
@@ -53,13 +53,13 @@ public abstract class Boundary
 
 	protected abstract void printMenu();
 
-	public static void printDivider()
+	public void printDivider()
 	{
 		printDivider(MENULENGTH);
 		System.out.println();
 	}
 
-	public static void printDivider(int length)
+	public void printDivider(int length)
 	{
 		for (int i = 0; i < length; i++)
 		{
@@ -67,14 +67,14 @@ public abstract class Boundary
 		}
 	}
 
-	public static void printMainTitle(String title)
+	public void printMainTitle(String title)
 	{
 		printDivider();
 		printSubTitle(title);
 		printDivider();
 	}
 
-	public static void printSubTitle(String title)
+	public void printSubTitle(String title)
 	{
 		int titleLen = title.length() + 2;
 		int length = (MENULENGTH - titleLen) / 2;
@@ -87,7 +87,7 @@ public abstract class Boundary
 		System.out.println();
 	}
 
-	public static void printMenuList(String[] menuList, String back)
+	public void printMenuList(String[] menuList, String back)
 	{
 		int i = 1;
 		for (String str : menuList)
@@ -100,7 +100,7 @@ public abstract class Boundary
 		printDivider();
 	}
 
-	public static void printMenuList(String[] menuList)
+	public void printMenuList(String[] menuList)
 	{
 		int i = 1;
 		for (String str : menuList)
@@ -111,7 +111,7 @@ public abstract class Boundary
 		printDivider();
 	}
 
-	public static void printList(String[] menuList)
+	public void printList(String[] menuList)
 	{
 		for (String str : menuList)
 		{
@@ -120,30 +120,30 @@ public abstract class Boundary
 		printDivider();
 	}
 
-	public static void waitInput()
+	public void waitInput()
 	{
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\nPress Enter to return.");
 		sc.nextLine();
 	}
 
-	public static void invalidInputWarning()
+	public void invalidInputWarning()
 	{
 		System.out.println("--Invalid Input--");
 	}
 
-	public static char characterSelect(boolean select, char charTrue, char charFalse)
+	public char characterSelect(boolean select, char charTrue, char charFalse)
 	{
 		if (select) return charTrue;
 		else return charFalse;
 	}
 
-	public static int getMenulength()
+	public int getMenulength()
 	{
 		return MENULENGTH;
 	}
 
-	public static char[] getDesign()
+	public char[] getDesign()
 	{
 		return DESIGN;
 	}

@@ -348,7 +348,7 @@ public class RoomController extends Controller
 				break;
 
 			default:
-				Boundary.invalidInputWarning();
+				rb.invalidInputWarning();
 		}
 	}
 
