@@ -123,7 +123,6 @@ public class CheckInController extends Controller {
 		}
 		int guestID=room.getGuestId();
 		//get the paymentDetail from guest. 
-		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
 		new PaymentController().makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
