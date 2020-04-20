@@ -1,5 +1,6 @@
 package com.company;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -204,18 +205,22 @@ public class PaymentController extends Controller
         for (RoomServiceItem item: order) {
         	StringBuilder tempName = new StringBuilder(item.getName());
         	StringBuilder tempDescription = new StringBuilder(item.getDescription());
+        	BigDecimal tempPrice = BigDecimal.valueOf(item.getPrice());
         	tempName.setLength( (20 > tempName.length()) ? tempName.length() : 20   );
         	tempDescription.setLength( (35 > tempDescription.length()) ? tempDescription.length() : 35); 
         	
             if (transaction == null) {
-            	transaction = new Transaction(tempName.toString(), tempDescription.toString(), item.getPrice(), 1, order.getOrder_date_time());
+            	transaction = new Transaction(tempName.toString(), tempDescription.toString(), tempPrice.doubleValue(), 1, order.getOrder_date_time());
             	}
             else if (tempName.toString().equals(transaction.getName())) 
+            {
             	transaction.setQuantity( transaction.getQuantity()+1 );
+            	transaction.setPrice( tempPrice.add( BigDecimal.valueOf(transaction.getPrice()) ).doubleValue() ); 
+            }
             else {
             	bill.AddTransaction(transaction);
             	transaction = null;
-            	transaction = new Transaction(tempName.toString(), tempDescription.toString(), item.getPrice(), 1, order.getOrder_date_time());
+            	transaction = new Transaction(tempName.toString(), tempDescription.toString(), tempPrice.doubleValue(), 1, order.getOrder_date_time());
             	}
             }
         if (transaction != null) bill.AddTransaction(transaction);
