@@ -28,7 +28,7 @@ public class RoomBoundary extends Boundary
 						"Search Room by Room ID",
 						"Search Room by Guest"
 				};
-		printMenuList(menuList, "Go back to Main Menu");
+		printMenuList(menuList, "Go back to Administrative Control");
 		System.out.println();
 	}
 
