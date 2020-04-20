@@ -305,8 +305,15 @@ public class RoomController extends Controller
 
 			case 3: //3 - Change room to maintenance
 				roomId = rb.getRoomId();
-				this.roomMaintenace(roomId);
-				System.out.println(roomId + " is under maintenace");
+				System.out.println("set Maintenace");
+				b = rb.getBooleanInput();
+				if(b) {
+					this.roomMaintenace(roomId);
+					System.out.println(roomId + " is under maintenace");
+				}else {
+					this.checkOut(roomId);
+					System.out.println(roomId + " is not under maintenace");
+				}
 				break;
 			case 4: //4 - Change room bed type
 				roomId = rb.getRoomId();
