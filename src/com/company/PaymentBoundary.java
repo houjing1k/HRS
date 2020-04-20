@@ -90,7 +90,7 @@ public class PaymentBoundary extends Boundary{
 				double receive = this.readDouble(scan, "Cash Amount : ");
 				if(receive>=money) {
 					System.out.println("Paid Amount: $"+ receive);
-					System.out.println("Return Amount: $"+ (receive-money));
+					System.out.println("Return Amount: $"+ String.format("%.2f",(receive-money)));
 					paying =false;
 				}
 				else {
