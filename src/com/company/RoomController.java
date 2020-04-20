@@ -44,6 +44,9 @@ public class RoomController extends Controller
 		boolean wifi = true;
 		for (int j = 0; j < 6; j++)
 		{
+			if(level>6) {
+				wifi = false;
+			}
 			int x = 0;
 			for (int i = 0; i < 2; i++)
 			{
@@ -63,7 +66,6 @@ public class RoomController extends Controller
 			level += 1;
 			room = 0;
 			smoking = !smoking;
-			wifi = !wifi;
 		}
 	}
 
