@@ -35,17 +35,6 @@ public class PaymentBill implements Serializable{
 		transactionList.add(item);
 	}
 		
-	//print the PaymentBill
-	public void printPaymentBill() {
-		Boundary.printSubTitle("BILL");
-		System.out.println(String.format("%-20s %-39s %-10s %-11s %-20s", "Name", "Description", "Quantity" ,"Price","Date"));
-		Boundary.printDivider();
-		for(Transaction trans : transactionList) {
-			System.out.println(trans.toString());
-
-		}
-		Boundary.printDivider();
-	}
 
 	//return all the transaction of the PaymentBills
 	public ArrayList<Transaction> getTransactions() {

@@ -246,7 +246,14 @@ public class PaymentController extends Controller
 			pb.invalidBillingAccount();
 			return;
 		}
+		Boundary.printSubTitle("BILL");
+		System.out.println(String.format("%-20s %-39s %-10s %-11s %-20s", "Name", "Description", "Quantity" ,"Price","Date"));
+		Boundary.printDivider();
+		for(Transaction trans : bill.getTransactions()) {
+			System.out.println(trans.toString());
 
+		}
+		Boundary.printDivider();
 		bill.printPaymentBill();
 		calculatePaymentBill(bill);
 		String totalPrice = formatter.format(bill.getTotalPrice());
