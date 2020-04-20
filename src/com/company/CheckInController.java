@@ -160,6 +160,8 @@ public class CheckInController extends Controller {
 		}
 		LocalDate startDate,endDate;
 		startDate = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		System.out.println("Check In Date : " +startDate.format(formatter));
 		endDate = checkInBoundary.getEndDate(startDate);
 		String roomId = selectRoom(startDate,endDate);
 		return checkIn(guestId,roomId,startDate,endDate);
