@@ -2,6 +2,8 @@ package com.company;
 
 import java.util.Scanner;
 
+import com.company.RoomEntity.BedType;
+
 public class RoomBoundary extends Boundary
 {
 	private Scanner sc;
@@ -18,13 +20,12 @@ public class RoomBoundary extends Boundary
 				{
 						"Add Rooms",
 						"Remove Rooms",
-						"Display All Rooms",
-						"Display Single Rooms",
-						"Display Occupied Rooms",
-						"Display 1 Room",
-						"Display Smoking Rooms",
-						"Filter and Display Rooms",
-						"Test Select Rooms"
+						"Change Room To Maintenance",
+						"Change Room Bed Type",
+						"Change Smoking Room",
+						"Change Room Wifi",
+						"Search Room by Room Id",
+						"Search Room by guest"
 				};
 		printMenuList(menuList, "Go back to Administrative Control");
 		System.out.println();
@@ -85,6 +86,88 @@ public class RoomBoundary extends Boundary
 		}
 		printList(done);
 
+	}
+
+	public String getRoomId() {
+		// TODO Auto-generated method stub
+		String id = "";
+		do {
+			System.out.println("Enter Room ID: ");
+			id = sc.nextLine();
+		}	while(!checkRoomId(id));
+		return id;
+	}
+	
+	private boolean checkRoomId(String str)
+	{
+		boolean check = ((!str.equals(""))
+				&& (str != null)
+				&& (str.matches("\\d{4}"))
+				&& (str.matches("^[0-9]+$")));
+
+		if (!check)
+		{
+			System.out.println("Invalid Room Id Number.");
+			System.out.println("Format: xxxx");
+		}
+		return check;
+	}
+
+	public BedType getBedType() {
+		// TODO Auto-generated method stub
+		String[] bedType =
+			{
+					" 1 - Single          ",
+					" 2 - Double Single   ",
+					" 3 - Queen           ",
+					" 4 - King            "
+			};
+		int sel;
+		System.out.println("Choose bed Type:");
+		printList(bedType);
+		try {
+			sel = sc.nextInt();
+		}catch(Exception e) {
+			return null;
+		}
+		switch(sel) {
+			case 1:
+				return BedType.SINGLE;
+			case 2:
+				return BedType.DOUBLESINGLE;
+			case 3:
+				return BedType.QUEEN;
+			case 4:
+				return BedType.KING;
+			default:
+				return null;
+		}
+	}
+
+	public boolean getBooleanInput() {
+		// TODO Auto-generated method stub
+		String[] ans =
+			{
+					" 1 - Yes          ",
+					" 2 - No  ",
+			};
+		int sel = 0;
+		while(true) {
+		printList(ans);
+		try {
+			sel = sc.nextInt();
+		}catch(Exception e) {
+			System.out.println("Invalid input");
+		}
+		switch(sel) {
+			case 1:
+				return true;
+			case 2:
+				return false;
+			default:
+				System.out.println("Invalid input");
+		}
+		}
 	}
 
 }

@@ -34,11 +34,16 @@ public class MainController extends Controller
 					break;
 
 				case 5: //5 - Room Overview
-					DisplayRooms.showList(RoomController.getInstance().filterRooms(false));
+					RoomVisualiser.showList(RoomController.getInstance().filterRooms(0));
 					mb.waitInput();
 					break;
 
-				case 6: //6 - Admin Options
+				case 6: //6 - Schedule Overview
+					RoomVisualiser.scheduleOverviewMenu();
+					mb.waitInput();
+					break;
+
+				case 7: //7 - Admin Options
 					new AdminController().processMain();
 					break;
 

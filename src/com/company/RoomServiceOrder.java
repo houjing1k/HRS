@@ -11,6 +11,7 @@ package com.company;
  */
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -28,7 +29,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	private int order_id;
 	private LocalDateTime order_date_time;
 	private String remarks;
-	private double bill;
+	private BigDecimal bill;
 	
 	private String room_number;
 	private OrderStatus status;
@@ -47,7 +48,7 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 		this.room_number = room_number;
 		this.status = OrderStatus.UNCONFIRMED;
 		this.remarks = "";
-		this.bill = 0;
+		this.bill = BigDecimal.ZERO;
 		this.paid = false;
 	}
 	
@@ -60,25 +61,43 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	 */
 	boolean addItem(RoomServiceItem item, int quantity) {
 		
-		// need add error checking for positive quantity?
 		for (int i=0; i < quantity; i++) {
 			if (item.getStatus() == StockStatus.OUT_OF_STOCK) return false;
 			order_items.add(item);
-			bill += item.getPrice();
+			bill = bill.add( BigDecimal.valueOf(item.getPrice()) );
 		}
 		order_items.sort(null);
 		return true;
 	}
 	
 	/**
-	 * Removes the {@code RoomServiceItem} at the specified position in the list of items.
+	 * Removes the {@code RoomServiceItem} with the specified name in the list of items.
 	 * 
-	 * @param index  the index of {@code RoomServiceItem} to be removed
-	 * @return the {@code RoomServiceItem} previously at the specified position
+	 * @param name  the name of {@code RoomServiceItem} to be removed
+	 * @return {@code true} if this list contains the item with the specified name
+	 *
 	 */
-	RoomServiceItem removeItem(int index) {
-		bill -= order_items.get(index).getPrice();
-		return order_items.remove(index);
+	boolean removeItem(String name) {
+		
+		// pre-process string input
+		StringBuilder temp = new StringBuilder();
+		name.trim();
+		for (String word : name.split(" ")) {
+			if (word.equals(" ")) continue;
+			temp.append(word.substring(0,1).toUpperCase() + word.substring(1) + " ");
+		}
+		name = temp.toString().trim();
+		
+		int i = 0;
+		for (RoomServiceItem item : order_items) {
+			if (item.getName().equals(name)) {
+				order_items.remove(i);
+				bill = bill.subtract( BigDecimal.valueOf(item.getPrice()) );
+				return true;
+			}
+			i += 1;
+		}
+		return false;
 	}
 	
 	/**
@@ -140,14 +159,14 @@ class RoomServiceOrder implements Serializable, Comparable<RoomServiceOrder>, It
 	/**
 	 * @return the bill
 	 */
-	double getBill() {
+	BigDecimal getBill() {
 		return bill;
 	}
 
 	/**
 	 * @param bill the bill to set
 	 */
-	void setBill(double bill) {
+	void setBill(BigDecimal bill) {
 		this.bill = bill;
 	}
 

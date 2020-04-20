@@ -102,7 +102,7 @@ public class ReservationController extends Controller {
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
         //String roomId = RoomController.getInstance().
         //ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
-        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().filterRooms(true);
+        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().filterRooms(2);
         ArrayList<String> tempRoomIDs = new ArrayList<>();
         for (RoomEntity roomEntity: roomEntities)
         {
@@ -242,6 +242,7 @@ public class ReservationController extends Controller {
                         reservationBoundary.printReservationCancellationFailed();
 
                     break;
+                case 0: break;
                 default:
                     System.out.println("--Invalid Input--");
             }
@@ -305,5 +306,22 @@ public class ReservationController extends Controller {
             }
         }
         return false;
+    }
+
+    public ArrayList<ReservationEntity> getReservations ()
+    {
+        return reservations;
+    }
+
+    public ReservationEntity getReservationByRoomId(String roomId)
+    {
+        for (ReservationEntity reservation: reservations)
+        {
+            if(reservation.getRoomId().equals(roomId))
+            {
+                return  reservation;
+            }
+        }
+        return null;
     }
 }

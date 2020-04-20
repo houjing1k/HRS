@@ -83,7 +83,7 @@ public class CheckInController extends Controller {
 					//return
 					break;
 				default:
-					Boundary.invalidInputWarning();
+					checkInBoundary.invalidInputWarning();
 					loop = true;
 					break;
 			}
@@ -130,7 +130,6 @@ public class CheckInController extends Controller {
 		//get the paymentDetail from guest. 
 		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
-		paymentController.addRoomServiceToPaymentBill(roomId);
 		paymentController.makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
 		System.out.println("Check out successful");
@@ -181,7 +180,7 @@ public class CheckInController extends Controller {
 		try {
 			paymentController.createBillingAccount(roomId);
 			paymentController.addRoomToPaymentBill(roomId, startDate, endDate);
-			roomController.checkIn(guestId, roomId);
+			roomController.checkIn(guestId, roomId, startDate, endDate);
 			System.out.println("Check in successful");
 			return false;
 		}catch(Exception e) {
@@ -192,7 +191,7 @@ public class CheckInController extends Controller {
 	
 	private String selectRoom() {
 		do{
-			roomArray = roomController.filterRooms(true);	
+			roomArray = roomController.filterRooms(1);
 			if(roomArray.isEmpty()) {
 				System.out.println("No rooms found");
 			}

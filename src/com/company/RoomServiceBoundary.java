@@ -201,11 +201,22 @@ class RoomServiceBoundary extends Boundary {
 	void printOrder(RoomServiceOrder order) {
 		if (order == null || order.size() == 0) System.out.println("No items in order.");
 		else {
-			int i=1;
+			int quantity = 1;
+			RoomServiceItem temp = null;
+			System.out.printf("%-20s  %-10s  %-5s", "Name", "Quantity", "Price\n");
 			for (RoomServiceItem item : order) {
-				System.out.printf("%d: \t%s \n\t%s%.2f\n", i, item.getName(), currency, item.getPrice());
-				i++;
+				if (temp == null) temp = item;
+				else if (temp.equals(item)) {
+					quantity += 1;
+				}
+				else {
+					System.out.printf("%-20s  %-10d  %s%.2f\n", temp.getName(), quantity, currency, temp.getPrice());
+					quantity = 1;
+					temp = item;
+				}				
 			}
+			if (temp != null) System.out.printf("%-20s  %-10d  %s%.2f\n", temp.getName(), quantity, currency, temp.getPrice());
+			
 			System.out.print("Remarks: ");
 			System.out.println(order.getRemarks());
 			System.out.print("Total: " + currency);
@@ -228,7 +239,7 @@ class RoomServiceBoundary extends Boundary {
 			for (RoomServiceOrder order : list) {
 				
 				String formatedDateTime = order.getOrder_date_time().format(formatter);
-				System.out.printf("%-9d %-13d %s%-8.2f %s\n", 
+				System.out.printf("%-9d %-13s %s%-8.2f %s\n", 
 						order.getOrder_id(), order.getRoom_number(), currency, order.getBill(), formatedDateTime);
 			}
 		}
