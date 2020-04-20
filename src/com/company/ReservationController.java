@@ -251,14 +251,14 @@ public class ReservationController extends Controller {
 
     public void triggerExpiredReservations()
     {
-        for (ReservationEntity reservation : reservations) {
-            if (reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED && (reservation.getStartDate().isEqual(LocalDate.now()) || reservation.getStartDate().isBefore(LocalDate.now()))) {
-                reservation.expireReservation();
-                RoomController.getInstance().checkOut(reservation.getRoomId());
-                waitListUpdate(reservation.getRoomId());
+        for (int i = 0; i < reservations.size();i++) {
+            if (reservations.get(i).getReservationState() == ReservationEntity.ReservationState.CONFIRMED && (reservations.get(i).getStartDate().isEqual(LocalDate.now()) || reservations.get(i).getStartDate().isBefore(LocalDate.now()))) {
+                reservations.get(i).expireReservation();
+                saveReservationsToFile();
+                RoomController.getInstance().checkOut(reservations.get(i).getRoomId());
+                waitListUpdate(reservations.get(i).getRoomId());
             }
         }
-        saveReservationsToFile();
     }
 
     public void getReservationByGuestName()

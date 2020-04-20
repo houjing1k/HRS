@@ -20,7 +20,8 @@ public class Scheduler {
         Calendar tempCalendar = Calendar.getInstance();
         Date date2pm = new java.util.Date();
         date2pm.setHours(14);
-        date2pm.setMinutes(00);
+        date2pm.setMinutes(0);
+        date2pm.setSeconds(0);
         if(hour > 13)
         {
             //date2pm.set
@@ -31,6 +32,7 @@ public class Scheduler {
         Date date11AM = new java.util.Date();
         date11AM.setHours(11);
         date11AM.setMinutes(00);
+        date11AM.setSeconds(0);
         if(hour > 10)
         {
             tempCalendar.setTime(date11AM);
@@ -39,7 +41,6 @@ public class Scheduler {
         }
         timer2PM.schedule(new timerTask2PM(),date2pm,86400000);
         timer11AM.schedule(new timerTask12MN(),date11AM,86400000);
-        testTimer.schedule(new testTimerTask(),1000,1000);
     }
     class timerTask2PM extends TimerTask {
         ReservationController reservationController = new ReservationController();
@@ -55,13 +56,6 @@ public class Scheduler {
         public void run() {
             System.out.println("All reservations have been set");
             reservationController.setRoomReservationStatus();
-        }
-    }
-    class testTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            Date date2pm = new java.util.Date();
-            //System.out.println(date2pm);
         }
     }
 
