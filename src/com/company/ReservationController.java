@@ -24,8 +24,9 @@ public class ReservationController extends Controller {
             if (reservation.getRoomId().equals(roomId) &&
                     (reservation.getStartDate().isBefore(endDateRequest) ||
                             reservation.getStartDate().equals(endDateRequest)) &&
-                    (startDateRequest.isBefore(reservation.getEndDate()) ||
-                            startDateRequest.equals(reservation.getEndDate()))
+                    (startDateRequest.isBefore(reservation.getEndDate()) //||
+                          //startDateRequest.equals(reservation.getEndDate())
+                    )
                     && reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED
             ) {
                 return false;
@@ -85,6 +86,11 @@ public class ReservationController extends Controller {
                 if(endDate.isBefore(startDate))
                 {
                     System.out.println("Please key in a date after the end date");
+                    endDate = null;
+                }
+                if(endDate.equals(startDate))
+                {
+                    System.out.println("Please book at least one day");
                     endDate = null;
                 }
             }catch (Exception e)
