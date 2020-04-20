@@ -12,11 +12,9 @@ public class AdminController extends Controller
 	@Override
 	public void processMain()
 	{
-		boolean loop = true;
-		while (loop)
+		while (true)
 		{
 			int sel = ab.process();
-			loop = false;
 			switch (sel)
 			{
 				case 1: //Manage Rooms
@@ -47,7 +45,8 @@ public class AdminController extends Controller
 					break;
 
 				case 0: // 0 - Go Back
-					break;
+					return;
+
 
 				default:
 					ab.invalidInputWarning();

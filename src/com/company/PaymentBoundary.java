@@ -38,7 +38,7 @@ public class PaymentBoundary extends Boundary{
    						"Modify Service Charge",
    						"Apply / Modify Discount"
    				};
-   		printMenuList(menuList, "Go back to Payment System Menu");
+   		printMenuList(menuList, "Go back to Administrative Control");
    		System.out.println();
    	}
        
@@ -85,7 +85,7 @@ public class PaymentBoundary extends Boundary{
 		if(method=="CASH") {
 			System.out.println("Pay By Cash:");
 			boolean paying=true;
-			while(paying) {
+			while(paying) { 
 				double receive = this.readDouble(scan, "Cash Amount : ");
 				if(receive>=money) {
 					System.out.println("Paid Amount: $"+ receive);

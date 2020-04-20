@@ -6,6 +6,7 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Scanner;
 
 public class RoomVisualiser
 {
@@ -18,14 +19,16 @@ public class RoomVisualiser
 
 	public static void scheduleOverviewMenu()
 	{
+		Scanner sc=new Scanner(System.in);
 		rvb = new RoomVisualiserBoundary();
 		LocalDate date = LocalDate.now();
-
+		int sel=0;
 		boolean loop = true;
 		while (loop)
 		{
 			loop = false;
-			switch (rvb.scheduleMenu())
+		    sel=rvb.scheduleMenu();
+			switch (sel)
 			{
 				case 1:
 					break;
@@ -42,10 +45,17 @@ public class RoomVisualiser
 					loop = true;
 			}
 		}
+		do {
 		RoomVisualiser.showSchedule(
-				RoomController.getInstance().filterRooms(0),
+				RoomController.getInstance().filterRooms(1),
 				new ReservationController().getReservations(),
 				date);
+				System.out.println("Enter 0 to exit (else continue)");
+				try {
+				sel=sc.nextInt();
+				}
+				catch(Exception e) {}
+		}while(sel!=0);
 	}
 
 	public static void showList(ArrayList<RoomEntity> roomList)
