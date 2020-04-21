@@ -17,8 +17,10 @@ public class AdminBoundary extends Boundary
 		String[] menuList =
 				{
 						"Manage Rooms",
-						"Print Occupancy Reports",
+						"Manage Guests",
 						"Modify Hotel Charges",
+						"View Existing Bill",
+						"Print Occupancy Reports",
 						"Generate Financial Report"
 				};
 		printMenuList(menuList, "Go back to Main Menu");

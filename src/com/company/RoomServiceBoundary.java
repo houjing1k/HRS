@@ -251,7 +251,7 @@ class RoomServiceBoundary extends Boundary {
 	 * @param menu  string array of menu options to choose from
 	 * @return  the index of menu option
 	 */
-	public int userInputFromMenu(String[] menu) {
+	int userInputFromMenu(String[] menu) {
 		
 		printMenu(menu);
 		int choice = getIntFromUser(0, menu.length - 2);
@@ -264,7 +264,7 @@ class RoomServiceBoundary extends Boundary {
 	 * Gets string user input in form of a sentence instead of single word.
 	 * @return  String sentence
 	 */
-	public String getStringFromUser() {
+	String getStringFromUser() {
 		
 		StringBuilder builder = new StringBuilder();;
 		builder.append(sc.next());
@@ -277,7 +277,7 @@ class RoomServiceBoundary extends Boundary {
 	 * Gets user input of double
 	 * @return  double
 	 */
-	public double getDoubleFromUser() {
+	double getDoubleFromUser() {
 		
 		double doub;
 		while (!sc.hasNextDouble()) {
@@ -293,7 +293,7 @@ class RoomServiceBoundary extends Boundary {
 	 * Gets user input of integer
 	 * @return  integer
 	 */
-	public int getIntFromUser() {
+	int getIntFromUser() {
 		
 		int num;
 		while (!sc.hasNextInt()) {
@@ -311,7 +311,7 @@ class RoomServiceBoundary extends Boundary {
 	 * @param max  maximum value
 	 * @return  integer
 	 */
-	public int getIntFromUser(int min, int max) {
+	int getIntFromUser(int min, int max) {
 		
 		int num = getIntFromUser();
 		
@@ -327,7 +327,7 @@ class RoomServiceBoundary extends Boundary {
 	 * Outputs menu options to user
 	 * @param menu  String array of menu options
 	 */
-	public void printMenu(String[] menu) {
+	void printMenu(String[] menu) {
 		
 		printMainTitle(menu[0]);
 		String[] temp = new String[menu.length-2];

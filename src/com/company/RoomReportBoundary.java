@@ -29,6 +29,7 @@ public class RoomReportBoundary  extends Boundary{
 	public void printReport(HashMap<String, ArrayList<RoomEntity>> reportData, boolean b) {
 		String level = "";
 		String num = "";
+		String pre = "";
 		for(String key: reportData.keySet()){
 			System.out.println(key);
 			if(b) {
@@ -42,10 +43,16 @@ public class RoomReportBoundary  extends Boundary{
 				System.out.print("NIL");
 			}
 			else {
+				
 			     for(RoomEntity val : reportData.get(key) ){
-			    	 level = val.getRoomId().substring(0, 2);
-					 num = val.getRoomId().substring(2, 4);
-			    	 System.out.print(level+"-"+num+",");
+			    	    level = val.getRoomId().substring(0, 2);
+						num = val.getRoomId().substring(2, 4);
+						if(!level.equals(pre)) {
+							System.out.print("\nLevel "+level+": ");
+						}
+						pre = level;
+						System.out.print(level+"-"+num);
+						System.out.print(" ");
 			     }
 			}
 			System.out.println("\n");

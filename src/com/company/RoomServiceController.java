@@ -234,7 +234,6 @@ public class RoomServiceController extends Controller {
 		
 		 // need to account for invalid room numbers
 		String room_number;
-		
 		do {
 			System.out.println("Please enter the room number (eg. 0208): ");
 			room_number = boundary.getStringFromUser();
@@ -244,12 +243,12 @@ public class RoomServiceController extends Controller {
 			
 			
 			if (!Pattern.matches(general_pattern, room_number)) {
-				System.out.println("Please enter in a valid format.");
-				continue;
+				System.out.println("Invalid room number format.");
+				return;
 			}
 			else if (!Pattern.matches(valid_room_pattern, room_number)) {
 				System.out.println("No such room exists.");
-				continue;
+				return;
 			}
 			else
 				break;

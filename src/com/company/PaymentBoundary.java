@@ -12,30 +12,33 @@ public class PaymentBoundary extends Boundary{
 	
     protected void printMenu()
 	{
-		printMainTitle("Payment System");
+		
+	}
+    
+    protected void printRoomPriceMenu()
+	{
+		printMainTitle("Modify Room Price");
 		String[] menuList =
 				{
-						"Add/Edit Payment Account",
-						"Print Invoice",
-						"Make Payment",
-						"Modify charges",
-						"Generate Financial report"
+						"Single Room",
+						"Double Room",
+						"Deluxe Room",
 				};
 		printMenuList(menuList, "Go back to Main Menu");
 		System.out.println();
 	}
-
   
        protected void modifyChargesMenu()
    	{
    		printMainTitle("Modify charges");
    		String[] menuList =
    				{
+					    "Modify Room Price",
    						"Modify GST",
    						"Modify Service Charge",
-   						"Apply/modify Discount",
+   						"Apply / Modify Discount"
    				};
-   		printMenuList(menuList, "Go back to Payment System Menu");
+   		printMenuList(menuList, "Go back to Administrative Control");
    		System.out.println();
    	}
        
@@ -53,14 +56,10 @@ public class PaymentBoundary extends Boundary{
    	}
  
        
-	protected void CreateBillingAccount()
-	{
-		printSubTitle("Create New Payment Account");
-	}
 	
 	protected void invalidBillingAccount()
 	{
-		System.out.println("Payment Account does not exist!");
+		System.out.println("Bill does not exist!");
 	}
 
     protected String requestRoomID()
@@ -73,11 +72,11 @@ public class PaymentBoundary extends Boundary{
             try {
                 temp= scan.next();
                 if(!temp.matches("\\d{4}")) {
-                	throw new Exception("Invalid Room ID. Format: xxxx");
+                	throw new Exception();
                 }
                 else return temp;
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.out.println("Invalid Room ID. Format: xxxx");
             }
         }
 	}
@@ -86,7 +85,7 @@ public class PaymentBoundary extends Boundary{
 		if(method=="CASH") {
 			System.out.println("Pay By Cash:");
 			boolean paying=true;
-			while(paying) {
+			while(paying) { 
 				double receive = this.readDouble(scan, "Cash Amount : ");
 				if(receive>=money) {
 					System.out.println("Paid Amount: $"+ receive);

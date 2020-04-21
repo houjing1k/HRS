@@ -1,4 +1,4 @@
-package com.company;
+ 	 package com.company;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +44,9 @@ public class RoomController extends Controller
 		boolean wifi = true;
 		for (int j = 0; j < 6; j++)
 		{
+			if(level>6) {
+				wifi = false;
+			}
 			int x = 0;
 			for (int i = 0; i < 2; i++)
 			{
@@ -58,12 +61,11 @@ public class RoomController extends Controller
 				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking, wifi);
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking, wifi);
+				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking, wifi);
 			}
 			level += 1;
 			room = 0;
 			smoking = !smoking;
-			wifi = !wifi;
 		}
 	}
 
@@ -82,6 +84,7 @@ public class RoomController extends Controller
 	{
 		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking, wifi);
 		roomList.add(rm);
+		roomList.sort(null);
 	}
 
 
@@ -199,6 +202,7 @@ public class RoomController extends Controller
 		else
 		{
 			roomList.remove(room);
+			roomList.sort(null);
 			saveFile();
 		}
 	}
@@ -289,13 +293,25 @@ public class RoomController extends Controller
 	{
 		int sel = rb.process();
 		String roomId;
+		BedType bedType;
+		RoomType roomType;
+
 		boolean b;
 		switch (sel)
 		{
 			case 1: //1 - Add Rooms
-				//roomId = rb
-				//this.addRoom(id, roomType, status, bedType, smoking, wifi);
-				saveFile();
+				roomId = rb.getRoomId();
+				if(getRoom(roomId)!=null) {
+					System.out.println("Room already exisits");
+					break;
+				}
+				roomType = rb.getRoomType();
+				bedType = rb.getBedType();
+				System.out.println("Smoking");
+				boolean smoking = rb.getBooleanInput();
+				System.out.println("WIFI");
+				boolean wifi = rb.getBooleanInput();
+				this.addRoom(roomId, roomType, RoomStatus.VACANT, bedType, smoking, wifi);
 				break;
 
 			case 2: //2 - Delete Rooms
@@ -305,12 +321,19 @@ public class RoomController extends Controller
 
 			case 3: //3 - Change room to maintenance
 				roomId = rb.getRoomId();
-				this.roomMaintenace(roomId);
-				System.out.println(roomId + " is under maintenace");
+				System.out.println("set Maintenace");
+				b = rb.getBooleanInput();
+				if(b) {
+					this.roomMaintenace(roomId);
+					System.out.println(roomId + " is under maintenace");
+				}else {
+					this.checkOut(roomId);
+					System.out.println(roomId + " is not under maintenace");
+				}
 				break;
 			case 4: //4 - Change room bed type
 				roomId = rb.getRoomId();
-				BedType bedType = rb.getBedType();
+				bedType = rb.getBedType();
 				this.changeBedType(roomId, bedType);
 				break;
 			case 5: //5 - change room smoking
@@ -334,6 +357,7 @@ public class RoomController extends Controller
 				{
 					System.out.println("Room does not exist");
 				}
+				break;
 			case 8://8 - Find room by guest
 				int guest = new GuestController().searchGuest_Hybrid().getGuestID();
 				try
@@ -344,6 +368,7 @@ public class RoomController extends Controller
 				{
 					System.out.println("Room does not exist");
 				}
+				break;
 			case 0: // 0 - Go Back
 				break;
 

@@ -2,6 +2,7 @@ package com.company;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.company.ReservationEntity.ReservationState;
@@ -89,15 +90,16 @@ public class CheckInController extends Controller {
 	private boolean reserveCheckIn() {
 		// TODO Auto-generated method stub
 		int reserveId =checkInBoundary.getId();
-		RoomEntity room = roomController.getRerservation(reserveId);
 		ReservationEntity reservation = reservationController.getReservationById(reserveId);
+		LocalDate startDate = reservation.startDate;
+		LocalDate endDate = reservation.endDate;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		if(startDate.compareTo(LocalDate.now())!=0) {
+			System.out.println("Your reservation is for "+startDate.format(formatter));
+			return true;
+		}
+		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
-			LocalDate startDate = reservation.startDate;
-			if(startDate.compareTo(LocalDate.now())!=0) {
-				System.out.println("Your reservation is for "+startDate);
-				return true;
-			}
-			LocalDate endDate = reservation.endDate;
 			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
@@ -123,7 +125,6 @@ public class CheckInController extends Controller {
 		}
 		int guestID=room.getGuestId();
 		//get the paymentDetail from guest. 
-		//get the roomservice that this guest ordered
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
 		new PaymentController().makePaymentMenu(roomId,guest.getPaymentDetail());
 		roomController.checkOut(roomId);
@@ -160,13 +161,10 @@ public class CheckInController extends Controller {
 			}
 		}
 		LocalDate startDate,endDate;
-		 while(true) {
-				startDate = LocalDate.now();
-				endDate = checkInBoundary.getEndDate(startDate);
-		        if (Period.between(startDate, endDate).getDays()<1) 
-		            System.out.println("Enter Valid Period of Day!");
-		        else break;
-		        }
+		startDate = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		System.out.println("Check In Date : " +startDate.format(formatter));
+		endDate = checkInBoundary.getEndDate(startDate);
 		String roomId = selectRoom(startDate,endDate);
 		return checkIn(guestId,roomId,startDate,endDate);
 	}

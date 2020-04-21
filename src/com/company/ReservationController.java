@@ -65,11 +65,12 @@ public class ReservationController extends Controller {
         System.out.println("Please type the start date(dd/mm/yyyy):");
         while (startDate == null){
             try {
-                tempString = scan.next();
-                startDate = LocalDate.parse(tempString, dateFormat);
-                if(startDate.isBefore(LocalDate.now()))
-                {
-                    System.out.println("Please key in a date after today");
+            	tempString = scan.next();
+            	startDate = LocalDate.parse(tempString, dateFormat);
+            	
+                if(startDate.isBefore(LocalDate.now().plusDays(1))) 
+                {   
+                    System.out.println("Please key in a date after today(dd/mm/yyyy):");
                     startDate = null;
                 }
             }catch (Exception e)
@@ -116,7 +117,6 @@ public class ReservationController extends Controller {
                 reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
                 saveReservationsToFile();
                 reservationBoundary.printRoomHasBeenReserved(tempRoomID,newReservationId);
-                RoomController.getInstance().reserve(tempRoomID, guestId, newReservationId);
                 reserved = true;
                 break;
             }

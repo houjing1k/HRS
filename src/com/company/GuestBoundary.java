@@ -26,7 +26,7 @@ public class GuestBoundary extends Boundary
 						"Print all Guests",
 						//"Test"
 				};
-		printMenuList(menuList, "Go back to Main Menu");
+		printMenuList(menuList, "Go back to Administrative Control");
 		System.out.println();
 	}
 

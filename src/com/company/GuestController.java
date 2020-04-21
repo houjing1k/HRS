@@ -185,10 +185,10 @@ public class GuestController extends Controller
 		{
 			return null;
 		}
-		else if (temp.size() == 1)
+		/*else if (temp.size() == 1)
 		{
 			result = temp.get(0);
-		}
+		}*/
 		else
 		{
 			result = searchGuest(gb.searchGuestID());

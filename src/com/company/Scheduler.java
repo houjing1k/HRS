@@ -21,7 +21,7 @@ public class Scheduler {
         Date date2pm = new java.util.Date();
         date2pm.setHours(14);
         date2pm.setMinutes(0);
-        date2pm.setSeconds(0);
+        date2pm.setSeconds(15);
         if(hour > 13)
         {
             //date2pm.set
@@ -32,7 +32,7 @@ public class Scheduler {
         Date date11AM = new java.util.Date();
         date11AM.setHours(11);
         date11AM.setMinutes(00);
-        date11AM.setSeconds(0);
+        date11AM.setSeconds(15);
         if(hour > 10)
         {
             tempCalendar.setTime(date11AM);
