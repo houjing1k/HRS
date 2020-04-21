@@ -21,12 +21,9 @@ public interface TypesOfRooms {
 			DELUXE;
 
 	}
+	//method to create roomtype and bedtype
+	public void createRoom();
 
-	//Method to get room type
-	public RoomType getRoomType();
-	
-	//Method to get bed type
-	public BedType getBedType() ;
 
 	
 

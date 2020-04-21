@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 
-public class RoomEntity implements TypesOfRooms,Serializable, Comparable<RoomEntity>{
+import com.company.TypesOfRooms.BedType;
+import com.company.TypesOfRooms.RoomType;
+
+public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	/**
 	 *
 	 */
@@ -19,8 +22,8 @@ public class RoomEntity implements TypesOfRooms,Serializable, Comparable<RoomEnt
 	private int numChild = 0;
 	private LocalDate checkInDate;
 	private LocalDate checkOutDate;
-	private RoomType roomType;
-	private BedType bedType;
+	protected RoomType roomType;
+	protected BedType bedType;
 	
 
 	public RoomEntity(String roomId,RoomStatus status,boolean smoking,boolean wifi) {
@@ -43,12 +46,12 @@ public class RoomEntity implements TypesOfRooms,Serializable, Comparable<RoomEnt
 	
 	//Method to get room type
 	public  RoomType getRoomType() {
-		return null;
+		return roomType;
 	}
 	
 	//Method to get bed type
 	public  BedType getBedType() {
-		return null;
+		return bedType;
 	}
 	
 	//Method to change bed type

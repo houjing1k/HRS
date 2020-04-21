@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.TypesOfRooms.BedType;
+import com.company.TypesOfRooms.RoomType;
 
 public class DeluxeRoom extends RoomEntity {
 	
@@ -11,19 +13,15 @@ public class DeluxeRoom extends RoomEntity {
 	public DeluxeRoom(String roomId, RoomStatus status, boolean smoking, boolean wifi) {
 		
 		super(roomId, status, smoking, wifi);
-		// TODO Auto-generated constructor stub
-	}
+		createRoom();
+		}
 
-	@Override
-	public RoomType getRoomType() {
-		return RoomType.DELUXE;
+
+	public void createRoom() {
+		this.roomType=RoomType.DELUXE;
+		this.bedType=BedType.KING;
 	}
 	
-	@Override
-	public BedType getBedType() {
-		return BedType.KING;
-	}
-
 	
 	
 

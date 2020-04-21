@@ -165,7 +165,7 @@ public class ReservationBoundary extends Boundary {
     public void requestRoomRequirements()
     {
         boolean invalidDecision = false;
-        RoomEntity.RoomType roomType ;
+        TypesOfRooms.RoomType roomType ;
         int temp;
         printDivider();
         do {
@@ -176,13 +176,13 @@ public class ReservationBoundary extends Boundary {
             switch(this.process())
             {
                 case 1:
-                    roomType = RoomEntity.RoomType.SINGLE;
+                    roomType = TypesOfRooms.RoomType.SINGLE;
                     break;
                 case 2:
-                    roomType = RoomEntity.RoomType.DOUBLE;
+                    roomType = TypesOfRooms.RoomType.DOUBLE;
                     break;
                 case 3:
-                    roomType = RoomEntity.RoomType.DELUXE;
+                    roomType = TypesOfRooms.RoomType.DELUXE;
                     break;
                 default:
                     invalidDecision = true;

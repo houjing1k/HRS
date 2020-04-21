@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
+import com.company.TypesOfRooms.BedType;
+import com.company.TypesOfRooms.RoomType;
+
 public class RoomVisualiser
 {
 	private static final int BOX_HEIGHT = 7;
@@ -410,21 +413,21 @@ public class RoomVisualiser
 		return String.format("%02d", getRoomLevel(room)) + "-" + String.format("%02d", getRoomNum(room));
 	}
 
-	private static char convertBedType(RoomEntity.BedType bedType)
+	private static char convertBedType(TypesOfRooms.BedType bedType)
 	{
-		if (bedType == RoomEntity.BedType.SINGLE)
+		if (bedType == TypesOfRooms.BedType.SINGLE)
 		{
 			return 'S';
 		}
-		else if (bedType == RoomEntity.BedType.DOUBLESINGLE)
+		else if (bedType == TypesOfRooms.BedType.DOUBLESINGLE)
 		{
 			return 'D';
 		}
-		else if (bedType == RoomEntity.BedType.QUEEN)
+		else if (bedType == TypesOfRooms.BedType.QUEEN)
 		{
 			return 'Q';
 		}
-		else if (bedType == RoomEntity.BedType.KING)
+		else if (bedType == TypesOfRooms.BedType.KING)
 		{
 			return 'K';
 		}

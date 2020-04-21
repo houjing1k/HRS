@@ -2,7 +2,7 @@ package com.company;
 
 import com.company.RoomEntity.RoomStatus;
 
-public class SingleRoom extends RoomEntity {
+public class SingleRoom extends RoomEntity implements TypesOfRooms {
 	
 	/**
 	 * 
@@ -12,17 +12,16 @@ public class SingleRoom extends RoomEntity {
 	public SingleRoom(String roomId, RoomStatus status, boolean smoking, boolean wifi) {
 		
 		super(roomId, status, smoking, wifi);
+		createRoom();
 		// TODO Auto-generated constructor stub
 	}
+	
 
-	@Override
-	public RoomType getRoomType() {
-		return RoomType.SINGLE;
+	public void createRoom() {
+		this.roomType=RoomType.SINGLE;
+		this.bedType=BedType.SINGLE;
 	}
 	
-	@Override
-	public BedType getBedType() {
-		return BedType.SINGLE;
-	}
+
 	
 }
