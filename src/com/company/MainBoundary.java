@@ -13,7 +13,7 @@ public class MainBoundary extends Boundary
 
 	protected void printMenu()
 	{
-		printMainTitle("Welcome to Hotel Reservation App");
+		printMainTitle("Welcome to Hotel Reservation and Payment System (HRPS)");
 		String[] menuList =
 				{
 						"Add / Manage Reservations",

@@ -3,15 +3,14 @@ package com.company;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class RoomEntity implements Serializable, Comparable<RoomEntity>{
+
+public class RoomEntity implements TypesOfRooms,Serializable, Comparable<RoomEntity>{
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private final String roomId;
-	private final RoomType roomType;
 	private  RoomStatus status;
-	private BedType bedType;
 	private boolean smoking;
 	private boolean wifi;
 	private int guestId;
@@ -20,8 +19,18 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	private int numChild = 0;
 	private LocalDate checkInDate;
 	private LocalDate checkOutDate;
+	private RoomType roomType;
+	private BedType bedType;
+	
 
-
+	public RoomEntity(String roomId,RoomStatus status,boolean smoking,boolean wifi) {
+		this.roomId = roomId;
+		this.status = status;
+		this.smoking = smoking;
+		this.wifi = wifi;
+		this.checkOutDate = null;
+	}
+	
 	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking,boolean wifi) {
 		this.roomId = roomId;
 		this.roomType = roomType;
@@ -31,7 +40,26 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 		this.wifi = wifi;
 		this.checkOutDate = null;
 	}
-
+	
+	//Method to get room type
+	public  RoomType getRoomType() {
+		return null;
+	}
+	
+	//Method to get bed type
+	public  BedType getBedType() {
+		return null;
+	}
+	
+	//Method to change bed type
+	public void setBedType(BedType bedtype) {
+		this.bedType = bedtype;
+	}
+	//Method to change room type
+	public void setRoomType(RoomType Roomtype) {
+		this.roomType = Roomtype;
+	}
+	
 	//Method to get numGuest
 	public int getNumGuest() {return numAdult+numChild;}
 	
@@ -43,22 +71,16 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	//Method to get room id
 	public String getRoomId() {return roomId;}
 
-	//Method to get room type
-	public RoomType getRoomType() {return roomType;}
 
 	//Method to get room status
 	public RoomStatus getRoomStatus() {return status;}
 
-	//Method to get bed type
-	public BedType getBedType() {return bedType;}
 
 	//Method to check if room allows smoking
 	public boolean isSmoking() {return smoking;}
 
 	//Method to check if the room have wifi
 	public boolean isWifi() {return wifi;}
-	//Method to get the cost of the room
-	public int getCost() {return roomType.cost;}
 
 	//Method to get reservation id
 	public int getReserveId() {return reserveId;}
@@ -90,10 +112,7 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	//Method to check if room is under maintenance
 	public boolean isMaintenance() {return(this.getRoomStatus()==RoomStatus.MAINTENANCE);}
 
-	//Method to change bed type
-	public void setBedType(BedType bedtype) {
-		this.bedType = bedtype;
-	}
+
 
 	//Method to change smoking 
 	public void setSmoking(boolean b) {
@@ -135,7 +154,6 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	}
 
 	//method to print string 
-	@Override
 	public String toString() {
 		return("\nRoom ID: "+this.getRoomId()+
 				"\nGuest Id: "+this.getGuestId()+
@@ -146,37 +164,22 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 				"\nWIFI:"+this.isWifi();
 	}
 
-	public enum RoomType{
-		//Single room , cost = $100
-		SINGLE(100),
-		//Double room , cost = $150
-		DOUBLE(150),
-		//DELUXE room, cost = $200
-		DELUXE(200);
-
-		int cost;
-
-		RoomType(int cost){
-			this.cost = cost;
-		}
-	}
 
 	public enum RoomStatus{
 		//Room status: reserved, occupied, vacant, maintenance
 		RESERVED,OCCUPIED,VACANT,MAINTENANCE;
 
 	}
+	
 
-	public enum BedType{
-		//Bed type: King, Queen, DoubleSingle, Single
-		KING,QUEEN,DOUBLESINGLE,SINGLE;
-	}
 	
 	@Override
 	public int compareTo(RoomEntity o)
 	{
 		return this.roomId.compareTo(o.getRoomId());
 	}
+
+
 
 	
 }

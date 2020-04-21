@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.company.RoomEntity.RoomStatus;
-import com.company.RoomEntity.RoomType;
+import com.company.TypesOfRooms.RoomType;
 
 public class RoomReports {
 	

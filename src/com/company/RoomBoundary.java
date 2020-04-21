@@ -3,8 +3,8 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import com.company.RoomEntity.BedType;
-import com.company.RoomEntity.RoomType;
+import com.company.TypesOfRooms.BedType;
+import com.company.TypesOfRooms.RoomType;
 
 public class RoomBoundary extends Boundary
 {
