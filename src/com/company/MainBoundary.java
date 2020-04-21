@@ -19,7 +19,6 @@ public class MainBoundary extends Boundary
 						"Add / Manage Reservations",
 						"Check-in / Check-out Services",
 						"Room Services",
-						"Manage Guests",
 						"Room Overview",
 						"Schedule Overview",
 						"Administrative Control",
