@@ -8,10 +8,6 @@ import com.company.TypesOfRooms.RoomType;
 
 public class RoomFactory extends Controller{
 	private ArrayList<RoomEntity> roomList;
-	SingleRoom singleRoom;
-	DoubleRoomQueenBed doubleRoomQBed;
-	DoubleRoomSingleBeds doubleRoomSBeds;
-	DeluxeRoom deluxeRoom;
 	public RoomFactory() {
 		System.out.println("Default Rooms Created");
 		roomList = new ArrayList<RoomEntity>();
@@ -42,23 +38,23 @@ public class RoomFactory extends Controller{
 			{
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				singleRoom=new SingleRoom();	//create single room with single bed
-				addTolist(new RoomEntity(roomId,singleRoom.createRoom(),RoomStatus.VACANT,singleRoom.createBed(), smoking, wifi));
+					//create single room with single bed
+				addTolist(new RoomEntity(roomId,new SingleRoom(),RoomStatus.VACANT, smoking, wifi));
 				
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				doubleRoomQBed = new DoubleRoomQueenBed(); //Double room with queen size bed
-				addTolist(new RoomEntity(roomId,doubleRoomQBed.createRoom(),RoomStatus.VACANT,doubleRoomQBed.createBed(), smoking, wifi));
+				//Double room with queen size bed
+				addTolist(new RoomEntity(roomId,new DoubleRoomQueenBed(),RoomStatus.VACANT, smoking, wifi));
 				
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				deluxeRoom = new DeluxeRoom(); //deluxe room with king size bed
-				addTolist(new RoomEntity(roomId,deluxeRoom.createRoom(),RoomStatus.VACANT,deluxeRoom.createBed(), smoking, wifi));
+				 //deluxe room with king size bed
+				addTolist(new RoomEntity(roomId,new DeluxeRoom(),RoomStatus.VACANT, smoking, wifi));
 
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				doubleRoomSBeds = new DoubleRoomSingleBeds(); //Double Room with single bed
-				addTolist(new RoomEntity(roomId,doubleRoomSBeds.createRoom(),RoomStatus.VACANT,doubleRoomSBeds.createBed(), smoking, wifi));
+				 //Double Room with single bed
+				addTolist(new RoomEntity(roomId,new DoubleRoomSingleBeds(),RoomStatus.VACANT, smoking, wifi));
 			}
 			level += 1;
 			room = 0;

@@ -24,14 +24,27 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	private LocalDate checkOutDate;
 	protected RoomType roomType;
 	protected BedType bedType;
-	
+	TypesOfRooms typeOfRoom;
 
 	
+	//Manually Creates
 	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking,boolean wifi) {
 		this.roomId = roomId;
 		this.roomType = roomType;
 		this.status = status;
 		this.bedType = bedType;
+		this.smoking = smoking;
+		this.wifi = wifi;
+		this.checkOutDate = null;
+	}
+	
+	
+	//Create By dependency injection
+	public RoomEntity(String roomId,TypesOfRooms typeOfRoom,RoomStatus status,boolean smoking,boolean wifi) {
+		this.roomId = roomId;
+		this.roomType = typeOfRoom.createRoom();
+		this.status = status;
+		this.bedType = typeOfRoom.createBed();
 		this.smoking = smoking;
 		this.wifi = wifi;
 		this.checkOutDate = null;
