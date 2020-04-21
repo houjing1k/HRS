@@ -90,9 +90,17 @@ public class CheckInController extends Controller {
 	private boolean reserveCheckIn() {
 		// TODO Auto-generated method stub
 		int reserveId =checkInBoundary.getId();
-		ReservationEntity reservation = reservationController.getReservationById(reserveId);
-		LocalDate startDate = reservation.startDate;
-		LocalDate endDate = reservation.endDate;
+		ReservationEntity reservation = null;
+		LocalDate startDate = null;
+		LocalDate endDate = null;
+		try {
+			reservation = reservationController.getReservationById(reserveId);
+			startDate = reservation.startDate;
+			endDate = reservation.endDate;
+		}catch(Exception e) {
+			System.out.println("Reservation not found");
+			return true;
+		}
 		int numAdult = reservation.getNumOfAdults();
 		int numChild = reservation.getNumOfChildren();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
