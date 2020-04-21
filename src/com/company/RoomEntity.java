@@ -16,7 +16,8 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	private boolean wifi;
 	private int guestId;
 	private int reserveId;
-	private int numGuest = 0;
+	private int numAdult = 0;
+	private int numChild = 0;
 	private LocalDate checkInDate;
 	private LocalDate checkOutDate;
 
@@ -32,8 +33,13 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	}
 
 	//Method to get numGuest
-	public int getNumGuest() {return numGuest;}
+	public int getNumGuest() {return numAdult+numChild;}
 	
+	//Method to get numGuest
+	public int getNumAdult() {return numAdult;}
+	
+	//Method to get numGuest
+	public int getNumChild() {return numChild;}
 	//Method to get room id
 	public String getRoomId() {return roomId;}
 
@@ -100,12 +106,13 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	}
 
 	//Method to check in
-	public void checkIn(int guest, LocalDate checkInDate, LocalDate checkOutDate, int numGuest) {
+	public void checkIn(int guest, LocalDate checkInDate, LocalDate checkOutDate, int numAdult,int numChild) {
 		this.guestId = guest;
 		this.status = RoomStatus.OCCUPIED;
 		this.checkOutDate = checkOutDate;
 		this.checkInDate = checkInDate;
-		this.numGuest = numGuest;
+		this.numAdult = numAdult;
+		this.numChild = numChild;
 	}
 
 	//Method to reserve 

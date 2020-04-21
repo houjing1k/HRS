@@ -224,10 +224,10 @@ public class RoomController extends Controller
 		}
 	}
 
-	public void checkIn(int guestId, String roomId, LocalDate startDate, LocalDate endDate,int numGuest)
+	public void checkIn(int guestId, String roomId, LocalDate startDate, LocalDate endDate,int numAdult,int numChild)
 	{
 		// TODO Auto-generated method stub
-		this.getRoom(roomId).checkIn(guestId, startDate, endDate,numGuest);
+		this.getRoom(roomId).checkIn(guestId, startDate, endDate,numAdult,numChild);
 		saveFile();
 	}
 

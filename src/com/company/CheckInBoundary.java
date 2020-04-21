@@ -127,4 +127,22 @@ public class CheckInBoundary extends Boundary {
 			}
 		}
 	}
+
+	public int selectNumAdult() {
+		// TODO Auto-generated method stub
+		System.out.println("Maximun number of guest per room is 4");
+		System.out.println("Enter Number of Adult: ");
+		return(getInput(1, 4));
+	}
+	
+	public int selectNumChild(int numAdult) {
+		// TODO Auto-generated method stub
+		int i = 4 - numAdult;
+		if(i!=0) {
+		System.out.println(String.format("Enter Number of Child: (Max %d)", i));
+		return(getInput(0, i));
+		}else {
+			return 0;
+		}
+	}
 }

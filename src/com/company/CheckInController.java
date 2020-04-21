@@ -101,7 +101,7 @@ public class CheckInController extends Controller {
 		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
 			reservationController.checkInReservation(reserveId);
-			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
+			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,0,0);
 		}
 		else {
 			System.out.println("Reservation not found");
@@ -166,14 +166,18 @@ public class CheckInController extends Controller {
 		System.out.println("Check In Date : " +startDate.format(formatter));
 		endDate = checkInBoundary.getEndDate(startDate);
 		String roomId = selectRoom(startDate,endDate);
-		return checkIn(guestId,roomId,startDate,endDate);
+		int numAdult = checkInBoundary.selectNumAdult();
+		int numChild = checkInBoundary.selectNumChild(numAdult);
+		return checkIn(guestId,roomId,startDate,endDate,numAdult,numChild);
 	}
 	
-	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate) {
+	
+
+	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate, int numAdult,int numChild) {
 		try {
 			new PaymentController().createBillingAccount(roomId);
 			new PaymentController().addRoomToPaymentBill(roomId, startDate, endDate);
-			roomController.checkIn(guestId, roomId, startDate, endDate);
+			roomController.checkIn(guestId, roomId, startDate, endDate,numAdult,numChild);
 			System.out.println("Check in successful");
 			return false;
 		}catch(Exception e) {
