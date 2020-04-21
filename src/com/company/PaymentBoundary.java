@@ -72,11 +72,11 @@ public class PaymentBoundary extends Boundary{
             try {
                 temp= scan.next();
                 if(!temp.matches("\\d{4}")) {
-                	throw new Exception("Invalid Room ID. Format: xxxx");
+                	throw new Exception();
                 }
                 else return temp;
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.out.println("Invalid Room ID. Format: xxxx");
             }
         }
 	}
