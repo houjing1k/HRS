@@ -171,21 +171,6 @@ public class RoomController extends Controller
 		return null;
 	}
 
-	//Return the list based on smoking
-	@SuppressWarnings ("unchecked")
-	public <T> ArrayList<T> listRooms(boolean smoking)
-	{
-		ArrayList<T> list = new ArrayList<>();
-		for (RoomEntity room : roomList)
-		{
-			if (room.isSmoking() == smoking)
-			{
-				list.add((T) room);
-			}
-		}
-		return list;
-	}
-
 	private void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{
 		loadObject(id, roomType, status, bedType, smoking, wifi);
@@ -388,6 +373,9 @@ public class RoomController extends Controller
 				{
 					System.out.println("Room does not exist");
 				}
+				break;
+			case 9://Show number of guest in hotel
+				rb.printNumGuest(roomList);
 				break;
 			case 0: // 0 - Go Back
 				break;
