@@ -19,6 +19,7 @@ public class AdminBoundary extends Boundary
 						"Manage Rooms",
 						"Manage Guests",
 						"Print Occupancy Reports",
+						"Print Bill",
 						"Modify Hotel Charges",
 						"Generate Financial Report"
 				};

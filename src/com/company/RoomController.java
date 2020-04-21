@@ -357,6 +357,7 @@ public class RoomController extends Controller
 				{
 					System.out.println("Room does not exist");
 				}
+				break;
 			case 8://8 - Find room by guest
 				int guest = new GuestController().searchGuest_Hybrid().getGuestID();
 				try
@@ -367,6 +368,7 @@ public class RoomController extends Controller
 				{
 					System.out.println("Room does not exist");
 				}
+				break;
 			case 0: // 0 - Go Back
 				break;
 
