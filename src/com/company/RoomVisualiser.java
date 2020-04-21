@@ -302,7 +302,7 @@ public class RoomVisualiser
 					color = rvb.ANSI_CYAN;
 				else if (roomStatus == RoomEntity.RoomStatus.MAINTENANCE)
 					color = rvb.ANSI_PURPLE;*/
-				str = design[7] + centrePadding(roomStatus.toString(), ' ', width) + +design[7];
+				str = design[7] + centrePadding(roomStatus.toString(), ' ', width) + design[7];
 				break;
 
 			case 2:
