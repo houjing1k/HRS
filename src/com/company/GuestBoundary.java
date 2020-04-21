@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class GuestBoundary extends Boundary
 {
 	private Scanner sc;
-	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.","Card Details"};
+	private String[] list = {"Name", "Address", "Country", "Gender", "Identity No.", "Nationality", "Contact No.", "Card Details"};
 
 	public GuestBoundary()
 	{
@@ -69,20 +69,80 @@ public class GuestBoundary extends Boundary
 
 	public String searchGuest()
 	{
-		sc = new Scanner(System.in);
+/*		sc = new Scanner(System.in);
 		String name;
 		System.out.println("Enter Name (Keyword): ");
 		name = sc.nextLine();
+		return name;*/
+
+		String name;
+		while (true)
+		{
+			sc = new Scanner(System.in);
+			try
+			{
+				System.out.println("Enter Guest Name (Keyword): ");
+				name = sc.nextLine();
+				if (!checkName(name))
+					throw new Exception();
+				else
+					break;
+			} catch (Exception e)
+			{
+			}
+		}
 		return name;
 	}
 
 	public int searchGuestID()
 	{
-		sc = new Scanner(System.in);
 		int id;
-		System.out.println("Enter Guest ID: ");
-		id = sc.nextInt();
+		while (true)
+		{
+			sc = new Scanner(System.in);
+			try
+			{
+				System.out.println("Enter Guest ID: (-1 to Exit Search) ");
+				id = sc.nextInt();
+				break;
+			} catch (Exception e)
+			{
+				invalidInputWarning();
+			}
+		}
 		return id;
+	}
+
+	public boolean addGuestPrompt()
+	{
+		sc = new Scanner(System.in);
+		String choice;
+
+		while (true)
+		{
+			try
+			{
+				System.out.println("Do you wish to add a new guest? (Y / N):");
+				choice = sc.next();
+
+				if (choice.equals("Y") || choice.equals("y"))
+				{
+					return true;
+				}
+				else if (choice.equals("N") || choice.equals("n"))
+				{
+					System.out.println("No changes made.");
+					return false;
+				}
+				else
+				{
+					throw new Exception();
+				}
+			} catch (Exception e)
+			{
+				System.out.println("Invalid Input.");
+			}
+		}
 	}
 
 	public int updateGuest()

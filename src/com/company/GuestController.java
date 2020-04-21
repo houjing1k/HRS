@@ -47,11 +47,19 @@ public class GuestController extends Controller
 					break;
 				case 5:
 					//Search Guest by ID
-					printGuest(searchGuest(gb.searchGuestID()));
+					int id = gb.searchGuestID();
+					if (id != -1)
+					{
+						printGuest(searchGuest(id));
+					}
 					break;
 				case 6:
 					//Print All Guests
 					printAllGuest();
+					break;
+				case 7:
+					//Print All Guests
+					searchGuest_Hybrid();
 					break;
 				case 0:
 					return;
@@ -183,7 +191,14 @@ public class GuestController extends Controller
 		printGuestList(temp);
 		if (temp.size() == 0)
 		{
-			return null;
+			if (gb.addGuestPrompt())
+			{
+				result = searchGuest(addGuest());
+				printGuest(result);
+				return result;
+			}
+			else
+				return null;
 		}
 		/*else if (temp.size() == 1)
 		{
@@ -191,10 +206,15 @@ public class GuestController extends Controller
 		}*/
 		else
 		{
+			int id = gb.searchGuestID();
+			if (id == -1)
+			{
+				return null;
+			}
 			result = searchGuest(gb.searchGuestID());
 			printGuest(result);
+			return result;
 		}
-		return result;
 	}
 
 
