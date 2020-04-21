@@ -399,7 +399,7 @@ public class ReservationController extends Controller {
                             reservationEntity.setNumOfChildren(numberOfChildren);
                             reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
                             saveReservationsToFile();
-                            System.out.println("Your start date has been successfully changed");
+                            System.out.println("Number of guests has been successfully changed");
                             break;
                         case 4:
                             int numberOfAdults;
@@ -419,7 +419,7 @@ public class ReservationController extends Controller {
                             reservationEntity.setNumOfAdults(numberOfAdults);
                             reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
                             saveReservationsToFile();
-                            System.out.println("Your start date has been successfully changed");
+                            System.out.println("Number of guests has been successfully changed");
                             break;
                         case 5:
                             roomEntities = RoomController.getInstance().filterRooms(2);
@@ -435,7 +435,7 @@ public class ReservationController extends Controller {
                                 System.out.println("Sorry there are no rooms that suit your reservation requirements");
                             }
                             else {
-                                RoomVisualiser.showList(roomEntities);
+                                //RoomVisualiser.showList(roomEntities);
                                 String selectedRoomId = reservationBoundary.selectRoom(roomEntities);
                                 int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
                                 reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, reservationEntity.getGuestId(), ReservationEntity.ReservationState.CONFIRMED,reservationEntity.getNumOfAdults(),reservationEntity.getNumOfChildren()));
