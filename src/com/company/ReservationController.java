@@ -1,5 +1,6 @@
 package com.company;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -43,7 +44,17 @@ public class ReservationController extends Controller {
         String decision;
         LocalDate startDate,endDate;
         GuestEntity guestEntity=null;
+        String selectedRoomId = "";
+        ArrayList<RoomEntity> filteredRooms = null;
+        ArrayList<String> waitListIds = new ArrayList<>();
+        ArrayList<String> filteredRoomIDs = new ArrayList<>();
+        int numOfAdults,numOfChildren;
+        numOfAdults = numOfChildren = -1;
+        boolean waitListDecision;
+        boolean reserved = false;
         int guestId = -1;
+        String tempString;
+        startDate = endDate = null;
         //boolean loop = true;
         do {
             do {
@@ -60,16 +71,24 @@ public class ReservationController extends Controller {
         }while(guestEntity == null && guestId == -1);
         if(guestEntity != null)
             guestId = guestEntity.getGuestID();
-        String tempString;
-        startDate = endDate = null;
+        System.out.println("Key in the number of adults");
+        do{
+            numOfAdults = scan.nextInt();
+            if(numOfAdults <= 0) System.out.println("Please key in a valid number of adults");
+        }while (numOfAdults <= 0);
+        System.out.println("Key in the number of children");
+        do{
+            numOfChildren = scan.nextInt();
+            if(numOfChildren <= 0) System.out.println("Please key in a valid number of children");
+        }while (numOfChildren <= 0);
         System.out.println("Please type the start date(dd/mm/yyyy):");
         while (startDate == null){
             try {
             	tempString = scan.next();
             	startDate = LocalDate.parse(tempString, dateFormat);
-            	
-                if(startDate.isBefore(LocalDate.now().plusDays(1))) 
-                {   
+
+                if(startDate.isBefore(LocalDate.now().plusDays(1)))
+                {
                     System.out.println("Please key in a date after today(dd/mm/yyyy):");
                     startDate = null;
                 }
@@ -101,37 +120,85 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        //String roomId = RoomController.getInstance().
-        //ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
-        ArrayList<RoomEntity> roomEntities = RoomController.getInstance().filterRooms(2);
-        ArrayList<String> tempRoomIDs = new ArrayList<>();
-        for (RoomEntity roomEntity: roomEntities)
-        {
-            tempRoomIDs.add(roomEntity.getRoomId());
-        }
-        //String[]  = {"02-01","02-02"};
-        boolean waitListDecision;
-        boolean reserved = false;
-        for (String tempRoomID : tempRoomIDs) {
-            if (isRoomAvailable(tempRoomID, startDate, endDate)) {
-                reservations.add(new ReservationEntity(startDate, endDate, tempRoomID, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
-                saveReservationsToFile();
-                reservationBoundary.printRoomHasBeenReserved(tempRoomID,newReservationId);
-                reserved = true;
-                break;
+        do {
+            filteredRooms = RoomController.getInstance().filterRooms(2);
+            if(filteredRooms.size()==0)
+            {
+                do {
+                    System.out.println("Would you like to select a new room filter?(Y/N)");
+                    decision = scan.next();
+                    decision = decision.toUpperCase();
+                } while (!decision.equals("Y") && !decision.equals("N"));
+                if(decision.equals("Y"))
+                    filteredRooms = null;
+                else
+                    return;
             }
+        }while (filteredRooms == null);
+        for (RoomEntity roomEntity: filteredRooms)
+        {
+            waitListIds.add(roomEntity.getRoomId());
         }
-        if(!reserved)
+        filteredRooms = filterReservedRooms(filteredRooms,startDate,endDate);
+        final LocalDate finalStartDate,finalEndDate;
+        finalEndDate = endDate;
+        finalStartDate = startDate;
+        filteredRooms.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),finalStartDate,finalEndDate));
+        System.out.println(filteredRooms.size());
+        if(filteredRooms.size()==0)
         {
             waitListDecision = reservationBoundary.printNoAvailableRooms();
             if(waitListDecision)
             {
-                reservations.add(new ReservationEntity(startDate, endDate, newReservationId, guestId, ReservationEntity.ReservationState.WAITLISTED,tempRoomIDs));
+                reservations.add(new ReservationEntity(startDate, endDate, newReservationId, guestId, ReservationEntity.ReservationState.WAITLISTED,waitListIds,numOfAdults,numOfChildren));
                 saveReservationsToFile();
             }
+            return;
         }
+        for (RoomEntity roomEntity: filteredRooms)
+        {
+            filteredRoomIDs.add(roomEntity.getRoomId());
+        }
+        do {
+            RoomVisualiser.showList(filteredRooms);
+            selectedRoomId = scan.next();
+            boolean invalidId = true;
+            for(String filteredRoomID:filteredRoomIDs)
+            {
+                if (filteredRoomID.equals(selectedRoomId)) {
+                    invalidId = false;
+                    break;
+                }
+            }
+            if(invalidId)
+            {
+                selectedRoomId = "";
+                System.out.println("Sorry the ID you keyed in is not valid");
+            }
+        }while (selectedRoomId.equals(""));
+        //String[]  = {"02-01","02-02"};
+        reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED,numOfAdults,numOfChildren));
+        saveReservationsToFile();
+        reservationBoundary.printRoomHasBeenReserved(getReservationById(newReservationId));
 
     }
+
+    public ArrayList<RoomEntity> filterReservedRooms(ArrayList<RoomEntity> roomEntities, LocalDate startDateRequest, LocalDate endDateRequest)
+    {
+        loadReservationsFromFile();
+        for(ReservationEntity reservation: reservations)
+        {
+            roomEntities.removeIf(roomEntity -> reservation.getRoomId().equals(roomEntity.getRoomId()) &&
+                    (reservation.getStartDate().isBefore(endDateRequest) ||
+                            reservation.getStartDate().equals(endDateRequest)) &&
+                    (startDateRequest.isBefore(reservation.getEndDate()) //||
+                            //startDateRequest.equals(reservation.getEndDate())
+                    )
+                    && reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED);
+        }
+        return roomEntities;
+    }
+
 
     public void waitListUpdate(String roomId)
     {

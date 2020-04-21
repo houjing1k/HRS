@@ -16,9 +16,9 @@ public class ReservationEntity implements Serializable {
     LocalDate startDate, endDate;
     String roomId;
     ArrayList<String> waitListRoomIds;
-    int reservationId, guestId;
+    int reservationId, guestId, numOfAdults, numOfChildren;
     ReservationState reservationState;
-    ReservationEntity(LocalDate startDate,LocalDate endDate,int reservationId, int guestId,ReservationState reservationState,ArrayList<String> waitListRoomIds)
+    ReservationEntity(LocalDate startDate,LocalDate endDate,int reservationId, int guestId,ReservationState reservationState,ArrayList<String> waitListRoomIds,int numOfAdults,int numOfChildren)
     {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -27,8 +27,10 @@ public class ReservationEntity implements Serializable {
         this.guestId = guestId;
         this.reservationState = reservationState;
         this.waitListRoomIds = waitListRoomIds;
+        this.numOfAdults = numOfAdults;
+        this.numOfChildren = numOfChildren;
     }
-    ReservationEntity(LocalDate startDate,LocalDate endDate,String roomId,int reservationId, int guestId,ReservationState reservationState)
+    ReservationEntity(LocalDate startDate,LocalDate endDate,String roomId,int reservationId, int guestId,ReservationState reservationState,int numOfAdults,int numOfChildren)
     {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -37,6 +39,8 @@ public class ReservationEntity implements Serializable {
         this.guestId = guestId;
         this.reservationState = reservationState;
         this.waitListRoomIds = null;
+        this.numOfAdults = numOfAdults;
+        this.numOfChildren = numOfChildren;
     }
     @Override
     public String toString() {
@@ -88,6 +92,14 @@ public class ReservationEntity implements Serializable {
 
     public String getRoomId() {
         return roomId;
+    }
+
+    public int getNumOfAdults() {
+        return numOfAdults;
+    }
+
+    public int getNumOfChildren() {
+        return numOfChildren;
     }
 
     public ReservationState getReservationState() {
