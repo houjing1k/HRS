@@ -84,11 +84,29 @@ public class ReservationBoundary extends Boundary {
         return decision.equals("Y");
     }
 
-    public void printRoomHasBeenReserved(String roomID, int reserveId)
+    public void printRoomHasBeenReserved(ReservationEntity reservationEntity)
     {
         printDivider();
-        System.out.println(String.format("The room %s has been reserved",roomID));
-        System.out.println(String.format("your reservation Id is: %d",reserveId));
+        //System.out.println(String.format("The room %s has been reserved",roomID));
+        //System.out.println(String.format("your reservation Id is: %d",reserveId));
+        System.out.println(String.format("[Reservation ID]: %d \n" +
+                        "Guest Name: %s \n" +
+                        "Number of adults: %d \n" +
+                        "Number of children: %d \n" +
+                        "Room Number: %s \n" +
+                        "Start Date: %s \n" +
+                        "End Date: %s\n" +
+                        "Reservation State: %s",
+                reservationEntity.getReservationId(),
+                new GuestController().searchGuest(reservationEntity.getGuestId()).getName(),
+                reservationEntity.getNumOfAdults(),
+                reservationEntity.getNumOfChildren(),
+                reservationEntity.getRoomId(),
+                reservationEntity.getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                reservationEntity.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                reservationEntity.getReservationState()
+        ));
+        printDivider();
     }
 
     public void requestRoomRequirements()

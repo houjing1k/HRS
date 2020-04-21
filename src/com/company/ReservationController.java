@@ -48,9 +48,13 @@ public class ReservationController extends Controller {
         ArrayList<RoomEntity> filteredRooms = null;
         ArrayList<String> waitListIds = new ArrayList<>();
         ArrayList<String> filteredRoomIDs = new ArrayList<>();
+        int numOfAdults,numOfChildren;
+        numOfAdults = numOfChildren = -1;
         boolean waitListDecision;
         boolean reserved = false;
         int guestId = -1;
+        String tempString;
+        startDate = endDate = null;
         //boolean loop = true;
         do {
             do {
@@ -67,8 +71,16 @@ public class ReservationController extends Controller {
         }while(guestEntity == null && guestId == -1);
         if(guestEntity != null)
             guestId = guestEntity.getGuestID();
-        String tempString;
-        startDate = endDate = null;
+        System.out.println("Key in the number of adults");
+        do{
+            numOfAdults = scan.nextInt();
+            if(numOfAdults <= 0) System.out.println("Please key in a valid number of adults");
+        }while (numOfAdults <= 0);
+        System.out.println("Key in the number of children");
+        do{
+            numOfChildren = scan.nextInt();
+            if(numOfChildren <= 0) System.out.println("Please key in a valid number of children");
+        }while (numOfChildren <= 0);
         System.out.println("Please type the start date(dd/mm/yyyy):");
         while (startDate == null){
             try {
@@ -108,8 +120,6 @@ public class ReservationController extends Controller {
             }
         }
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
-        //String roomId = RoomController.getInstance().
-        //ArrayList<RoomEntity> roomEntities = RoomController.getInstance().listRooms( RoomEntity.RoomStatus.VACANT,RoomEntity.RoomType.SINGLE, RoomEntity.BedType.SINGLE,true);
         do {
             filteredRooms = RoomController.getInstance().filterRooms(2);
             if(filteredRooms.size()==0)
@@ -130,13 +140,17 @@ public class ReservationController extends Controller {
             waitListIds.add(roomEntity.getRoomId());
         }
         filteredRooms = filterReservedRooms(filteredRooms,startDate,endDate);
+        final LocalDate finalStartDate,finalEndDate;
+        finalEndDate = endDate;
+        finalStartDate = startDate;
+        filteredRooms.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),finalStartDate,finalEndDate));
         System.out.println(filteredRooms.size());
         if(filteredRooms.size()==0)
         {
             waitListDecision = reservationBoundary.printNoAvailableRooms();
             if(waitListDecision)
             {
-                reservations.add(new ReservationEntity(startDate, endDate, newReservationId, guestId, ReservationEntity.ReservationState.WAITLISTED,waitListIds));
+                reservations.add(new ReservationEntity(startDate, endDate, newReservationId, guestId, ReservationEntity.ReservationState.WAITLISTED,waitListIds,numOfAdults,numOfChildren));
                 saveReservationsToFile();
             }
             return;
@@ -163,9 +177,9 @@ public class ReservationController extends Controller {
             }
         }while (selectedRoomId.equals(""));
         //String[]  = {"02-01","02-02"};
-        reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED));
+        reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED,numOfAdults,numOfChildren));
         saveReservationsToFile();
-        reservationBoundary.printRoomHasBeenReserved(selectedRoomId,newReservationId);
+        reservationBoundary.printRoomHasBeenReserved(getReservationById(newReservationId));
 
     }
 
@@ -184,6 +198,7 @@ public class ReservationController extends Controller {
         }
         return roomEntities;
     }
+
 
     public void waitListUpdate(String roomId)
     {
