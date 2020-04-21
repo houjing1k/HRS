@@ -287,6 +287,20 @@ public class RoomController extends Controller
 			System.out.println("Room does not exist");
 		}
 	}
+	
+	public boolean isRoomAvailable(String roomId, LocalDate startDateRequest, LocalDate endDateRequest)
+    {
+        for (RoomEntity room : roomList) {
+            //to check if the reservation has any clashes
+        	if(room.getRoomId().equals(roomId)&&room.getRoomStatus()!=RoomStatus.VACANT&&
+        			(room.getCheckInDate().isBefore(endDateRequest)||
+        					room.getCheckInDate().equals(endDateRequest))&&
+        			startDateRequest.isBefore(room.getCheckOutDate())) {
+        		return false;
+        	}
+        }
+        return true;
+    }
 
 	@Override
 	public void processMain()
@@ -359,7 +373,13 @@ public class RoomController extends Controller
 				}
 				break;
 			case 8://8 - Find room by guest
-				int guest = new GuestController().searchGuest_Hybrid().getGuestID();
+				int guest;
+				try {
+					guest = new GuestController().searchGuest_Hybrid().getGuestID();
+				}catch(Exception e) {
+					System.out.println("Guest does not exist");
+					break;
+				}
 				try
 				{
 					roomId = getRoom(guest).getRoomId();
