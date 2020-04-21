@@ -33,8 +33,6 @@ public class RoomController extends Controller
 		rb = new RoomBoundary();
 	}
 
-
-
 	public static RoomController getInstance()
 	{
 
@@ -44,8 +42,6 @@ public class RoomController extends Controller
 		}
 		return instance;
 	}
-
-
 
 	//Return the list based on room type
 	@SuppressWarnings ("unchecked")
@@ -61,7 +57,6 @@ public class RoomController extends Controller
 		}
 		return list;
 	}
-
 
 	//Return the list based on room status
 	@SuppressWarnings ("unchecked")
@@ -129,8 +124,6 @@ public class RoomController extends Controller
 		}
 		return null;
 	}
-
-
 
 	private void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{

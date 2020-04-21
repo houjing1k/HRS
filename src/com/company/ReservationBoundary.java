@@ -162,38 +162,6 @@ public class ReservationBoundary extends RoomIOBoundary {
         printDivider();
     }
 
-    public void requestRoomRequirements()
-    {
-        boolean invalidDecision = false;
-        TypesOfRooms.RoomType roomType ;
-        int temp;
-        printDivider();
-        do {
-            invalidDecision = false;
-            System.out.println("Please type the room type you would like(single/double/duluxe)");
-            temp = scan.nextInt();
-            //  this.
-            switch(this.process())
-            {
-                case 1:
-                    roomType = TypesOfRooms.RoomType.SINGLE;
-                    break;
-                case 2:
-                    roomType = TypesOfRooms.RoomType.DOUBLE;
-                    break;
-                case 3:
-                    roomType = TypesOfRooms.RoomType.DELUXE;
-                    break;
-                default:
-                    invalidDecision = true;
-                    System.out.println("Invalid Input");
-
-            }
-        }while (invalidDecision);
-
-
-    }
-
     public int getReservation(ArrayList<ReservationEntity> arrayList, int guestId,String guestName)
     {
         printMainTitle("Reservations for "+guestName);
@@ -219,6 +187,5 @@ public class ReservationBoundary extends RoomIOBoundary {
             }
             return arrayList.size();
     }
-
 
 }

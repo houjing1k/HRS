@@ -1,13 +1,11 @@
 package com.company;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.company.ReservationEntity.ReservationState;
 import com.company.RoomEntity.RoomStatus;
-import com.company.TypesOfRooms.RoomType;
 
 public class CheckInController extends Controller {
 	private static CheckInController instance = null;
@@ -28,16 +26,6 @@ public class CheckInController extends Controller {
 			"New Guest",
 			"Existing Guest"
 	};
-	
-	private String [] menuGuestId = {
-			"Enter Guest Id:"
-	};
-	
-	private String [] menuRoomType = {
-            "1. Single room",
-            "2. Double room",
-            "3. Deluxe room"
-    };	
 	
 	private CheckInController() {
 		checkInBoundary = new CheckInBoundary();
@@ -133,7 +121,6 @@ public class CheckInController extends Controller {
 			System.out.println("Invalid room Id");
 			return true;
 		}
-		int guestID=room.getGuestId();
 		//get the paymentDetail from guest. 
 		GuestEntity guest = guestController.searchGuest(room.getGuestId());
 		new PaymentController().makePaymentMenu(roomId,guest.getPaymentDetail());
@@ -181,8 +168,6 @@ public class CheckInController extends Controller {
 		return checkIn(guestId,roomId,startDate,endDate,numAdult,numChild);
 	}
 	
-	
-
 	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate, int numAdult,int numChild) {
 		try {
 			new PaymentController().createBillingAccount(roomId);

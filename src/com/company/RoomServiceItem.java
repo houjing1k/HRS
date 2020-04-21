@@ -14,9 +14,6 @@ import java.math.BigDecimal;
 
 enum StockStatus { IN_STOCK, OUT_OF_STOCK };
 
-
-
-
 class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	
 	/**

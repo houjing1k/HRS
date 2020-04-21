@@ -6,7 +6,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -24,6 +23,7 @@ public class PaymentController extends Controller
 	String billingAccountsFile = "./data/billingAccount.ser";
 	String chargesRateFile = "./data/charges.ser";   // index 0 : gst , index 1: service charge
 
+	@SuppressWarnings("unchecked")
 	public PaymentController()
 	{
 		billingAccountList = (ArrayList<PaymentBill>) fromFile(billingAccountsFile);
@@ -37,13 +37,11 @@ public class PaymentController extends Controller
 		setCharges(chargesList);
 	}
 
-
 	@Override
 	public void processMain()
 	{
 
 	}
-
 
 	//Modify Rate of different Charges
 	public void modifyChargesMenu()
@@ -150,7 +148,6 @@ public class PaymentController extends Controller
 		pb.waitInput();
 	}
 
-
 	//Create payment account when checked in
 	public void createBillingAccount(String roomID)
 	{
@@ -166,7 +163,6 @@ public class PaymentController extends Controller
 		saveBillsToFile();
 	}
 
-
 	// Remove Payment Account
 	public void removebillingAccount(String roomID)
 	{
@@ -180,7 +176,6 @@ public class PaymentController extends Controller
 		addToRecord(bill);
 		billingAccountList.remove(bill);
 	}
-
 
 	//Save the paid bills to record
 	void addToRecord(PaymentBill bill)
@@ -304,7 +299,6 @@ public class PaymentController extends Controller
 		pb.printDivider();
 	}
 
-
 	//calculate the total of PaymentBill
 	public double calculatePaymentBill(PaymentBill paymentBill)
 	{
@@ -320,8 +314,6 @@ public class PaymentController extends Controller
 		return Double.valueOf(String.format("%.2f", sum));
 	}
 
-
-	
 	//load GST,service charges and room charges
 	public void setCharges(ArrayList<Double> charges)
 	{
@@ -361,8 +353,6 @@ public class PaymentController extends Controller
 		chargesList.set(choice, charge);  //set and save new room charge to file 
 		saveChargesToFile();
 	}
-	
-	
 	
 	//Change serviceCharge
 	public void setServiceCharge()
@@ -423,7 +413,6 @@ public class PaymentController extends Controller
 
 	}
 
-
 	//store the billingAccountList to file
 	private void saveBillsToFile()
 	{
@@ -442,6 +431,5 @@ public class PaymentController extends Controller
 		toFile(paymentRecords, paymentRecordsFile);
 
 	}
-
 
 }

@@ -3,16 +3,15 @@ package com.company;
 import java.util.ArrayList;
 
 import com.company.RoomEntity.RoomStatus;
-import com.company.TypesOfRooms.BedType;
-import com.company.TypesOfRooms.RoomType;
 
 public class RoomFactory extends Controller{
+	
 	private ArrayList<RoomEntity> roomList;
+	
 	public RoomFactory() {
 		System.out.println("Default Rooms Created");
 		roomList = new ArrayList<RoomEntity>();
 		processMain();   //Create Room
-	
 	}
 	
 	public ArrayList<RoomEntity> getRoomList(){
@@ -33,7 +32,6 @@ public class RoomFactory extends Controller{
 			if(level>6) {
 				wifi = false;
 			}
-			int x = 0;
 			for (int i = 0; i < 2; i++)
 			{
 				room += 1;
@@ -62,8 +60,6 @@ public class RoomFactory extends Controller{
 		}
 	}
 	
-	
-
 	//Load object into the array list
 	private void addTolist(RoomEntity rm)
 	{	
@@ -71,7 +67,5 @@ public class RoomFactory extends Controller{
 		roomList.sort(null);
 
 	}
-
-
 
 }

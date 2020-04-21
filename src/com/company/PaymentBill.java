@@ -1,7 +1,6 @@
 package com.company;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -35,7 +34,6 @@ public class PaymentBill implements Serializable{
 		transactionList.add(item);
 	}
 		
-
 	//return all the transaction of the PaymentBills
 	public ArrayList<Transaction> getTransactions() {
 		return transactionList;
@@ -95,6 +93,7 @@ public class PaymentBill implements Serializable{
 	static public double getGST() {
 		return GST;
 	}
+	
 	//setGST
 	static void setGST(double gst) {
 		GST=gst;
@@ -104,6 +103,7 @@ public class PaymentBill implements Serializable{
 	static public double getServiceCharge() {
 		return serviceCharge;
 	}
+	
 	//set Service Charge
 	static void setServiceCharge(double charge) {
 		serviceCharge=charge;

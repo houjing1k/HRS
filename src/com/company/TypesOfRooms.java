@@ -1,8 +1,5 @@
 package com.company;
 
-import com.company.TypesOfRooms.BedType;
-import com.company.TypesOfRooms.RoomType;
-
 public interface TypesOfRooms {
 	/**
 	 *
@@ -20,13 +17,9 @@ public interface TypesOfRooms {
 			DOUBLE,
 			//DELUXE room
 			DELUXE;
-
 	}
 
 	public RoomType createRoom();
+	
 	public BedType createBed() ;
-	
-
-
-	
 }

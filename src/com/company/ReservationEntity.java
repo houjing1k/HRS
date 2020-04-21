@@ -3,10 +3,14 @@ package com.company;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ReservationEntity implements Serializable {
-    enum ReservationState{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8730357897085311235L;
+
+	enum ReservationState{
         CONFIRMED,
         CHECKED_IN,
         WAITLISTED,

@@ -1,9 +1,5 @@
 package com.company;
 
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -28,7 +24,7 @@ public class PaymentBoundary extends Boundary{
 		System.out.println();
 	}
   
-       protected void modifyChargesMenu()
+    protected void modifyChargesMenu()
    	{
    		printMainTitle("Modify charges");
    		String[] menuList =
@@ -42,7 +38,7 @@ public class PaymentBoundary extends Boundary{
    		System.out.println();
    	}
        
-       protected void makePaymentMenu()
+    protected void makePaymentMenu()
    	{
 	    System.out.println();
    		printMainTitle("Payment");
@@ -54,9 +50,7 @@ public class PaymentBoundary extends Boundary{
    		printMenuList(menuList);
    		System.out.println();
    	}
- 
-       
-	
+    
 	protected void invalidBillingAccount()
 	{
 		System.out.println("Bill does not exist!");
@@ -127,7 +121,5 @@ public class PaymentBoundary extends Boundary{
             }
         }
     }
-
-    
 
 }

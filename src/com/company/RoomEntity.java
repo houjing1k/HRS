@@ -26,7 +26,6 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	protected BedType bedType;
 	TypesOfRooms typeOfRoom;
 
-	
 	//Manually Creates
 	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking,boolean wifi) {
 		this.roomId = roomId;
@@ -37,7 +36,6 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 		this.wifi = wifi;
 		this.checkOutDate = null;
 	}
-	
 	
 	//Create By dependency injection
 	public RoomEntity(String roomId,TypesOfRooms typeOfRoom,RoomStatus status,boolean smoking,boolean wifi) {
@@ -65,6 +63,7 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	public void setBedType(BedType bedtype) {
 		this.bedType = bedtype;
 	}
+	
 	//Method to change room type
 	public void setRoomType(RoomType Roomtype) {
 		this.roomType = Roomtype;
@@ -81,10 +80,8 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	//Method to get room id
 	public String getRoomId() {return roomId;}
 
-
 	//Method to get room status
 	public RoomStatus getRoomStatus() {return status;}
-
 
 	//Method to check if room allows smoking
 	public boolean isSmoking() {return smoking;}
@@ -121,8 +118,6 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 
 	//Method to check if room is under maintenance
 	public boolean isMaintenance() {return(this.getRoomStatus()==RoomStatus.MAINTENANCE);}
-
-
 
 	//Method to change smoking 
 	public void setSmoking(boolean b) {
@@ -174,22 +169,16 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 				"\nWIFI:"+this.isWifi();
 	}
 
-
 	public enum RoomStatus{
 		//Room status: reserved, occupied, vacant, maintenance
 		RESERVED,OCCUPIED,VACANT,MAINTENANCE;
 
 	}
 	
-
-	
 	@Override
 	public int compareTo(RoomEntity o)
 	{
 		return this.roomId.compareTo(o.getRoomId());
 	}
-
-
-
 	
 }

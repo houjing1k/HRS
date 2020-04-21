@@ -34,7 +34,6 @@ public class RoomBoundary extends Boundary
 		System.out.println();
 	}
 
-
 	protected void filterRoom(boolean[] filter, boolean mode)
 	{
 		char check = getDesign()[8];
