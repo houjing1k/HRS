@@ -160,7 +160,7 @@ public class RoomController extends Controller
 		replaceFile(roomList, roomFile);
 	}
 
-	public void roomMaintenace(String roomId)
+	public void roomMaintenance(String roomId)
 	{
 		try
 		{
@@ -287,7 +287,7 @@ public class RoomController extends Controller
 				System.out.println("Set Maintenance");
 				b = rb.getBooleanInput();
 				if(b) {
-					this.roomMaintenace(roomId);
+					this.roomMaintenance(roomId);
 					System.out.println(roomId + " is under maintenance");
 				}else {
 					this.checkOut(roomId);

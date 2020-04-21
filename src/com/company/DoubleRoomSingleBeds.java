@@ -1,16 +1,22 @@
 package com.company;
 
-public class DoubleRoomSingleBeds  implements TypesOfRooms{
+import java.io.Serializable;
 
-	public DoubleRoomSingleBeds() {
+public class DoubleRoomSingleBeds implements TypesOfRooms, Serializable
+{
 
-		}
+	public DoubleRoomSingleBeds()
+	{
 
-	public RoomType createRoom() {
+	}
+
+	public RoomType createRoom()
+	{
 		return RoomType.DOUBLE;
 	}
-	
-	public BedType createBed() {
+
+	public BedType createBed()
+	{
 		return BedType.DOUBLESINGLE;
 	}
 }

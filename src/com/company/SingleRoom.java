@@ -1,17 +1,23 @@
 package com.company;
 
 
-public class SingleRoom implements TypesOfRooms {
+import java.io.Serializable;
 
-	public SingleRoom() {
-				// TODO Auto-generated constructor stub
+public class SingleRoom implements TypesOfRooms, Serializable
+{
+
+	public SingleRoom()
+	{
+		// TODO Auto-generated constructor stub
 	}
-	
-	public RoomType createRoom() {
+
+	public RoomType createRoom()
+	{
 		return RoomType.SINGLE;
 	}
-	
-	public BedType createBed() {
+
+	public BedType createBed()
+	{
 		return BedType.SINGLE;
 	}
 }

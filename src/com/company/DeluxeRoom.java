@@ -1,17 +1,23 @@
 package com.company;
 
 
-public class DeluxeRoom implements TypesOfRooms {
-	
-	public DeluxeRoom() {
-		
-		}
+import java.io.Serializable;
 
-	public RoomType createRoom() {
+public class DeluxeRoom implements TypesOfRooms, Serializable
+{
+
+	public DeluxeRoom()
+	{
+
+	}
+
+	public RoomType createRoom()
+	{
 		return RoomType.DELUXE;
 	}
-	
-	public BedType createBed() {
+
+	public BedType createBed()
+	{
 		return BedType.KING;
 	}
 }
