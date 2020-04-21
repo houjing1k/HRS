@@ -17,6 +17,7 @@ public class AdminBoundary extends Boundary
 		String[] menuList =
 				{
 						"Manage Rooms",
+						"Manage Guests",
 						"Print Occupancy Reports",
 						"Modify Hotel Charges",
 						"Generate Financial Report"
