@@ -94,14 +94,14 @@ public class CheckInController extends Controller {
 		LocalDate startDate = reservation.startDate;
 		LocalDate endDate = reservation.endDate;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		if(startDate.compareTo(LocalDate.now())!=0) {
+		if(startDate.compareTo(LocalDate.now())!=0&&reservation.reservationState==ReservationState.CONFIRMED) {
 			System.out.println("Your reservation is for "+startDate.format(formatter));
 			return true;
 		}
 		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
 			reservationController.checkInReservation(reserveId);
-			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
+			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,0,0);
 		}
 		else {
 			System.out.println("Reservation not found");
@@ -166,14 +166,18 @@ public class CheckInController extends Controller {
 		System.out.println("Check In Date : " +startDate.format(formatter));
 		endDate = checkInBoundary.getEndDate(startDate);
 		String roomId = selectRoom(startDate,endDate);
-		return checkIn(guestId,roomId,startDate,endDate);
+		int numAdult = checkInBoundary.selectNumAdult();
+		int numChild = checkInBoundary.selectNumChild(numAdult);
+		return checkIn(guestId,roomId,startDate,endDate,numAdult,numChild);
 	}
 	
-	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate) {
+	
+
+	private boolean checkIn(int guestId,String roomId, LocalDate startDate, LocalDate endDate, int numAdult,int numChild) {
 		try {
 			new PaymentController().createBillingAccount(roomId);
 			new PaymentController().addRoomToPaymentBill(roomId, startDate, endDate);
-			roomController.checkIn(guestId, roomId, startDate, endDate);
+			roomController.checkIn(guestId, roomId, startDate, endDate,numAdult,numChild);
 			System.out.println("Check in successful");
 			return false;
 		}catch(Exception e) {
