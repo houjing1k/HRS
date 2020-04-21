@@ -94,7 +94,7 @@ public class CheckInController extends Controller {
 		LocalDate startDate = reservation.startDate;
 		LocalDate endDate = reservation.endDate;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		if(startDate.compareTo(LocalDate.now())!=0) {
+		if(startDate.compareTo(LocalDate.now())!=0&&reservation.reservationState==ReservationState.CONFIRMED) {
 			System.out.println("Your reservation is for "+startDate.format(formatter));
 			return true;
 		}
