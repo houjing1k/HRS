@@ -1,12 +1,11 @@
- 	 package com.company;
+package com.company;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import com.company.RoomEntity.BedType;
+import com.company.TypesOfRooms.BedType;
 import com.company.RoomEntity.RoomStatus;
-import com.company.RoomEntity.RoomType;
-
+import com.company.TypesOfRooms.RoomType;
 
 public class RoomController extends Controller
 {
@@ -24,50 +23,17 @@ public class RoomController extends Controller
 	{
 		roomReports = RoomReports.getInstance();
 		roomList = (ArrayList<RoomEntity>) fromFile(roomFile);
+
 		if (roomList == null)
 		{
 			roomList = new ArrayList<>();
-			addRoomObjects();
+			roomList = new RoomFactory().getRoomList();
 			saveFile();
 		}
 		rb = new RoomBoundary();
 	}
 
-	private void addRoomObjects()
-	{
-		// TODO Auto-generated method stub
-		//level 2 rooms
-		int level = 2;
-		int room = 0;
-		String roomId = "";
-		boolean smoking = false;
-		boolean wifi = true;
-		for (int j = 0; j < 6; j++)
-		{
-			if(level>6) {
-				wifi = false;
-			}
-			int x = 0;
-			for (int i = 0; i < 2; i++)
-			{
-				room += 1;
-				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.SINGLE, RoomStatus.VACANT, BedType.SINGLE, smoking, wifi);
-				room += 1;
-				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.QUEEN, smoking, wifi);
-				room += 1;
-				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DELUXE, RoomStatus.VACANT, BedType.KING, smoking, wifi);
-				room += 1;
-				roomId = String.format("%02d" + "%02d", level, room);
-				this.loadObject(roomId, RoomType.DOUBLE, RoomStatus.VACANT, BedType.DOUBLESINGLE, smoking, wifi);
-			}
-			level += 1;
-			room = 0;
-			smoking = !smoking;
-		}
-	}
+
 
 	public static RoomController getInstance()
 	{
@@ -79,13 +45,6 @@ public class RoomController extends Controller
 		return instance;
 	}
 
-	//Load object into the array list
-	private void loadObject(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
-	{
-		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking, wifi);
-		roomList.add(rm);
-		roomList.sort(null);
-	}
 
 
 	//Return the list based on room type
@@ -171,10 +130,34 @@ public class RoomController extends Controller
 		return null;
 	}
 
+	//Return the list based on smoking
+	@SuppressWarnings ("unchecked")
+	public <T> ArrayList<T> listRooms(boolean smoking)
+	{
+		ArrayList<T> list = new ArrayList<>();
+		for (RoomEntity room : roomList)
+		{
+			if (room.isSmoking() == smoking)
+			{
+				list.add((T) room);
+			}
+		}
+		return list;
+	}
+
 	private void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{
 		loadObject(id, roomType, status, bedType, smoking, wifi);
 		saveFile();
+	}
+	
+	//Load object into the array list
+	private void loadObject(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
+	{
+		
+		RoomEntity rm = new RoomEntity(id, roomType, status, bedType, smoking, wifi);
+		roomList.add(rm);
+		roomList.sort(null);
 	}
 
 	public void deleteRoom(String id)
