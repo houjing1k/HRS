@@ -211,7 +211,7 @@ public class GuestController extends Controller
 			{
 				return null;
 			}
-			result = searchGuest(gb.searchGuestID());
+			result = searchGuest(id);
 			printGuest(result);
 			return result;
 		}
