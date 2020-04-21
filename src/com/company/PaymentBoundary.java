@@ -59,7 +59,7 @@ public class PaymentBoundary extends Boundary{
 	
 	protected void invalidBillingAccount()
 	{
-		System.out.println("Payment Account does not exist!");
+		System.out.println("Bill does not exist!");
 	}
 
     protected String requestRoomID()
