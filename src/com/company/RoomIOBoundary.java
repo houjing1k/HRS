@@ -17,6 +17,7 @@ public abstract class RoomIOBoundary extends Boundary {
         }
         do {
             RoomVisualiser.showList(rooms);
+            System.out.println("Enter Room Id:");
             selectedRoomId = scan.next();
             boolean invalidId = true;
             for(String filteredRoomID:roomIds)
