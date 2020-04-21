@@ -26,13 +26,6 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	protected BedType bedType;
 	
 
-	public RoomEntity(String roomId,RoomStatus status,boolean smoking,boolean wifi) {
-		this.roomId = roomId;
-		this.status = status;
-		this.smoking = smoking;
-		this.wifi = wifi;
-		this.checkOutDate = null;
-	}
 	
 	public RoomEntity(String roomId,RoomType roomType,RoomStatus status,BedType bedType,boolean smoking,boolean wifi) {
 		this.roomId = roomId;

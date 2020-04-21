@@ -42,23 +42,23 @@ public class RoomFactory extends Controller{
 			{
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				singleRoom = new SingleRoom(roomId,  RoomStatus.VACANT, smoking, wifi);
-				addTolist(singleRoom);
+				singleRoom=new SingleRoom();	//create single room with single bed
+				addTolist(new RoomEntity(roomId,singleRoom.createRoom(),RoomStatus.VACANT,singleRoom.createBed(), smoking, wifi));
 				
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				doubleRoomQBed = new DoubleRoomQueenBed(roomId,  RoomStatus.VACANT, smoking, wifi);
-				addTolist(doubleRoomQBed);
+				doubleRoomQBed = new DoubleRoomQueenBed(); //Double room with queen size bed
+				addTolist(new RoomEntity(roomId,doubleRoomQBed.createRoom(),RoomStatus.VACANT,doubleRoomQBed.createBed(), smoking, wifi));
 				
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				deluxeRoom = new DeluxeRoom(roomId,  RoomStatus.VACANT, smoking, wifi);
-				addTolist(deluxeRoom);
+				deluxeRoom = new DeluxeRoom(); //deluxe room with king size bed
+				addTolist(new RoomEntity(roomId,deluxeRoom.createRoom(),RoomStatus.VACANT,deluxeRoom.createBed(), smoking, wifi));
 
 				room += 1;
 				roomId = String.format("%02d" + "%02d", level, room);
-				doubleRoomSBeds = new DoubleRoomSingleBeds(roomId,  RoomStatus.VACANT, smoking, wifi);
-				addTolist(doubleRoomSBeds);
+				doubleRoomSBeds = new DoubleRoomSingleBeds(); //Double Room with single bed
+				addTolist(new RoomEntity(roomId,doubleRoomSBeds.createRoom(),RoomStatus.VACANT,doubleRoomSBeds.createBed(), smoking, wifi));
 			}
 			level += 1;
 			room = 0;
