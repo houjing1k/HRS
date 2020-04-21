@@ -202,7 +202,7 @@ public class CheckInController extends Controller {
 				System.out.println("No rooms found");
 			}
 		}
-		String id = checkInBoundary.printRooms(returnArray);
+		String id = checkInBoundary.selectRoom(returnArray);
 		return id;
 	}
 }
