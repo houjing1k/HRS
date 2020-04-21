@@ -83,10 +83,6 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 
 	//Method to check if room is under maintenance
 	public boolean isMaintenance() {return(this.getRoomStatus()==RoomStatus.MAINTENANCE);}
-	
-	public void setNumGuest(int num) {
-		this.numGuest = num;
-	}
 
 	//Method to change bed type
 	public void setBedType(BedType bedtype) {
@@ -104,11 +100,12 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	}
 
 	//Method to check in
-	public void checkIn(int guest, LocalDate checkInDate, LocalDate checkOutDate) {
+	public void checkIn(int guest, LocalDate checkInDate, LocalDate checkOutDate, int numGuest) {
 		this.guestId = guest;
 		this.status = RoomStatus.OCCUPIED;
 		this.checkOutDate = checkOutDate;
 		this.checkInDate = checkInDate;
+		this.numGuest = numGuest;
 	}
 
 	//Method to reserve 
