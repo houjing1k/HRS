@@ -124,14 +124,9 @@ public class RoomBoundary extends Boundary
 					" 4 - King            "
 			};
 		int sel;
-		while(true) {
 		System.out.println("Choose bed Type:");
 		printList(bedType);
-		try {
-			sel = sc.nextInt();
-		}catch(Exception e) {
-			return null;
-		}
+		sel = getInput(1,4);
 		switch(sel) {
 			case 1:
 				return BedType.SINGLE;
@@ -142,9 +137,9 @@ public class RoomBoundary extends Boundary
 			case 4:
 				return BedType.KING;
 			default:
-				System.out.print("Invalid Input");
+				return null;
 		}
-		}
+		
 	}
 
 	public boolean getBooleanInput() {
@@ -154,23 +149,15 @@ public class RoomBoundary extends Boundary
 					" 1 - Yes          ",
 					" 2 - No  ",
 			};
-		int sel = 0;
-		while(true) {
+		int sel;
 		printList(ans);
-		try {
-			sel = sc.nextInt();
-		}catch(Exception e) {
-			System.out.println("Invalid input");
+		sel = getInput(1,2);
+		if(sel==1) {
+			return true;
+		}else {
+			return false;
 		}
-		switch(sel) {
-			case 1:
-				return true;
-			case 2:
-				return false;
-			default:
-				System.out.println("Invalid input");
-		}
-		}
+		
 	}
 
 	public RoomType getRoomType() {
@@ -182,14 +169,10 @@ public class RoomBoundary extends Boundary
 					" 3 - Deluxe           ",
 			};
 		int sel;
-		while(true) {
 		System.out.println("Choose bed Type:");
 		printList(bedType);
-		try {
-			sel = sc.nextInt();
-		}catch(Exception e) {
-			return null;
-		}
+		sel = getInput(1,3);
+		
 		switch(sel) {
 			case 1:
 				return RoomType.SINGLE;
@@ -198,9 +181,8 @@ public class RoomBoundary extends Boundary
 			case 3:
 				return RoomType.DELUXE;
 			default:
-				System.out.print("Invalid Input");
+				return null;
 				
-		}
 		}
 	}
 
