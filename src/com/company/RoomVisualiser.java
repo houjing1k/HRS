@@ -293,7 +293,7 @@ public class RoomVisualiser
 
 			case 1:
 				RoomEntity.RoomStatus roomStatus = roomEntity.getRoomStatus();
-				String color = rvb.ANSI_RESET;
+/*				String color = rvb.ANSI_RESET;
 				if (roomStatus == RoomEntity.RoomStatus.VACANT)
 					color = rvb.ANSI_GREEN;
 				else if (roomStatus == RoomEntity.RoomStatus.OCCUPIED)
@@ -301,8 +301,8 @@ public class RoomVisualiser
 				else if (roomStatus == RoomEntity.RoomStatus.RESERVED)
 					color = rvb.ANSI_CYAN;
 				else if (roomStatus == RoomEntity.RoomStatus.MAINTENANCE)
-					color = rvb.ANSI_PURPLE;
-				str = design[7] + color + centrePadding(roomStatus.toString(), ' ', width) + rvb.ANSI_RESET + design[7];
+					color = rvb.ANSI_PURPLE;*/
+				str = design[7] + centrePadding(roomStatus.toString(), ' ', width) + +design[7];
 				break;
 
 			case 2:
