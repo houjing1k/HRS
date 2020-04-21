@@ -281,6 +281,7 @@ public class RoomController extends Controller
 				System.out.println("WIFI");
 				boolean wifi = rb.getBooleanInput();
 				this.addRoom(roomId, roomType, RoomStatus.VACANT, bedType, smoking, wifi);
+				System.out.println("Room Created "+getRoom(roomId).toString());
 				break;
 
 			case 2: //2 - Delete Rooms
