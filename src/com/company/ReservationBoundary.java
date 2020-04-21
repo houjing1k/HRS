@@ -194,7 +194,7 @@ public class ReservationBoundary extends Boundary {
 
     }
 
-    public void getReservation(ArrayList<ReservationEntity> arrayList, int guestId,String guestName)
+    public int getReservation(ArrayList<ReservationEntity> arrayList, int guestId,String guestName)
     {
         printMainTitle("Reservations for "+guestName);
         if (arrayList.size() == 0)
@@ -217,6 +217,34 @@ public class ReservationBoundary extends Boundary {
                     ));
                 }
             }
+            return arrayList.size();
+    }
+    public String selectRoom(ArrayList<RoomEntity> rooms)
+    {
+        ArrayList<String> roomIds = new ArrayList<>();
+        String selectedRoomId;
+        for (RoomEntity roomEntity: rooms)
+        {
+            roomIds.add(roomEntity.getRoomId());
+        }
+        do {
+            RoomVisualiser.showList(rooms);
+            selectedRoomId = scan.next();
+            boolean invalidId = true;
+            for(String filteredRoomID:roomIds)
+            {
+                if (filteredRoomID.equals(selectedRoomId)) {
+                    invalidId = false;
+                    break;
+                }
+            }
+            if(invalidId)
+            {
+                selectedRoomId = "";
+                System.out.println("Sorry the ID you keyed in is not valid");
+            }
+        }while (selectedRoomId.equals(""));
+        return selectedRoomId;
     }
 
 

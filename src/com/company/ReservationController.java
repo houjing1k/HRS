@@ -74,17 +74,19 @@ public class ReservationController extends Controller {
         }while(guestEntity == null && guestId == -1);
         if(guestEntity != null)
             guestId = guestEntity.getGuestID();
-        System.out.println("Key in the number of adults");
-        do{
-            numOfAdults = scan.nextInt();
-            if(numOfAdults < 0) System.out.println("Please key in a valid number of adults");
-        }while (numOfAdults < 0);
-        System.out.println("Key in the number of children");
-        do{
-            numOfChildren = scan.nextInt();
-            if(numOfChildren < 0) System.out.println("Please key in a valid number of children");
-        }while (numOfChildren < 0);
-        System.out.println("Please type the start date(dd/mm/yyyy):");
+        do {
+            System.out.println("Key in the number of adults");
+            do {
+                numOfAdults = scan.nextInt();
+                if (numOfAdults < 0) System.out.println("Please key in a valid number of adults");
+                if (numOfAdults == 0) System.out.println("Sorry there needs to be at least 1 adult");
+            } while (numOfAdults <= 0);
+            System.out.println("Key in the number of children");
+            do {
+                numOfChildren = scan.nextInt();
+                if (numOfChildren < 0) System.out.println("Please key in a valid number of children");
+            } while (numOfChildren < 0);
+        }while (!validNumberOfPeople(numOfChildren,numOfAdults));
         startDate = reservationBoundary.getStartDateInput("Please type the start date(dd/mm/yyyy):");
         endDate = reservationBoundary.getEndDateInput("Please type the end date(dd/mm/yyyy):",startDate);
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
@@ -127,23 +129,7 @@ public class ReservationController extends Controller {
         {
             filteredRoomIDs.add(roomEntity.getRoomId());
         }
-        do {
-            RoomVisualiser.showList(filteredRooms);
-            selectedRoomId = scan.next();
-            boolean invalidId = true;
-            for(String filteredRoomID:filteredRoomIDs)
-            {
-                if (filteredRoomID.equals(selectedRoomId)) {
-                    invalidId = false;
-                    break;
-                }
-            }
-            if(invalidId)
-            {
-                selectedRoomId = "";
-                System.out.println("Sorry the ID you keyed in is not valid");
-            }
-        }while (selectedRoomId.equals(""));
+        selectedRoomId = reservationBoundary.selectRoom(filteredRooms);
         //String[]  = {"02-01","02-02"};
         reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, guestId, ReservationEntity.ReservationState.CONFIRMED,numOfAdults,numOfChildren));
         saveReservationsToFile();
@@ -236,8 +222,10 @@ public class ReservationController extends Controller {
         int guestId;
         int reservationId;
         int sel;
+        boolean redecide;
         LocalDate date;
         ReservationEntity reservationEntity;
+        ArrayList<RoomEntity> roomEntities;
         GuestEntity guestEntity;
         do {
             choice = reservationBoundary.process();
@@ -268,7 +256,10 @@ public class ReservationController extends Controller {
                     guestEntity = new GuestController().searchGuest_Hybrid();
                     if(guestEntity == null) continue;
                     guestId = guestEntity.getGuestID();
-                    reservationBoundary.getReservation(reservations,guestId,guestEntity.getName());
+                    if(reservationBoundary.getReservation(reservations,guestId,guestEntity.getName())==0)
+                    {
+                        break;
+                    }
                     System.out.println("Key in the ID of the reservation");
                     reservationId = scan.nextInt();
                     reservationEntity = getReservationById(reservationId);
@@ -277,18 +268,182 @@ public class ReservationController extends Controller {
                     switch (sel)
                     {
                         case 1:
-                            System.out.println(String.format("Your current start date is on: %s",reservationEntity.getStartDate().toString()));
-                            date = reservationBoundary.getStartDateInput("Please key in a new start date: ");
-                            reservationEntity.setStartDate(date);
-                            System.out.println("Your start date has been successfully changed");
+                            do {
+                                date = reservationBoundary.getStartDateInput("Please key in a new start date: ");
+                                System.out.println(String.format("Your current start date is on: %s", reservationEntity.getStartDate().toString()));
+                                ArrayList<RoomEntity> tempArrayList = new ArrayList<>();
+                                tempArrayList.add(RoomController.getInstance().getRoom(reservationEntity.getRoomId()));
+                                RoomVisualiser.showSchedule(tempArrayList, reservations, reservationEntity.getStartDate().minusDays(20));
+                                reservationBoundary.printMenuList(new String[]{"Use the same room","Change to similar room"});
+                                sel = reservationBoundary.getInput(1,2);
+                                switch (sel)
+                                {
+                                    case 1:
+                                        if (!isRoomAvailable(reservationEntity.getRoomId(), date, reservationEntity.getStartDate())) {
+                                            System.out.println(String.format("Room %s is not available on %s\nWould you to:", reservationEntity.getRoomId(), date));
+                                            redecide = true;
+                                            //reservationBoundary.printMenuList({"Change to similar room","Change start date"});
+                                        }
+                                        else
+                                        {
+                                            reservationEntity.setStartDate(date);
+                                            reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
+                                            saveReservationsToFile();
+                                            System.out.println("Your start date has been successfully changed");
+                                            redecide = false;
+                                        }
+                                        break;
+                                    case 2:
+                                        roomEntities = RoomController.getInstance().filterRooms(2);
+                                        final LocalDate startDate,endDate;
+                                        final String roomId;
+                                        startDate = date;
+                                        endDate = reservationEntity.getEndDate();
+                                        roomId = reservationEntity.getRoomId();
+                                        roomEntities.removeIf(roomEntity -> !isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
+                                        roomEntities.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
+                                        if(roomEntities.size()==0)
+                                        {
+                                            System.out.println("Sorry there are no rooms that suit your new start date");
+                                            redecide = false;
+                                        }
+                                        else {
+                                            RoomVisualiser.showList(roomEntities);
+                                            String selectedRoomId = reservationBoundary.selectRoom(roomEntities);
+                                            int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
+                                            reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, reservationEntity.getGuestId(), ReservationEntity.ReservationState.CONFIRMED,reservationEntity.getNumOfAdults(),reservationEntity.getNumOfChildren()));
+                                            saveReservationsToFile();
+                                            cancelReservation(reservationId);
+                                            reservationBoundary.printRoomHasBeenReserved(getReservationById(newReservationId));
+                                            redecide = false;
+                                        }
+                                        break;
+                                    default:
+                                        redecide = false;
+                                }
+
+                            }while (redecide);
                             break;
                         case 2:
+                            do {
+                                date = reservationBoundary.getEndDateInput("Please key in a new end date: ",reservationEntity.getStartDate());
+                                System.out.println(String.format("Your current end date is on: %s", reservationEntity.getEndDate().toString()));
+                                ArrayList<RoomEntity> tempArrayList = new ArrayList<>();
+                                tempArrayList.add(RoomController.getInstance().getRoom(reservationEntity.getRoomId()));
+                                RoomVisualiser.showSchedule(tempArrayList, reservations, reservationEntity.getEndDate());
+                                reservationBoundary.printMenuList(new String[]{"Use the same room","Change to similar room"});
+                                sel = reservationBoundary.getInput(1,2);
+                                switch (sel)
+                                {
+                                    case 1:
+                                        if (!isRoomAvailable(reservationEntity.getRoomId(), reservationEntity.getEndDate(), date)) {
+                                            System.out.println(String.format("Room %s is not available on %s\nWould you to:", reservationEntity.getRoomId(), date));
+                                            redecide = true;
+                                            //reservationBoundary.printMenuList({"Change to similar room","Change start date"});
+                                        }
+                                        else
+                                        {
+                                            reservationEntity.setEndDate(date);
+                                            reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
+                                            saveReservationsToFile();
+                                            System.out.println("Your start date has been successfully changed");
+                                            redecide = false;
+                                        }
+                                        break;
+                                    case 2:
+                                        roomEntities = RoomController.getInstance().filterRooms(2);
+                                        final LocalDate startDate,endDate;
+                                        final String roomId;
+                                        startDate = reservationEntity.getStartDate();
+                                        endDate = date;
+                                        roomId = reservationEntity.getRoomId();
+                                        roomEntities.removeIf(roomEntity -> !isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
+                                        roomEntities.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
+                                        if(roomEntities.size()==0)
+                                        {
+                                            System.out.println("Sorry there are no rooms that suit your new end date");
+                                            redecide = false;
+                                        }
+                                        else {
+                                            RoomVisualiser.showList(roomEntities);
+                                            String selectedRoomId = reservationBoundary.selectRoom(roomEntities);
+                                            int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
+                                            reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, reservationEntity.getGuestId(), ReservationEntity.ReservationState.CONFIRMED,reservationEntity.getNumOfAdults(),reservationEntity.getNumOfChildren()));
+                                            saveReservationsToFile();
+                                            cancelReservation(reservationId);
+                                            reservationBoundary.printRoomHasBeenReserved(getReservationById(newReservationId));
+                                            redecide = false;
+                                        }
+                                        break;
+                                    default:
+                                        redecide = false;
+                                }
+
+                            }while (redecide);
                             break;
                         case 3:
+                            int numberOfChildren;
+                            System.out.println("Key in the new number of children");
+                            do {
+                                numberOfChildren = scan.nextInt();
+                                if(numberOfChildren<0)
+                                {
+                                    System.out.println("Please key in a valid number of children");
+                                }
+                                if(validNumberOfPeople(numberOfChildren,reservationEntity.getNumOfAdults()))
+                                {
+                                    System.out.println("Please key in a new number of children");
+                                    numberOfChildren = -1;
+                                }
+                            }while (numberOfChildren < 0);
+                            reservationEntity.setNumOfChildren(numberOfChildren);
+                            reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
+                            saveReservationsToFile();
+                            System.out.println("Your start date has been successfully changed");
                             break;
                         case 4:
+                            int numberOfAdults;
+                            System.out.println("Key in the new number of adults");
+                            do {
+                                numberOfAdults = scan.nextInt();
+                                if(numberOfAdults<0)
+                                {
+                                    System.out.println("Please key in a valid number of adults");
+                                }
+                                if(!validNumberOfPeople(reservationEntity.getNumOfChildren(),numberOfAdults))
+                                {
+                                    System.out.println("please key in a new number of adults");
+                                    numberOfAdults = -1;
+                                }
+                            }while (numberOfAdults < 0);
+                            reservationEntity.setNumOfAdults(numberOfAdults);
+                            reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
+                            saveReservationsToFile();
+                            System.out.println("Your start date has been successfully changed");
                             break;
                         case 5:
+                            roomEntities = RoomController.getInstance().filterRooms(2);
+                            final LocalDate startDate,endDate;
+                            final String roomId;
+                            startDate = reservationEntity.getStartDate();
+                            endDate = reservationEntity.getEndDate();
+                            roomId = reservationEntity.getRoomId();
+                            roomEntities.removeIf(roomEntity -> !isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
+                            roomEntities.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
+                            if(roomEntities.size()==0)
+                            {
+                                System.out.println("Sorry there are no rooms that suit your reservation requirements");
+                            }
+                            else {
+                                RoomVisualiser.showList(roomEntities);
+                                String selectedRoomId = reservationBoundary.selectRoom(roomEntities);
+                                int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
+                                reservations.add(new ReservationEntity(startDate, endDate, selectedRoomId, newReservationId, reservationEntity.getGuestId(), ReservationEntity.ReservationState.CONFIRMED,reservationEntity.getNumOfAdults(),reservationEntity.getNumOfChildren()));
+                                saveReservationsToFile();
+                                cancelReservation(reservationId);
+                                reservationBoundary.printRoomHasBeenReserved(getReservationById(newReservationId));
+                                redecide = false;
+                            }
                             break;
 
                     }
@@ -375,4 +530,21 @@ public class ReservationController extends Controller {
         }
         return null;
     }
+
+    private boolean validNumberOfPeople(int numOfChildren,int numOfAdults)
+    {
+        if(numOfAdults == 0)
+        {
+            System.out.println("There needs to be at least 1 adult in the room");
+            return false;
+        }
+        if(numOfChildren+numOfAdults > 4)
+        {
+            System.out.println(String.format("The total number of people is %s which exceed 4",numOfAdults+numOfChildren));
+            return false;
+        }
+        return true;
+    }
+
+
 }
