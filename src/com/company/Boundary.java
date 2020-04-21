@@ -139,7 +139,7 @@ public abstract class Boundary
 		else return charFalse;
 	}
 
-	public int getMenulength()
+	public int getMenuLength()
 	{
 		return MENULENGTH;
 	}

@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class GuestController extends Controller
 {
@@ -9,6 +8,7 @@ public class GuestController extends Controller
 	private ArrayList<GuestEntity> guestList;
 	private final String guestFileName = "./data/GuestList.ser";
 
+	@SuppressWarnings("unchecked")
 	public GuestController()
 	{
 		gb = new GuestBoundary();

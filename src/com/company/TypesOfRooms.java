@@ -1,7 +1,5 @@
 package com.company;
 
-import com.company.TypesOfRooms.BedType;
-import com.company.TypesOfRooms.RoomType;
 
 public interface TypesOfRooms {
 	/**
@@ -24,9 +22,7 @@ public interface TypesOfRooms {
 	}
 
 	public RoomType createRoom();
-	public BedType createBed() ;
 	
-
-
+	public BedType createBed() ;
 	
 }

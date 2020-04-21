@@ -1,7 +1,6 @@
 package com.company;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -31,10 +30,9 @@ public class PaymentBill implements Serializable{
 	}
 
 	//Add transaction to the PaymentBill. 
-	public void AddTransaction(Transaction item) {
+	public void addTransaction(Transaction item) {
 		transactionList.add(item);
 	}
-		
 
 	//return all the transaction of the PaymentBills
 	public ArrayList<Transaction> getTransactions() {

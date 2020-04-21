@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 public class Transaction implements Serializable{
 	/**
 	 * 
@@ -48,7 +47,6 @@ public class Transaction implements Serializable{
         return   String.format("%-20s %-39s %-10s %-11s %-20s", name, description, quantity ,formatPrice,formatDateTime);
 	}
 	
-	
 	//return name of the transaction
 	public String getName() {
 		return name;
@@ -89,6 +87,7 @@ public class Transaction implements Serializable{
 	public LocalDateTime getTime() {
 		return time;
 	}
+	
 	public void setTime(LocalDateTime time) {
 		this.time=time;
 	}

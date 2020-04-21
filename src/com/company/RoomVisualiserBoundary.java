@@ -2,13 +2,11 @@ package com.company;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class RoomVisualiserBoundary extends Boundary
 {
 	private Scanner scan;
-
 
 	protected int scheduleMenu()
 	{

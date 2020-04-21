@@ -69,6 +69,7 @@ public class RoomServiceController extends Controller {
 	
 	private RoomServiceMenu menu;
 	private RoomServiceOrderHistory order_history;
+	
 	private int next_order_id;
 	private RoomServiceBoundary boundary;
 	

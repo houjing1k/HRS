@@ -1,8 +1,5 @@
 package com.company;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -39,10 +36,10 @@ public class Scheduler {
             tempCalendar.add(Calendar.DATE,1);
             date11AM = tempCalendar.getTime();
         }
-        timer2PM.schedule(new timerTask2PM(),date2pm,86400000);
-        timer11AM.schedule(new timerTask11AM(),date11AM,86400000);
+        timer2PM.schedule(new TimerTask2PM(),date2pm,86400000);
+        timer11AM.schedule(new TimerTask11AM(),date11AM,86400000);
     }
-    class timerTask2PM extends TimerTask {
+    class TimerTask2PM extends TimerTask {
         ReservationController reservationController = new ReservationController();
         @Override
         public void run() {
@@ -50,7 +47,7 @@ public class Scheduler {
             reservationController.triggerExpiredReservations();
         }
     }
-    class timerTask11AM extends TimerTask {
+    class TimerTask11AM extends TimerTask {
         ReservationController reservationController = new ReservationController();
         @Override
         public void run() {

@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class PaymentDetail implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2655074700613488991L;
 	private String card_name;
 	private String card_no;
 	private String card_expiry;

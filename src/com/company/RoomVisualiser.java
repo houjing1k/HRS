@@ -1,15 +1,11 @@
 package com.company;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
-
-import com.company.TypesOfRooms.BedType;
-import com.company.TypesOfRooms.RoomType;
 
 public class RoomVisualiser
 {
@@ -92,8 +88,8 @@ public class RoomVisualiser
 		}
 		else printList(roomList);
 		//System.out.println();
-		System.out.println(centrePadding(design[8] + " SM - Smoking Room" + "   |   " + design[8] + " WIFI - WiFi Enabled", ' ', rvb.getMenulength()));
-		System.out.println(centrePadding("S - Single" + "   |   " + "D - Double Single" + "   |   " + "Q - Queen" + "   |   " + "K - King", ' ', rvb.getMenulength()));
+		System.out.println(centrePadding(design[8] + " SM - Smoking Room" + "   |   " + design[8] + " WIFI - WiFi Enabled", ' ', rvb.getMenuLength()));
+		System.out.println(centrePadding("S - Single" + "   |   " + "D - Double Single" + "   |   " + "Q - Queen" + "   |   " + "K - King", ' ', rvb.getMenuLength()));
 		rvb.printDivider();
 		System.out.println();
 	}
@@ -129,12 +125,12 @@ public class RoomVisualiser
 			}
 
 			//System.out.println();
-			System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved", ' ', rvb.getMenulength()));
+			System.out.println(centrePadding(charRepeater(design[10]) + " - Occupied" + charRepeater(' ', 15) + charRepeater(design[9]) + " - Reserved", ' ', rvb.getMenuLength()));
 		}
 		else
 		{
 			System.out.println();
-			System.out.println(centrePadding("- No Rooms To Show -", ' ', rvb.getMenulength()));
+			System.out.println(centrePadding("- No Rooms To Show -", ' ', rvb.getMenuLength()));
 			System.out.println();
 		}
 		rvb.printDivider();
@@ -145,8 +141,6 @@ public class RoomVisualiser
 		String schedule = "";
 		char dayStatus;
 		LocalDate date = startDate;
-		LocalDate tempDate;
-
 		for (int i = 0; i < NUM_OF_DAYS; i++)
 		{
 			dayStatus = ' ';
@@ -178,7 +172,6 @@ public class RoomVisualiser
 
 		return schedule;
 	}
-
 
 	private static boolean isWithinDate(LocalDate date, LocalDate startDate, LocalDate endDate)
 	{

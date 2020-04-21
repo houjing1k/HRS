@@ -6,7 +6,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -18,12 +17,15 @@ public class PaymentController extends Controller
 	private ArrayList<PaymentBill> billingAccountList;    // The bills that haven't paid yet
 	private ArrayList<PaymentBill> paymentRecords;        // The paid bills
 	private ArrayList<Double> chargesList;                // Store rate of gst, service charges,single room,double room,deluxe room
+	
 	PaymentBoundary pb = new PaymentBoundary();
 	private Scanner sc = new Scanner(System.in);
+	
 	String paymentRecordsFile = "./data/paymentRecords.ser";
 	String billingAccountsFile = "./data/billingAccount.ser";
 	String chargesRateFile = "./data/charges.ser";   // index 0 : gst , index 1: service charge
 
+	@SuppressWarnings("unchecked")
 	public PaymentController()
 	{
 		billingAccountList = (ArrayList<PaymentBill>) fromFile(billingAccountsFile);
@@ -150,7 +152,6 @@ public class PaymentController extends Controller
 		pb.waitInput();
 	}
 
-
 	//Create payment account when checked in
 	public void createBillingAccount(String roomID)
 	{
@@ -166,7 +167,6 @@ public class PaymentController extends Controller
 		saveBillsToFile();
 	}
 
-
 	// Remove Payment Account
 	public void removebillingAccount(String roomID)
 	{
@@ -180,7 +180,6 @@ public class PaymentController extends Controller
 		addToRecord(bill);
 		billingAccountList.remove(bill);
 	}
-
 
 	//Save the paid bills to record
 	void addToRecord(PaymentBill bill)
@@ -225,7 +224,7 @@ public class PaymentController extends Controller
 			}
 			else tempTrans.setPrice(temp_price * 0.9);
 			tempTrans.setTime(date.atTime(14, 00));
-			bill.AddTransaction(tempTrans);
+			bill.addTransaction(tempTrans);
 		}
 		saveBillsToFile();
     }
@@ -254,12 +253,12 @@ public class PaymentController extends Controller
             	transaction.setPrice( tempPrice.add( BigDecimal.valueOf(transaction.getPrice()) ).doubleValue() ); 
             }
             else {
-            	bill.AddTransaction(transaction);
+            	bill.addTransaction(transaction);
             	transaction = null;
             	transaction = new Transaction(tempName.toString(), tempDescription.toString(), tempPrice.doubleValue(), 1, order.getOrder_date_time());
             	}
             }
-        if (transaction != null) bill.AddTransaction(transaction);
+        if (transaction != null) bill.addTransaction(transaction);
         saveBillsToFile();
     }
 
@@ -304,7 +303,6 @@ public class PaymentController extends Controller
 		pb.printDivider();
 	}
 
-
 	//calculate the total of PaymentBill
 	public double calculatePaymentBill(PaymentBill paymentBill)
 	{
@@ -320,8 +318,6 @@ public class PaymentController extends Controller
 		return Double.valueOf(String.format("%.2f", sum));
 	}
 
-
-	
 	//load GST,service charges and room charges
 	public void setCharges(ArrayList<Double> charges)
 	{
@@ -361,8 +357,6 @@ public class PaymentController extends Controller
 		chargesList.set(choice, charge);  //set and save new room charge to file 
 		saveChargesToFile();
 	}
-	
-	
 	
 	//Change serviceCharge
 	public void setServiceCharge()
@@ -422,7 +416,6 @@ public class PaymentController extends Controller
 		pb.printDivider();
 
 	}
-
 
 	//store the billingAccountList to file
 	private void saveBillsToFile()

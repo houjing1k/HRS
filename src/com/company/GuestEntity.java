@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class GuestEntity implements Serializable, Comparable<GuestEntity>
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3537604225142743795L;
 	private Integer guestID;
 	private String name;
 	private String address;
