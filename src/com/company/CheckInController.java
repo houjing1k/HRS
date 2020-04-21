@@ -90,15 +90,15 @@ public class CheckInController extends Controller {
 	private boolean reserveCheckIn() {
 		// TODO Auto-generated method stub
 		int reserveId =checkInBoundary.getId();
-		RoomEntity room = roomController.getRerservation(reserveId);
 		ReservationEntity reservation = reservationController.getReservationById(reserveId);
+		LocalDate startDate = reservation.startDate;
+		LocalDate endDate = reservation.endDate;
+		if(startDate.compareTo(LocalDate.now())!=0) {
+			System.out.println("Your reservation is for "+startDate);
+			return true;
+		}
+		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
-			LocalDate startDate = reservation.startDate;
-			if(startDate.compareTo(LocalDate.now())!=0) {
-				System.out.println("Your reservation is for "+startDate);
-				return true;
-			}
-			LocalDate endDate = reservation.endDate;
 			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate);
 		}
