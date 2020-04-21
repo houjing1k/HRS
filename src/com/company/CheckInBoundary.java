@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import com.company.RoomEntity.RoomStatus;
 
-public class CheckInBoundary extends Boundary {
+public class CheckInBoundary extends RoomIOBoundary {
 
 	private String[] menu;
 	private String title;
@@ -67,36 +67,6 @@ public class CheckInBoundary extends Boundary {
     		}
     	}
 	}
-
-	public String printRooms(ArrayList<RoomEntity> roomArray) {
-		// TODO Auto-generated method stub
-		String pre = "";
-		String curLevel = "";
-		String num = "";
-		System.out.println("Available rooms");
-		for(RoomEntity room:roomArray) {
-			curLevel = room.getRoomId().substring(0, 2);
-			num = room.getRoomId().substring(2, 4);
-			if(!curLevel.equals(pre)) {
-				System.out.print("\nLevel "+curLevel+": ");
-			}
-			pre = curLevel;
-			System.out.print(curLevel+"-"+num);
-			System.out.print(" ");
-		}
-		System.out.println(" ");
-		sc.nextLine();
-
-		while(true) {
-			String id = getRoomId();
-			for(RoomEntity room:roomArray) {
-				if(id.equals(room.getRoomId())) {
-					return id;
-				}
-			}
-			System.out.println("Invalid room ID");
-		}
-	}
 	
 	private boolean checkRoomId(String str)
 	{
@@ -128,21 +98,4 @@ public class CheckInBoundary extends Boundary {
 		}
 	}
 
-	public int selectNumAdult() {
-		// TODO Auto-generated method stub
-		System.out.println("Maximun number of guest per room is 4");
-		System.out.println("Enter Number of Adult: ");
-		return(getInput(1, 4));
-	}
-	
-	public int selectNumChild(int numAdult) {
-		// TODO Auto-generated method stub
-		int i = 4 - numAdult;
-		if(i!=0) {
-		System.out.println(String.format("Enter Number of Child: (Max %d)", i));
-		return(getInput(0, i));
-		}else {
-			return 0;
-		}
-	}
 }
