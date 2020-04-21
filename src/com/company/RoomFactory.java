@@ -13,6 +13,7 @@ public class RoomFactory extends Controller{
 	DoubleRoomSingleBeds doubleRoomSBeds;
 	DeluxeRoom deluxeRoom;
 	public RoomFactory() {
+		System.out.println("Default Rooms Created");
 		roomList = new ArrayList<RoomEntity>();
 		processMain();   //Create Room
 	

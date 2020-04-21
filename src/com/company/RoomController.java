@@ -130,20 +130,7 @@ public class RoomController extends Controller
 		return null;
 	}
 
-	//Return the list based on smoking
-	@SuppressWarnings ("unchecked")
-	public <T> ArrayList<T> listRooms(boolean smoking)
-	{
-		ArrayList<T> list = new ArrayList<>();
-		for (RoomEntity room : roomList)
-		{
-			if (room.isSmoking() == smoking)
-			{
-				list.add((T) room);
-			}
-		}
-		return list;
-	}
+
 
 	private void addRoom(String id, RoomType roomType, RoomStatus status, BedType bedType, boolean smoking, boolean wifi)
 	{

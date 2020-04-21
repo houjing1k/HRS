@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import com.company.ReservationEntity.ReservationState;
 import com.company.RoomEntity.RoomStatus;
-import com.company.RoomEntity.RoomType;
+import com.company.TypesOfRooms.RoomType;
 
 public class CheckInController extends Controller {
 	private static CheckInController instance = null;
