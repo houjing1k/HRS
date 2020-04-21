@@ -1,5 +1,6 @@
 package com.company;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
@@ -7,12 +8,6 @@ import java.util.Scanner;
 
 public class ReservationBoundary extends Boundary {
     Scanner scan = new Scanner(System.in);
-    private String [] menuRoomType = {
-            "Single room",
-            "Double room",
-            "Deluxe room"
-    };
-
     protected void printMenu()
     {
         printMainTitle("Manage Reservations");
@@ -20,12 +15,66 @@ public class ReservationBoundary extends Boundary {
                 "Reserve A Room",
                 "Print All Reservations",
                 "View Reservations By Guest Name",
-                "Cancel Reservation"
+                "Cancel Reservation",
+                "Update Reservation"
         };
         printMenuList(menuList, "Go back to Main Menu");
         System.out.println();
     }
 
+    public LocalDate getStartDateInput(String requestString)
+    {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = null;
+        String tempString;
+        System.out.println(requestString);
+        while (date == null){
+            try {
+                tempString = scan.next();
+                date = LocalDate.parse(tempString, dateFormat);
+
+                if(date.isBefore(LocalDate.now().plusDays(1)))
+                {
+                    System.out.println("Please key in a date after today(dd/mm/yyyy):");
+                    date = null;
+                }
+            }catch (Exception e)
+            {
+                //e.printStackTrace();
+                System.out.println("Please use the format (dd/mm/yyyy)");
+            }
+        }
+        return date;
+    }
+
+    public LocalDate getEndDateInput(String requestString,LocalDate startDate)
+    {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = null;
+        String tempString;
+        System.out.println(requestString);
+        while (date == null){
+            try {
+                tempString = scan.next();
+                date = LocalDate.parse(tempString, dateFormat);
+                if(date.isBefore(startDate))
+                {
+                    System.out.println("Please key in a date after the end date");
+                    date = null;
+                }
+                if(date.equals(startDate))
+                {
+                    System.out.println("Please book at least one day");
+                    date = null;
+                }
+            }catch (Exception e)
+            {
+                //e.printStackTrace();
+                System.out.println("Please use the format 'dd/mm/yyyy' for end date");
+            }
+        }
+        return date;
+    }
 
     public void printReservations(ArrayList<ReservationEntity> arrayList, Map<Integer,String> guestNames)
     {
@@ -43,6 +92,8 @@ public class ReservationBoundary extends Boundary {
 
             System.out.println(String.format("[Reservation ID]: %d \n" +
                             "Guest Name: %s \n" +
+                            "Number of adults: %d \n" +
+                            "Number of children: %d \n" +
                             "Room Number: %s \n" +
                             "Wait List Room Ids: %s \n" +
                             "Start Date: %s \n" +
@@ -50,6 +101,8 @@ public class ReservationBoundary extends Boundary {
                             "Reservation State: %s",
                     reservationEntity.getReservationId(),
                     guestNames.get(reservationEntity.getGuestId()),
+                    reservationEntity.getNumOfAdults(),
+                    reservationEntity.getNumOfChildren(),
                     reservationEntity.getRoomId(),
                     waitListRoomIDsString,
                     reservationEntity.getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),

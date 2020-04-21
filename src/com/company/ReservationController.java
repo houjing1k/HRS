@@ -11,6 +11,7 @@ public class ReservationController extends Controller {
     int choice;
     ArrayList<ReservationEntity> reservations = new ArrayList<>();
     ReservationBoundary reservationBoundary = new ReservationBoundary();
+    String[] editReservationMenu = {"Edit start date","Edit end date","Edit number of children", "Edit number of adults", "Change room"};
     ReservationController()
     {
         loadReservationsFromFile();
@@ -23,8 +24,10 @@ public class ReservationController extends Controller {
         for (ReservationEntity reservation : reservations) {
             //to check if the reservation has any clashes
             if (reservation.getRoomId().equals(roomId) &&
-                    (reservation.getStartDate().isBefore(endDateRequest) ||
-                            reservation.getStartDate().equals(endDateRequest)) &&
+                    (reservation.getStartDate().isBefore(endDateRequest) //||
+                            //reservation.getStartDate().equals(endDateRequest)
+                            )
+                    &&
                     (startDateRequest.isBefore(reservation.getEndDate()) //||
                           //startDateRequest.equals(reservation.getEndDate())
                     )
@@ -74,51 +77,16 @@ public class ReservationController extends Controller {
         System.out.println("Key in the number of adults");
         do{
             numOfAdults = scan.nextInt();
-            if(numOfAdults <= 0) System.out.println("Please key in a valid number of adults");
-        }while (numOfAdults <= 0);
+            if(numOfAdults < 0) System.out.println("Please key in a valid number of adults");
+        }while (numOfAdults < 0);
         System.out.println("Key in the number of children");
         do{
             numOfChildren = scan.nextInt();
-            if(numOfChildren <= 0) System.out.println("Please key in a valid number of children");
-        }while (numOfChildren <= 0);
+            if(numOfChildren < 0) System.out.println("Please key in a valid number of children");
+        }while (numOfChildren < 0);
         System.out.println("Please type the start date(dd/mm/yyyy):");
-        while (startDate == null){
-            try {
-            	tempString = scan.next();
-            	startDate = LocalDate.parse(tempString, dateFormat);
-
-                if(startDate.isBefore(LocalDate.now().plusDays(1)))
-                {
-                    System.out.println("Please key in a date after today(dd/mm/yyyy):");
-                    startDate = null;
-                }
-            }catch (Exception e)
-            {
-                //e.printStackTrace();
-                System.out.println("Please use the format dd/mm/yyyy for start date");
-            }
-        }
-        System.out.println("Please type the end date(dd/mm/yyyy):");
-        while (endDate == null){
-            try {
-                tempString = scan.next();
-                endDate = LocalDate.parse(tempString, dateFormat);
-                if(endDate.isBefore(startDate))
-                {
-                    System.out.println("Please key in a date after the end date");
-                    endDate = null;
-                }
-                if(endDate.equals(startDate))
-                {
-                    System.out.println("Please book at least one day");
-                    endDate = null;
-                }
-            }catch (Exception e)
-            {
-                //e.printStackTrace();
-                System.out.println("Please use the format 'dd/mm/yyyy' for end date");
-            }
-        }
+        startDate = reservationBoundary.getStartDateInput("Please type the start date(dd/mm/yyyy):");
+        endDate = reservationBoundary.getEndDateInput("Please type the end date(dd/mm/yyyy):",startDate);
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
         do {
             filteredRooms = RoomController.getInstance().filterRooms(2);
@@ -139,10 +107,10 @@ public class ReservationController extends Controller {
         {
             waitListIds.add(roomEntity.getRoomId());
         }
-        filteredRooms = filterReservedRooms(filteredRooms,startDate,endDate);
         final LocalDate finalStartDate,finalEndDate;
         finalEndDate = endDate;
         finalStartDate = startDate;
+        filteredRooms.removeIf(roomEntity -> !isRoomAvailable(roomEntity.getRoomId(),finalStartDate,finalEndDate));
         filteredRooms.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),finalStartDate,finalEndDate));
         System.out.println(filteredRooms.size());
         if(filteredRooms.size()==0)
@@ -183,21 +151,6 @@ public class ReservationController extends Controller {
 
     }
 
-    public ArrayList<RoomEntity> filterReservedRooms(ArrayList<RoomEntity> roomEntities, LocalDate startDateRequest, LocalDate endDateRequest)
-    {
-        loadReservationsFromFile();
-        for(ReservationEntity reservation: reservations)
-        {
-            roomEntities.removeIf(roomEntity -> reservation.getRoomId().equals(roomEntity.getRoomId()) &&
-                    (reservation.getStartDate().isBefore(endDateRequest) ||
-                            reservation.getStartDate().equals(endDateRequest)) &&
-                    (startDateRequest.isBefore(reservation.getEndDate()) //||
-                            //startDateRequest.equals(reservation.getEndDate())
-                    )
-                    && reservation.getReservationState() == ReservationEntity.ReservationState.CONFIRMED);
-        }
-        return roomEntities;
-    }
 
 
     public void waitListUpdate(String roomId)
@@ -282,6 +235,9 @@ public class ReservationController extends Controller {
     public void processMain() {
         int guestId;
         int reservationId;
+        int sel;
+        LocalDate date;
+        ReservationEntity reservationEntity;
         GuestEntity guestEntity;
         do {
             choice = reservationBoundary.process();
@@ -307,7 +263,35 @@ public class ReservationController extends Controller {
                         reservationBoundary.printReservationCancelled();
                     else
                         reservationBoundary.printReservationCancellationFailed();
+                    break;
+                case 5:
+                    guestEntity = new GuestController().searchGuest_Hybrid();
+                    if(guestEntity == null) continue;
+                    guestId = guestEntity.getGuestID();
+                    reservationBoundary.getReservation(reservations,guestId,guestEntity.getName());
+                    System.out.println("Key in the ID of the reservation");
+                    reservationId = scan.nextInt();
+                    reservationEntity = getReservationById(reservationId);
+                    reservationBoundary.printMenuList(editReservationMenu);
+                    sel = reservationBoundary.getInput(1,5);
+                    switch (sel)
+                    {
+                        case 1:
+                            System.out.println(String.format("Your current start date is on: %s",reservationEntity.getStartDate().toString()));
+                            date = reservationBoundary.getStartDateInput("Please key in a new start date: ");
+                            reservationEntity.setStartDate(date);
+                            System.out.println("Your start date has been successfully changed");
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
 
+                    }
                     break;
                 case 0: break;
                 default:

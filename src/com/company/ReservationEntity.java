@@ -108,5 +108,23 @@ public class ReservationEntity implements Serializable {
 
     public void checkIn(){reservationState = ReservationState.CHECKED_IN;}
 
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setNumOfAdults(int numOfAdults) {
+        this.numOfAdults = numOfAdults;
+    }
+
+    public void setNumOfChildren(int numOfChildren) {
+        this.numOfChildren = numOfChildren;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
 }
