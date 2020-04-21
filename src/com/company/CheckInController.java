@@ -93,6 +93,8 @@ public class CheckInController extends Controller {
 		ReservationEntity reservation = reservationController.getReservationById(reserveId);
 		LocalDate startDate = reservation.startDate;
 		LocalDate endDate = reservation.endDate;
+		int numAdult = reservation.getNumOfAdults();
+		int numChild = reservation.getNumOfChildren();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		if(startDate.compareTo(LocalDate.now())!=0&&reservation.reservationState==ReservationState.CONFIRMED) {
 			System.out.println("Your reservation is for "+startDate.format(formatter));
@@ -101,7 +103,7 @@ public class CheckInController extends Controller {
 		RoomEntity room = roomController.getRerservation(reserveId);
 		if(room!=null) {
 			reservationController.checkInReservation(reserveId);
-			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,0,0);
+			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,numAdult,numChild);
 		}
 		else {
 			System.out.println("Reservation not found");

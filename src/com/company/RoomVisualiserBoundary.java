@@ -9,6 +9,7 @@ public class RoomVisualiserBoundary extends Boundary
 {
 	private Scanner scan;
 
+
 	protected int scheduleMenu()
 	{
 		printMainTitle("Schedule Overview");

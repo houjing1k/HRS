@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.company.RoomEntity.BedType;
@@ -26,7 +27,8 @@ public class RoomBoundary extends Boundary
 						"Change Smoking Room",
 						"Change Room Wifi",
 						"Search Room by Room ID",
-						"Search Room by Guest"
+						"Search Room by Guest",
+						"Show number of guest"
 				};
 		printMenuList(menuList, "Go back to Administrative Control");
 		System.out.println();
@@ -184,6 +186,37 @@ public class RoomBoundary extends Boundary
 				return null;
 				
 		}
+	}
+
+	public void printNumGuest(ArrayList<RoomEntity> roomList) {
+		// TODO Auto-generated method stub
+		String level= "";
+		String num = "";
+		String pre = "02";
+		int totalGuest = 0;
+		int totalAdult = 0;
+		int totalChild = 0;
+		printMainTitle("Number of guests");
+		for(RoomEntity room:roomList) {
+			level = room.getRoomId().substring(0, 2);
+			if(!level.equals(pre)) {
+				System.out.println("\nLevel "+pre+": ");
+				System.out.println("Total Number of Guest: "+totalGuest);
+				System.out.println("Total Number of Adult: "+totalAdult);
+				System.out.println("Total Number of Child: "+totalChild);
+				pre = level;
+				totalGuest = 0;
+				totalAdult = 0;
+				totalChild = 0;
+			}
+			totalGuest += room.getNumGuest();
+			totalAdult += room.getNumAdult();
+			totalChild += room.getNumChild();
+		}
+		System.out.println("\nLevel "+level+": ");
+		System.out.println("Total Number of Guest: "+totalGuest);
+		System.out.println("Total Number of Adult: "+totalAdult);
+		System.out.println("Total Number of Child: "+totalChild);
 	}
 
 }
