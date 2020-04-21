@@ -42,9 +42,10 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 	//Create By dependency injection
 	public RoomEntity(String roomId,TypesOfRooms typeOfRoom,RoomStatus status,boolean smoking,boolean wifi) {
 		this.roomId = roomId;
-		this.roomType = typeOfRoom.createRoom();
+		this.typeOfRoom = typeOfRoom;
+		this.roomType =this.typeOfRoom.createRoom();
 		this.status = status;
-		this.bedType = typeOfRoom.createBed();
+		this.bedType = this.typeOfRoom.createBed();
 		this.smoking = smoking;
 		this.wifi = wifi;
 		this.checkOutDate = null;
