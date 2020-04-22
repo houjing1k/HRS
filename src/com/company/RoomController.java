@@ -165,6 +165,7 @@ public class RoomController extends Controller
 		try
 		{
 			this.getRoom(roomId).maintenance();
+			System.out.println(roomId + " is under maintenance");
 			saveFile();
 		} catch (Exception e)
 		{
@@ -288,10 +289,13 @@ public class RoomController extends Controller
 				b = rb.getBooleanInput();
 				if(b) {
 					this.roomMaintenance(roomId);
-					System.out.println(roomId + " is under maintenance");
 				}else {
+					try {
 					this.checkOut(roomId);
 					System.out.println(roomId + " is not under maintenance");
+					}catch(Exception e) {
+						System.out.println("Room does not exist");
+					}
 				}
 				break;
 			case 4: //4 - Change room bed type
