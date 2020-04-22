@@ -42,21 +42,17 @@ public class ReservationController extends Controller {
     public void createReservation()
     {
         loadReservationsFromFile();
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         GuestController guestController = new GuestController();
         String decision;
         LocalDate startDate,endDate;
         GuestEntity guestEntity=null;
         String selectedRoomId = "";
-        ArrayList<RoomEntity> filteredRooms = null;
+        ArrayList<RoomEntity> filteredRooms;
         ArrayList<String> waitListIds = new ArrayList<>();
         ArrayList<String> filteredRoomIDs = new ArrayList<>();
         int numOfAdults,numOfChildren;
-        numOfAdults = numOfChildren = -1;
         boolean waitListDecision;
-        boolean reserved = false;
         int guestId = -1;
-        String tempString;
         startDate = endDate = null;
         //boolean loop = true;
         do {
@@ -74,19 +70,8 @@ public class ReservationController extends Controller {
         }while(guestEntity == null && guestId == -1);
         if(guestEntity != null)
             guestId = guestEntity.getGuestID();
-        do {
-            System.out.println("Key in the number of adults");
-            do {
-                numOfAdults = scan.nextInt();
-                if (numOfAdults < 0) System.out.println("Please key in a valid number of adults");
-                if (numOfAdults == 0) System.out.println("Sorry there needs to be at least 1 adult");
-            } while (numOfAdults <= 0);
-            System.out.println("Key in the number of children");
-            do {
-                numOfChildren = scan.nextInt();
-                if (numOfChildren < 0) System.out.println("Please key in a valid number of children");
-            } while (numOfChildren < 0);
-        }while (!validNumberOfPeople(numOfChildren,numOfAdults));
+        	numOfAdults = reservationBoundary.selectNumAdult();
+        	numOfChildren = reservationBoundary.selectNumChild(numOfAdults);
         startDate = reservationBoundary.getStartDateInput("Please type the start date(dd/mm/yyyy):");
         endDate = reservationBoundary.getEndDateInput("Please type the end date(dd/mm/yyyy):",startDate);
         int newReservationId = reservations.size()!=0? reservations.get(reservations.size()-1).getReservationId() + 1:1;
@@ -383,19 +368,7 @@ public class ReservationController extends Controller {
                             break;
                         case 3:
                             int numberOfChildren;
-                            System.out.println("Key in the new number of children");
-                            do {
-                                numberOfChildren = scan.nextInt();
-                                if(numberOfChildren<0)
-                                {
-                                    System.out.println("Please key in a valid number of children");
-                                }
-                                if(validNumberOfPeople(numberOfChildren,reservationEntity.getNumOfAdults()))
-                                {
-                                    System.out.println("Please key in a new number of children");
-                                    numberOfChildren = -1;
-                                }
-                            }while (numberOfChildren < 0);
+                            numberOfChildren = reservationBoundary.selectNumChild(reservationEntity.getNumOfAdults());
                             reservationEntity.setNumOfChildren(numberOfChildren);
                             reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
                             saveReservationsToFile();
@@ -403,19 +376,7 @@ public class ReservationController extends Controller {
                             break;
                         case 4:
                             int numberOfAdults;
-                            System.out.println("Key in the new number of adults");
-                            do {
-                                numberOfAdults = scan.nextInt();
-                                if(numberOfAdults<0)
-                                {
-                                    System.out.println("Please key in a valid number of adults");
-                                }
-                                if(!validNumberOfPeople(reservationEntity.getNumOfChildren(),numberOfAdults))
-                                {
-                                    System.out.println("please key in a new number of adults");
-                                    numberOfAdults = -1;
-                                }
-                            }while (numberOfAdults < 0);
+                            numberOfAdults = reservationBoundary.selectNumAdult();
                             reservationEntity.setNumOfAdults(numberOfAdults);
                             reservations.set(reservations.indexOf(getReservationById(reservationId)),reservationEntity);
                             saveReservationsToFile();
@@ -424,10 +385,8 @@ public class ReservationController extends Controller {
                         case 5:
                             roomEntities = RoomController.getInstance().filterRooms(2);
                             final LocalDate startDate,endDate;
-                            final String roomId;
                             startDate = reservationEntity.getStartDate();
                             endDate = reservationEntity.getEndDate();
-                            roomId = reservationEntity.getRoomId();
                             roomEntities.removeIf(roomEntity -> !isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
                             roomEntities.removeIf(roomEntity -> !RoomController.getInstance().isRoomAvailable(roomEntity.getRoomId(),startDate,endDate));
                             if(roomEntities.size()==0)

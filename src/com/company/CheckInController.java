@@ -96,12 +96,11 @@ public class CheckInController extends Controller {
 			System.out.println("Your reservation is for "+startDate.format(formatter));
 			return true;
 		}
-		RoomEntity room = roomController.getReservation(reserveId);
-		if(room!=null) {
+		try {
+			RoomEntity room = roomController.getRoom(reservation.getRoomId());
 			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,numAdult,numChild);
-		}
-		else {
+		}catch(Exception e) {
 			System.out.println("Reservation not found");
 			return true;
 		}
