@@ -14,7 +14,6 @@ public class CheckInController extends Controller {
 	private GuestController guestController;
 	private RoomController roomController;
 	private MainController mainController;
-	private ReservationController reservationController;
 	
 	private String[] menuMain = {
             "Walk In Check In",
@@ -32,7 +31,6 @@ public class CheckInController extends Controller {
 		guestController = new GuestController();
 		roomController = RoomController.getInstance();
 		mainController = new MainController();
-		reservationController  = new ReservationController();
 	}
 	
 	public static CheckInController getInstance() {
@@ -82,7 +80,7 @@ public class CheckInController extends Controller {
 		LocalDate startDate = null;
 		LocalDate endDate = null;
 		try {
-			reservation = reservationController.getReservationById(reserveId);
+			reservation = new ReservationController().getReservationById(reserveId);
 			startDate = reservation.startDate;
 			endDate = reservation.endDate;
 		}catch(Exception e) {
@@ -98,7 +96,7 @@ public class CheckInController extends Controller {
 		}
 		try {
 			RoomEntity room = roomController.getRoom(reservation.getRoomId());
-			reservationController.checkInReservation(reserveId);
+			new ReservationController().checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,numAdult,numChild);
 		}catch(Exception e) {
 			System.out.println("Reservation not found");
@@ -183,6 +181,7 @@ public class CheckInController extends Controller {
 	private String selectRoom(LocalDate startDate, LocalDate endDate) {
 		ArrayList<RoomEntity> roomArray;
 		ArrayList<RoomEntity> returnArray = new ArrayList<>();
+		ReservationController reservationController = new ReservationController();
 		while(returnArray.isEmpty()) {
 			roomArray = roomController.filterRooms(1);
 			for(RoomEntity room:roomArray) {
