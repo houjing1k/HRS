@@ -219,7 +219,7 @@ public class PaymentController extends Controller
 				tempTrans.setPrice(temp_price);
 			}
 			else tempTrans.setPrice(temp_price * 0.9);
-			tempTrans.setTime(date.atTime(14, 00));
+			tempTrans.setTime(date.atTime(13, 00));
 			bill.AddTransaction(tempTrans);
 		}
 		saveBillsToFile();
