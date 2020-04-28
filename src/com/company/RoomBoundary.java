@@ -28,9 +28,9 @@ public class RoomBoundary extends Boundary
 						"Change Room Wifi",
 						"Search Room by Room ID",
 						"Search Room by Guest",
-						"Show number of guest"
+						"Show Number of Guests"
 				};
-		printMenuList(menuList, "Go back to Administrative Control");
+		printMenuList(menuList, "Go Back to Administrative Control");
 		System.out.println();
 	}
 
@@ -125,7 +125,7 @@ public class RoomBoundary extends Boundary
 					" 4 - King            "
 			};
 		int sel;
-		System.out.println("Choose bed Type:");
+		System.out.println("Choose Bed Type:");
 		printList(bedType);
 		sel = getInput(1,4);
 		switch(sel) {
@@ -170,7 +170,7 @@ public class RoomBoundary extends Boundary
 					" 3 - Deluxe           ",
 			};
 		int sel;
-		System.out.println("Choose bed Type:");
+		System.out.println("Choose Bed Type:");
 		printList(bedType);
 		sel = getInput(1,3);
 		

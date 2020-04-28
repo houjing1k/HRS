@@ -1,5 +1,6 @@
 package com.company;
 
+import java.text.NumberFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -76,14 +77,15 @@ public class PaymentBoundary extends Boundary{
 	}
 	 
     public void paymentProcess(String method,double money) {
-		if(method=="CASH") {
-			System.out.println("Pay By Cash:");
+	    NumberFormat formatter = NumberFormat.getCurrencyInstance();
+    	if(method=="CASH") {
+			System.out.println("Pay by Cash :");
 			boolean paying=true;
 			while(paying) { 
 				double receive = this.readDouble(scan, "Cash Amount : ");
 				if(receive>=money) {
-					System.out.println("Paid Amount: $"+ receive);
-					System.out.println("Return Amount: $"+ String.format("%.2f",(receive-money)));
+					System.out.println("Paid Amount : "+ formatter.format(receive));
+					System.out.println("Return Amount : "+ formatter.format(receive-money));
 					paying =false;
 				}
 				else {
@@ -92,10 +94,10 @@ public class PaymentBoundary extends Boundary{
 			}
 		}
 		else {
-			System.out.println("Pay By Card:");
-			System.out.println("Paid Amount:: $"+ money);
+			System.out.println("Pay by Card : ");
+			System.out.println("Paid Amount : "+ formatter.format(money));
 		}
-		System.out.println("Thank you");
+		System.out.println("Thank You");
     }
     
     protected double readDouble(Scanner scanner, String message) {

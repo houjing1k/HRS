@@ -202,7 +202,7 @@ public class RoomController extends Controller
 		try
 		{
 			this.getRoom(roomId).setBedType(bedType);
-			System.out.println("bedType changed");
+			System.out.println("Bed Type Changed");
 			saveFile();
 		} catch (Exception e)
 		{
@@ -215,7 +215,7 @@ public class RoomController extends Controller
 		try
 		{
 			this.getRoom(roomId).setSmoking(b);
-			System.out.println("smoking changed");
+			System.out.println("Smoking Changed");
 			saveFile();
 		} catch (Exception e)
 		{
@@ -228,7 +228,7 @@ public class RoomController extends Controller
 		try
 		{
 			this.getRoom(roomId).setWIfi(b);
-			System.out.println("wifi changed");
+			System.out.println("WIFI Changed");
 			saveFile();
 		} catch (Exception e)
 		{
@@ -284,14 +284,14 @@ public class RoomController extends Controller
 
 			case 3: //3 - Change room to maintenance
 				roomId = rb.getRoomId();
-				System.out.println("set Maintenace");
+				System.out.println("Set Maintenance");
 				b = rb.getBooleanInput();
 				if(b) {
 					this.roomMaintenace(roomId);
-					System.out.println(roomId + " is under maintenace");
+					System.out.println(roomId + " is under Maintenance");
 				}else {
 					this.checkOut(roomId);
-					System.out.println(roomId + " is not under maintenace");
+					System.out.println(roomId + " is not under Maintenance");
 				}
 				break;
 			case 4: //4 - Change room bed type

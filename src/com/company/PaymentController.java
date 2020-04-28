@@ -115,7 +115,7 @@ public class PaymentController extends Controller
 		}
 		//Print the invoice
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		System.out.println("CheckOut Time :"+LocalDate.now().atTime(11,00).format(formatter));		
+		System.out.println("Checked Out At : "+LocalDate.now().atTime(11,00).format(formatter));
 		printInvoice(roomID);
 		boolean loop = true;
 		while (loop)
