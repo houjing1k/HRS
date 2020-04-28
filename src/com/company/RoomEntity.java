@@ -156,6 +156,10 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 		this.status = RoomStatus.VACANT;
 		checkOutDate = null;
 		checkInDate = null;
+		guestId = 0;
+		reserveId = 0;
+		numAdult = 0;
+		numChild = 0;
 	}
 
 	//method to print string 
