@@ -29,14 +29,14 @@ public abstract class RoomIOBoundary extends Boundary {
             if(invalidId)
             {
                 selectedRoomId = "";
-                System.out.println("Sorry the ID you keyed in is not valid");
+                System.out.println("Sorry, the ID you keyed in is not valid");
             }
         }while (selectedRoomId.equals(""));
         return selectedRoomId;
     }
 	
     public int selectNumAdult() {
-    	System.out.println("Maximun number of guest per room is 4");
+    	System.out.println("Maximum number of guest per room is 4");
     	System.out.println("Enter Number of Adult: ");
     	return(getInput(1, 4));
     	}

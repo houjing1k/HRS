@@ -96,7 +96,7 @@ public class CheckInController extends Controller {
 			System.out.println("Your reservation is for "+startDate.format(formatter));
 			return true;
 		}
-		RoomEntity room = roomController.getRerservation(reserveId);
+		RoomEntity room = roomController.getReservation(reserveId);
 		if(room!=null) {
 			reservationController.checkInReservation(reserveId);
 			return checkIn(room.getGuestId(),room.getRoomId(),startDate,endDate,numAdult,numChild);

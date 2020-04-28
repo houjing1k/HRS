@@ -113,7 +113,7 @@ public class RoomController extends Controller
 	}
 
 	//Return the list based on room id
-	public RoomEntity getRerservation(int reserveId)
+	public RoomEntity getReservation(int reserveId)
 	{
 		for (RoomEntity room : roomList)
 		{
@@ -264,7 +264,7 @@ public class RoomController extends Controller
 			case 1: //1 - Add Rooms
 				roomId = rb.getRoomId();
 				if(getRoom(roomId)!=null) {
-					System.out.println("Room already exisits");
+					System.out.println("Room already exists");
 					break;
 				}
 				roomType = rb.getRoomType();
@@ -288,10 +288,10 @@ public class RoomController extends Controller
 				b = rb.getBooleanInput();
 				if(b) {
 					this.roomMaintenace(roomId);
-					System.out.println(roomId + " is under Maintenance");
+					System.out.println(roomId + " is under maintenance");
 				}else {
 					this.checkOut(roomId);
-					System.out.println(roomId + " is not under Maintenance");
+					System.out.println(roomId + " is not under maintenance");
 				}
 				break;
 			case 4: //4 - Change room bed type

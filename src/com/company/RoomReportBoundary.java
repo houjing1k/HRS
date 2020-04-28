@@ -33,12 +33,12 @@ public class RoomReportBoundary  extends Boundary{
 		for(String key: reportData.keySet()){
 			System.out.println(key);
 			if(b) {
-				System.out.print("Numbers: ");
+				System.out.print("Numbers : ");
 				System.out.print(RoomController.getInstance().listRooms(RoomStatus.VACANT, reportData.get(key)).size());
 				System.out.print(" out of "+reportData.get(key).size());
 			}
 
-			System.out.print("\nrooms:");
+			System.out.print("\nRooms : ");
 			if(reportData.get(key).isEmpty()) {
 				System.out.print("NIL");
 			}
@@ -48,7 +48,7 @@ public class RoomReportBoundary  extends Boundary{
 			    	    level = val.getRoomId().substring(0, 2);
 						num = val.getRoomId().substring(2, 4);
 						if(!level.equals(pre)) {
-							System.out.print("\nLevel "+level+": ");
+							System.out.print("\nLevel "+level+" : ");
 						}
 						pre = level;
 						System.out.print(level+"-"+num);

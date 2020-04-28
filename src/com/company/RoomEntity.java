@@ -160,13 +160,13 @@ public class RoomEntity implements Serializable, Comparable<RoomEntity>{
 
 	//method to print string 
 	public String toString() {
-		return("\nRoom ID: "+this.getRoomId()+
-				"\nGuest Id: "+this.getGuestId()+
-				"\nRoom Status: "+this.getRoomStatus()+
-				"\nRoom Type: "+this.getRoomType()+
-				"\nBed Type: "+this.getBedType()+
-				"\nSmoking: "+this.isSmoking())+
-				"\nWIFI:"+this.isWifi();
+		return( "\nRoom ID      : "+this.getRoomId()+
+				"\nGuest ID     : "+this.getGuestId()+
+				"\nRoom Status  : "+this.getRoomStatus()+
+				"\nRoom Type    : "+this.getRoomType()+
+				"\nBed Type     : "+this.getBedType()+
+				"\nSmoking      : "+this.isSmoking())+
+				"\nWIFI         : "+this.isWifi();
 	}
 
 	public enum RoomStatus{
