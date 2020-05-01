@@ -148,10 +148,12 @@ public class RoomVisualiser
 
 	private static boolean isWithinDate(LocalDate date, LocalDate startDate, LocalDate endDate)
 	{
+		// (date >= stateDate) && (date < endDate)
 		if (date == null || startDate == null || endDate == null)
 			return false;
 		else
-			return !(date.isBefore(startDate) || date.isAfter(endDate));
+			return (!date.isBefore(startDate) && date.isBefore(endDate));
+		//return !(date.isBefore(startDate) || date.isAfter(endDate));
 	}
 
 	private static String charRepeater(char character)
