@@ -10,6 +10,7 @@ package com.company;
  */
 
 import java.io.*;
+import java.math.BigDecimal;
 
 enum StockStatus { IN_STOCK, OUT_OF_STOCK };
 
@@ -25,7 +26,7 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	
 	private String name;
 	private String description;
-	private double price;
+	private BigDecimal price;
 	private StockStatus status;
 	
 	/**
@@ -86,14 +87,14 @@ class RoomServiceItem implements Serializable, Comparable<RoomServiceItem> {
 	 * @return the price
 	 */
 	double getPrice() {
-		return price;
+		return price.doubleValue();
 	}
 	
 	/**
 	 * @param price the price to set
 	 */
 	void setPrice(double price) {
-		this.price = price;
+		this.price = BigDecimal.valueOf(price);
 	}
 	
 	/**
